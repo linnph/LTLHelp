@@ -340,29 +340,8 @@
                             </div>
                         </div>
                         <nav class="main-menu d-none d-lg-block">
-                            <ul>
-                                <li><a href="index.html">Home</a></li>
-                                <li><a href="about.html">About Us</a></li>
-                                <li class="menu-item-has-children">
-                                    <a href="donation.html">Donations</a>
-                                    <ul class="sub-menu">
-                                        <li><a href="donation.html">All Campaigns</a></li>
-                                        <li><a href="donation-details.html">Campaign Details</a></li>
-                                        <li><a href="donate-now.html">Donate Now</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="gallery.html">Gallery</a></li>
-                                <li><a href="faq.html">FAQs</a></li>
-                                <li class="menu-item-has-children">
-                                    <a href="blog.html">Blog</a>
-                                    <ul class="sub-menu">
-                                        <li><a href="blog.html">Blog List</a></li>
-                                        <li><a href="blog-details.html">Blog Details</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="contact.html">Contact Us</a></li>
-                            </ul>
-
+                            
+                                @await Component.InvokeAsync("MenuTop")                          
                         </nav>
                         <p class="header-notice"><img class="me-1" src="~/assets/img/icon/heart-icon.svg" alt="img">Are you ready to help them? Let’s become a volunteers...</p>
                     </div>
@@ -372,7 +351,7 @@
                             <span class="badge">5</span>
                             <i class="fa-regular fa-cart-shopping"></i>
                         </button>
-                        <a href="contact.html" class="th-btn style3 d-lg-block d-none"><i class="fas fa-heart me-2"></i> LTLHelpe Now</a>
+                        <a href="contact.html" class="th-btn style3 d-lg-block d-none"><i class="fas fa-heart me-2"></i> LTLHelpe Bây Giờ</a>
                         <button type="button" class="icon-btn th-menu-toggle d-lg-none"><i class="far fa-bars"></i></button>
                     </div>
                 </div>

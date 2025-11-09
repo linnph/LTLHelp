@@ -1,0 +1,23 @@
+﻿@model IEnumerable<LTLHelp.Models.TbMenu>
+<ul class="menu-list">
+    @foreach (var item in Model.Where(x => x.ParentId == null))
+    {
+        var children = Model.Where(x => x.ParentId == item.MenuId).ToList();
+        <li class="menu-item @(children.Any() ? "menu-item-has-children" : "")">
+            <a href="@item.Url">@item.MenuName</a>
+
+            @* Nếu có menu con *@
+            @if (children.Any())
+            {
+                <ul class="sub-menu">
+                    @foreach (var child in children)
+                    {
+                        <li><a href="@child.Url">@child.MenuName</a></li>
+                    }
+                </ul>
+            }
+        </li>
+    }
+</ul>
+
+
