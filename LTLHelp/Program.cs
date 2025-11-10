@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using LTLHelp.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,3 +35,4 @@ app.MapControllerRoute(
 
 
 app.Run();
+//Hello thương
