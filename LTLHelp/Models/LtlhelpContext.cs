@@ -45,17 +45,17 @@ public partial class LtlhelpContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("data source=LINNPH\\SQLEXPRESS; initial catalog=LTLHelp; integrated security=True; \nTrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("data source= ADMIN\\SQLEXPRESS; initial catalog=LTLHelp; integrated security=True; TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<TbAccount>(entity =>
         {
-            entity.HasKey(e => e.AccountId).HasName("PK__tb_Accou__349DA58690C71B4F");
+            entity.HasKey(e => e.AccountId).HasName("PK__tb_Accou__349DA586154A3607");
 
             entity.ToTable("tb_Account");
 
-            entity.HasIndex(e => e.Email, "UQ__tb_Accou__A9D10534B1A58A9A").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__tb_Accou__A9D1053490B82307").IsUnique();
 
             entity.Property(e => e.AccountId).HasColumnName("AccountID");
             entity.Property(e => e.Avatar).HasMaxLength(300);
@@ -74,7 +74,7 @@ public partial class LtlhelpContext : DbContext
 
         modelBuilder.Entity<TbBlog>(entity =>
         {
-            entity.HasKey(e => e.BlogId).HasName("PK__tb_Blog__54379E5006869D4E");
+            entity.HasKey(e => e.BlogId).HasName("PK__tb_Blog__54379E504612C0E0");
 
             entity.ToTable("tb_Blog");
 
@@ -89,12 +89,12 @@ public partial class LtlhelpContext : DbContext
 
             entity.HasOne(d => d.Category).WithMany(p => p.TbBlogs)
                 .HasForeignKey(d => d.CategoryId)
-                .HasConstraintName("FK__tb_Blog__Categor__5629CD9C");
+                .HasConstraintName("FK__tb_Blog__Categor__68487DD7");
         });
 
         modelBuilder.Entity<TbBlogComment>(entity =>
         {
-            entity.HasKey(e => e.CommentId).HasName("PK__tb_BlogC__C3B4DFAA7F46BC72");
+            entity.HasKey(e => e.CommentId).HasName("PK__tb_BlogC__C3B4DFAA8EFA18CB");
 
             entity.ToTable("tb_BlogComment");
 
@@ -108,12 +108,12 @@ public partial class LtlhelpContext : DbContext
             entity.HasOne(d => d.Blog).WithMany(p => p.TbBlogComments)
                 .HasForeignKey(d => d.BlogId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__tb_BlogCo__BlogI__59FA5E80");
+                .HasConstraintName("FK__tb_BlogCo__BlogI__6C190EBB");
         });
 
         modelBuilder.Entity<TbCampaign>(entity =>
         {
-            entity.HasKey(e => e.CampaignId).HasName("PK__tb_Campa__3F5E8D79893ED088");
+            entity.HasKey(e => e.CampaignId).HasName("PK__tb_Campa__3F5E8D790D9F57AF");
 
             entity.ToTable("tb_Campaign");
 
@@ -134,7 +134,7 @@ public partial class LtlhelpContext : DbContext
 
         modelBuilder.Entity<TbCategory>(entity =>
         {
-            entity.HasKey(e => e.CategoryId).HasName("PK__tb_Categ__19093A2BE0EA5062");
+            entity.HasKey(e => e.CategoryId).HasName("PK__tb_Categ__19093A2BCFAA6A0F");
 
             entity.ToTable("tb_Category");
 
@@ -148,7 +148,7 @@ public partial class LtlhelpContext : DbContext
 
         modelBuilder.Entity<TbContact>(entity =>
         {
-            entity.HasKey(e => e.ContactId).HasName("PK__tb_Conta__5C6625BB631B2892");
+            entity.HasKey(e => e.ContactId).HasName("PK__tb_Conta__5C6625BB8973882B");
 
             entity.ToTable("tb_Contact");
 
@@ -161,7 +161,7 @@ public partial class LtlhelpContext : DbContext
 
         modelBuilder.Entity<TbDonation>(entity =>
         {
-            entity.HasKey(e => e.DonationId).HasName("PK__tb_Donat__C5082EDB1113399B");
+            entity.HasKey(e => e.DonationId).HasName("PK__tb_Donat__C5082EDB857461DD");
 
             entity.ToTable("tb_Donation");
 
@@ -174,16 +174,16 @@ public partial class LtlhelpContext : DbContext
 
             entity.HasOne(d => d.Campaign).WithMany(p => p.TbDonations)
                 .HasForeignKey(d => d.CampaignId)
-                .HasConstraintName("FK__tb_Donati__Campa__6C190EBB");
+                .HasConstraintName("FK__tb_Donati__Campa__7E37BEF6");
 
             entity.HasOne(d => d.Donor).WithMany(p => p.TbDonations)
                 .HasForeignKey(d => d.DonorId)
-                .HasConstraintName("FK__tb_Donati__Donor__6B24EA82");
+                .HasConstraintName("FK__tb_Donati__Donor__7D439ABD");
         });
 
         modelBuilder.Entity<TbDonor>(entity =>
         {
-            entity.HasKey(e => e.DonorId).HasName("PK__tb_Donor__052E3F98642660CA");
+            entity.HasKey(e => e.DonorId).HasName("PK__tb_Donor__052E3F98566B1F4A");
 
             entity.ToTable("tb_Donor");
 
@@ -196,7 +196,7 @@ public partial class LtlhelpContext : DbContext
 
         modelBuilder.Entity<TbFaq>(entity =>
         {
-            entity.HasKey(e => e.FaqId).HasName("PK__tb_Faq__9C741C23E2A6D628");
+            entity.HasKey(e => e.FaqId).HasName("PK__tb_Faq__9C741C23AAE17E76");
 
             entity.ToTable("tb_Faq");
 
@@ -208,7 +208,7 @@ public partial class LtlhelpContext : DbContext
 
         modelBuilder.Entity<TbGallery>(entity =>
         {
-            entity.HasKey(e => e.GalleryId).HasName("PK__tb_Galle__CF4F7B959F0C1967");
+            entity.HasKey(e => e.GalleryId).HasName("PK__tb_Galle__CF4F7B95F62879EA");
 
             entity.ToTable("tb_Gallery");
 
@@ -221,12 +221,12 @@ public partial class LtlhelpContext : DbContext
 
             entity.HasOne(d => d.Campaign).WithMany(p => p.TbGalleries)
                 .HasForeignKey(d => d.CampaignId)
-                .HasConstraintName("FK__tb_Galler__Campa__5165187F");
+                .HasConstraintName("FK__tb_Galler__Campa__6383C8BA");
         });
 
         modelBuilder.Entity<TbMenu>(entity =>
         {
-            entity.HasKey(e => e.MenuId).HasName("PK__tb_Menu__C99ED250E8F77DA7");
+            entity.HasKey(e => e.MenuId).HasName("PK__tb_Menu__C99ED250DBDB2FD7");
 
             entity.ToTable("tb_Menu");
 
@@ -251,7 +251,7 @@ public partial class LtlhelpContext : DbContext
 
         modelBuilder.Entity<TbRole>(entity =>
         {
-            entity.HasKey(e => e.RoleId).HasName("PK__tb_Role__8AFACE3A6FC08AD5");
+            entity.HasKey(e => e.RoleId).HasName("PK__tb_Role__8AFACE3A116695B4");
 
             entity.ToTable("tb_Role");
 
@@ -264,7 +264,7 @@ public partial class LtlhelpContext : DbContext
 
         modelBuilder.Entity<TbTeam>(entity =>
         {
-            entity.HasKey(e => e.TeamId).HasName("PK__tb_Team__123AE7B98330DBC5");
+            entity.HasKey(e => e.TeamId).HasName("PK__tb_Team__123AE7B990509E89");
 
             entity.ToTable("tb_Team");
 
@@ -281,7 +281,7 @@ public partial class LtlhelpContext : DbContext
 
         modelBuilder.Entity<TbTestimonial>(entity =>
         {
-            entity.HasKey(e => e.TestimonialId).HasName("PK__tb_Testi__91A23E53CC1B8AC0");
+            entity.HasKey(e => e.TestimonialId).HasName("PK__tb_Testi__91A23E5375DC2379");
 
             entity.ToTable("tb_Testimonial");
 
