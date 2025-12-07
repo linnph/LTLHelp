@@ -1,0 +1,112 @@
+@model IEnumerable<LTLHelp.Models.BlogPost>
+@{
+    ViewData["Title"] = "Tin Tức";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!--==============================
+    Breadcumb
+============================== -->
+<div class="breadcumb-wrapper " data-bg-src="/assets/img/bg/cta-bg4-1.jpg" data-overlay="theme">
+    <div class="container">
+        <div class="breadcumb-content">
+            <h1 class="breadcumb-title">Tin Tức</h1>
+            <ul class="breadcumb-menu">
+                <li><a href="@Url.Action("Index", "Home")">Trang Chủ</a></li>
+                <li>Tin Tức</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--==============================
+Blog Area
+==============================-->
+<section class="th-blog-wrapper space-top space-extra-bottom">
+    <div class="container">
+        <div class="row gx-40">
+            <div class="col-xxl-8 col-lg-7">
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var post in Model)
+                    {
+                        var imageUrl = !string.IsNullOrEmpty(post.ImageUrl)
+                            ? (post.ImageUrl.StartsWith("http://") || post.ImageUrl.StartsWith("https://") || post.ImageUrl.StartsWith("/")
+                                ? post.ImageUrl
+                                : Url.Content($"~/assets/img/blog/{post.ImageUrl}"))
+                            : Url.Content("~/assets/img/blog/blog-s-1-1.jpg");
+                        
+                        var commentCount = post.BlogComments?.Count(c => c.IsApproved == true) ?? 0;
+                        var publishedDate = post.PublishedAt?.ToString("MMMM dd, yyyy") ?? DateTime.Now.ToString("MMMM dd, yyyy");
+                        
+                        <div class="th-blog blog-single @(!string.IsNullOrEmpty(post.ImageUrl) ? "has-post-thumbnail" : "")">
+                            @if (!string.IsNullOrEmpty(post.ImageUrl))
+                            {
+                                <div class="blog-img">
+                                    <a href="@Url.Action("Details", "Blog", new { id = post.BlogPostId })">
+                                        <img src="@(imageUrl.StartsWith("http://") || imageUrl.StartsWith("https://") ? imageUrl : Url.Content(imageUrl))" alt="@post.Title">
+                                    </a>
+                                </div>
+                            }
+                            <div class="blog-content">
+                                <div class="blog-meta">
+                                    <a href="@Url.Action("Index", "Blog")"><i class="fas fa-calendar-days"></i>@publishedDate</a>
+                                    @if (post.BlogCategory != null)
+                                    {
+                                        <a href="@Url.Action("Index", "Blog")"><i class="fas fa-tags"></i>@post.BlogCategory.Name</a>
+                                    }
+                                    <a href="@Url.Action("Details", "Blog", new { id = post.BlogPostId })"><i class="fas fa-comments"></i>Bình luận (@commentCount)</a>
+                                </div>
+                                <h2 class="blog-title">
+                                    <a href="@Url.Action("Details", "Blog", new { id = post.BlogPostId })">@post.Title</a>
+                                </h2>
+                                <p class="blog-text">@(post.Summary ?? (post.Content != null && post.Content.Length > 200 ? post.Content.Substring(0, 200) + "..." : post.Content ?? ""))</p>
+                                <a href="@Url.Action("Details", "Blog", new { id = post.BlogPostId })" class="th-btn btn-sm">Đọc Thêm <i class="fas fa-arrow-up-right ms-2"></i></a>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-center py-5">
+                        <i class="fas fa-newspaper" style="font-size: 64px; color: var(--smoke-color); margin-bottom: 20px;"></i>
+                        <p class="text-muted">Hiện tại chưa có bài viết nào. Vui lòng quay lại sau!</p>
+                    </div>
+                }
+            </div>
+            <div class="col-xxl-4 col-lg-5">
+                <aside class="sidebar-area">
+                    <div class="widget widget_search">
+                        <form class="search-form">
+                            <input type="text" placeholder="Tìm kiếm...">
+                            <button type="submit"><i class="far fa-search"></i></button>
+                        </form>
+                    </div>
+                    <div class="widget widget_categories">
+                        <h3 class="widget_title">Danh Mục</h3>
+                        <ul>
+                            @{
+                                var categories = Model?.Select(b => b.BlogCategory).Where(c => c != null).Distinct().ToList() ?? new List<BlogCategory>();
+                            }
+                            @if (categories.Any())
+                            {
+                                @foreach (var category in categories)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("Index", "Blog")">@category.Name</a>
+                                        <span><i class="fas fa-arrow-right"></i></span>
+                                    </li>
+                                }
+                            }
+                            else
+                            {
+                                <li><span class="text-muted">Chưa có danh mục</span></li>
+                            }
+                        </ul>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+</section>
+

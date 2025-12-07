@@ -1,6 +1,7 @@
 @model IEnumerable<LTLHelp.Models.Donation>
 @{
     ViewData["Title"] = "Lịch Sử Quyên Góp";
+    Layout = "~/Views/Shared/_Layout.cshtml";
     var totalDonated = ViewBag.TotalDonated as decimal? ?? 0;
     var totalDonations = ViewBag.TotalDonations as int? ?? 0;
     var confirmedAmount = ViewBag.ConfirmedAmount as decimal? ?? 0;

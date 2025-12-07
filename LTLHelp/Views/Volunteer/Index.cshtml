@@ -1,0 +1,92 @@
+@model IEnumerable<LTLHelp.Models.TeamMember>
+@{
+    ViewData["Title"] = "Tình Nguyện Viên";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!--==============================
+    Breadcumb
+============================== -->
+<div class="breadcumb-wrapper " data-bg-src="/assets/img/bg/cta-bg4-1.jpg" data-overlay="theme">
+    <div class="container">
+        <div class="breadcumb-content">
+            <h1 class="breadcumb-title">Tình Nguyện Viên</h1>
+            <ul class="breadcumb-menu">
+                <li><a href="@Url.Action("Index", "Home")">Trang Chủ</a></li>
+                <li>Tình Nguyện Viên</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--==============================
+Team Area  
+==============================-->
+<section class="space" id="team-sec">
+    <div class="container">
+        <div class="title-area text-center">
+            <span class="sub-title after-none before-none"><i class="far fa-heart text-theme"></i> Tình Nguyện Viên Của Chúng Tôi</span>
+            <h2 class="sec-title">Gặp Gỡ Những Tình Nguyện Viên Tích Cực</h2>
+        </div>
+        <div class="row gy-40">
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var member in Model)
+                {
+                    var avatarUrl = !string.IsNullOrEmpty(member.AvatarUrl)
+                        ? (member.AvatarUrl.StartsWith("http://") || member.AvatarUrl.StartsWith("https://") || member.AvatarUrl.StartsWith("/")
+                            ? member.AvatarUrl
+                            : Url.Content($"~/assets/img/team/{member.AvatarUrl}"))
+                        : Url.Content("~/assets/img/team/team_3_1.png");
+                    
+                    <div class="col-lg-3 col-md-6">
+                        <div class="th-team team-card3">
+                            <div class="team-img">
+                                <a href="@Url.Action("Details", "Volunteer", new { id = member.TeamMemberId })">
+                                    <img src="@(avatarUrl.StartsWith("http://") || avatarUrl.StartsWith("https://") ? avatarUrl : Url.Content(avatarUrl))" alt="@member.FullName">
+                                </a>
+                            </div>
+                            <div class="team-card-content">
+                                <h3 class="box-title">
+                                    <a href="@Url.Action("Details", "Volunteer", new { id = member.TeamMemberId })">@member.FullName</a>
+                                </h3>
+                                <span class="team-desig">@(member.Position ?? "Tình Nguyện Viên")</span>
+                                <div class="th-social style2">
+                                    @if (!string.IsNullOrEmpty(member.Facebook))
+                                    {
+                                        <a target="_blank" href="@member.Facebook"><i class="fab fa-facebook-f"></i></a>
+                                    }
+                                    @if (!string.IsNullOrEmpty(member.Twitter))
+                                    {
+                                        <a target="_blank" href="@member.Twitter"><i class="fab fa-twitter"></i></a>
+                                    }
+                                    @if (!string.IsNullOrEmpty(member.Linkedin))
+                                    {
+                                        <a target="_blank" href="@member.Linkedin"><i class="fab fa-linkedin-in"></i></a>
+                                    }
+                                    @if (string.IsNullOrEmpty(member.Facebook) && string.IsNullOrEmpty(member.Twitter) && string.IsNullOrEmpty(member.Linkedin))
+                                    {
+                                        <a target="_blank" href="https://facebook.com/"><i class="fab fa-facebook-f"></i></a>
+                                        <a target="_blank" href="https://twitter.com/"><i class="fab fa-twitter"></i></a>
+                                        <a target="_blank" href="https://instagram.com/"><i class="fab fa-instagram"></i></a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12 text-center py-5">
+                    <i class="fas fa-users" style="font-size: 64px; color: var(--smoke-color); margin-bottom: 20px;"></i>
+                    <p class="text-muted">Hiện tại chưa có tình nguyện viên nào. Hãy trở thành tình nguyện viên đầu tiên!</p>
+                    <a href="@Url.Action("Apply", "Volunteer")" class="th-btn style3 mt-3">
+                        <i class="fas fa-user-plus me-2"></i> Đăng Ký Tình Nguyện Viên
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+

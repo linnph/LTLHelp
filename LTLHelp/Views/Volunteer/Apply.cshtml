@@ -1,0 +1,134 @@
+@{
+    ViewData["Title"] = "Đăng Ký Tình Nguyện Viên";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!--==============================
+    Breadcumb
+============================== -->
+<div class="breadcumb-wrapper " data-bg-src="/assets/img/bg/cta-bg4-1.jpg" data-overlay="theme">
+    <div class="container">
+        <div class="breadcumb-content">
+            <h1 class="breadcumb-title">Trở Thành Tình Nguyện Viên</h1>
+            <ul class="breadcumb-menu">
+                <li><a href="@Url.Action("Index", "Home")">Trang Chủ</a></li>
+                <li>Đăng Ký Tình Nguyện Viên</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--==============================
+Team Area  
+==============================-->
+<section class="space">
+    <div class="container">
+        <div class="row gy-40 gx-80">
+            <div class="col-xl-6">
+                <h2 class="title mt-n2 mb-25">Hãy tham gia cộng đồng của chúng tôi để trở thành tình nguyện viên</h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="page-img">
+                            <img src="~/assets/img/team/add_team_1_1.png" alt="team">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="page-img">
+                            <img src="~/assets/img/team/add_team_1_2.png" alt="team">
+                        </div>
+                    </div>
+                </div>
+                <h3 class="h5 mt-n2">Yêu Cầu Tình Nguyện Viên</h3>
+                <p class="mb-30">Khám phá những câu chuyện truyền cảm hứng của các cá nhân và cộng đồng được chuyển đổi bởi các chương trình của chúng tôi. Câu chuyện thành công của chúng tôi làm nổi bật tác động thực tế của các khoản đóng góp của bạn và khả năng phục hồi của những người chúng tôi giúp đỡ.</p>
+                <div class="checklist">
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i>Cam kết tham gia các hoạt động tình nguyện</li>
+                        <li><i class="fas fa-check-circle"></i>Có tinh thần trách nhiệm và nhiệt huyết</li>
+                        <li><i class="fas fa-check-circle"></i>Sẵn sàng học hỏi và phát triển kỹ năng</li>
+                        <li><i class="fas fa-check-circle"></i>Tuân thủ các quy định và hướng dẫn</li>
+                        <li><i class="fas fa-check-circle"></i>Đóng góp thời gian và công sức cho cộng đồng</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-xl-6">
+                <div class="add-team-form">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                {
+                                    <li>@error.ErrorMessage</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                    
+                    <form action="@Url.Action("Apply", "Volunteer")" method="POST" class="contact-form">
+                        @Html.AntiForgeryToken()
+                        <div class="row">
+                            <div class="form-group style-border col-12">
+                                <input type="text" class="form-control" name="name" id="name" placeholder="Họ và Tên *" required>
+                            </div>
+                            <div class="form-group style-border col-12">
+                                <input type="email" class="form-control" name="email" id="email" placeholder="Địa Chỉ Email *" required>
+                            </div>
+                            <div class="form-group style-border col-12">
+                                <input type="tel" class="form-control" name="phone" id="phone" placeholder="Số Điện Thoại *" required>
+                            </div>
+                            <div class="form-group style-border col-md-6">
+                                <input type="text" class="form-control" name="address" id="address" placeholder="Địa Chỉ">
+                            </div>
+                            <div class="form-group style-border col-md-6">
+                                <select name="occupation" id="occupation" class="form-select">
+                                    <option value="" disabled selected hidden>Nghề Nghiệp</option>
+                                    <option value="Sinh viên">Sinh viên</option>
+                                    <option value="Giáo viên">Giáo viên</option>
+                                    <option value="Bác sĩ">Bác sĩ</option>
+                                    <option value="Kỹ sư">Kỹ sư</option>
+                                    <option value="Kinh doanh">Kinh doanh</option>
+                                    <option value="Nhân viên văn phòng">Nhân viên văn phòng</option>
+                                    <option value="Khác">Khác</option>
+                                </select>
+                            </div>
+                            <div class="form-group style-border col-12">
+                                <textarea name="message" id="message" cols="30" rows="5" class="form-control" placeholder="Lời nhắn (tùy chọn)"></textarea>
+                            </div>
+                            <div class="form-btn col-12">
+                                <button type="submit" class="th-btn style3">Gửi Đơn Đăng Ký</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .alert {
+        margin-bottom: 20px;
+    }
+    .checklist ul {
+        list-style: none;
+        padding: 0;
+    }
+    .checklist ul li {
+        padding: 8px 0;
+        display: flex;
+        align-items: center;
+    }
+    .checklist ul li i {
+        color: var(--theme-color);
+        margin-right: 10px;
+    }
+</style>
+

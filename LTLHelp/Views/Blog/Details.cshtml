@@ -1,0 +1,227 @@
+@model LTLHelp.Models.BlogPost
+@{
+    ViewData["Title"] = Model?.Title ?? "Chi Tiết Bài Viết";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var relatedPosts = ViewBag.RelatedPosts as List<BlogPost> ?? new List<BlogPost>();
+    var approvedComments = Model?.BlogComments?.Where(c => c.IsApproved == true).OrderByDescending(c => c.CreatedAt).ToList() ?? new List<BlogComment>();
+    var commentCount = approvedComments.Count;
+}
+
+<!--==============================
+    Breadcumb
+============================== -->
+<div class="breadcumb-wrapper " data-bg-src="/assets/img/bg/cta-bg4-1.jpg" data-overlay="theme">
+    <div class="container">
+        <div class="breadcumb-content">
+            <h1 class="breadcumb-title">Chi Tiết Bài Viết</h1>
+            <ul class="breadcumb-menu">
+                <li><a href="@Url.Action("Index", "Home")">Trang Chủ</a></li>
+                <li><a href="@Url.Action("Index", "Blog")">Tin Tức</a></li>
+                <li>Chi Tiết Bài Viết</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--==============================
+    Blog Area
+==============================-->
+<section class="th-blog-wrapper blog-details space-top space-extra2-bottom">
+    <div class="container">
+        <div class="row gx-40">
+            <div class="col-xxl-8 col-lg-7">
+                @if (Model != null)
+                {
+                    var imageUrl = !string.IsNullOrEmpty(Model.ImageUrl)
+                        ? (Model.ImageUrl.StartsWith("http://") || Model.ImageUrl.StartsWith("https://") || Model.ImageUrl.StartsWith("/")
+                            ? Model.ImageUrl
+                            : Url.Content($"~/assets/img/blog/{Model.ImageUrl}"))
+                        : Url.Content("~/assets/img/blog/blog-s-1-1.jpg");
+                    
+                    var publishedDate = Model.PublishedAt?.ToString("MMMM dd, yyyy") ?? DateTime.Now.ToString("MMMM dd, yyyy");
+                    var authorName = Model.Author?.UserName ?? "Admin";
+                    
+                    <div class="th-blog blog-single">
+                        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                        {
+                            <div class="blog-img">
+                                <img src="@(imageUrl.StartsWith("http://") || imageUrl.StartsWith("https://") ? imageUrl : Url.Content(imageUrl))" alt="@Model.Title">
+                            </div>
+                        }
+                        <div class="blog-content">
+                            <div class="blog-meta">
+                                <a href="@Url.Action("Index", "Blog")"><i class="fas fa-calendar-days"></i>@publishedDate</a>
+                                @if (Model.BlogCategory != null)
+                                {
+                                    <a href="@Url.Action("Index", "Blog")"><i class="fas fa-tags"></i>@Model.BlogCategory.Name</a>
+                                }
+                                <a href="#comments"><i class="fas fa-comments"></i>Bình luận (@commentCount)</a>
+                            </div>
+                            <h2 class="blog-title">@Model.Title</h2>
+                            <div class="blog-author mb-3">
+                                <i class="fas fa-user me-2"></i>
+                                <span>Tác giả: <strong>@authorName</strong></span>
+                            </div>
+                            <div class="blog-content-text">
+                                @Html.Raw(Model.Content?.Replace("\n", "<br>") ?? Model.Summary ?? "")
+                            </div>
+                            
+                            @if (Model.Tags != null && Model.Tags.Any())
+                            {
+                                <div class="share-links clearfix mt-4">
+                                    <div class="row justify-content-between">
+                                        <div class="col-md-auto">
+                                            <span class="share-links-title">Tags:</span>
+                                            <div class="tagcloud">
+                                                @foreach (var tag in Model.Tags)
+                                                {
+                                                    <a href="@Url.Action("Index", "Blog")">@tag.Name</a>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="col-md-auto text-xl-end">
+                                            <span class="share-links-title">Chia sẻ:</span>
+                                            <div class="th-social align-items-center">
+                                                <a href="https://www.facebook.com/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                                                <a href="https://www.twitter.com/" target="_blank"><i class="fab fa-twitter"></i></a>
+                                                <a href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram"></i></a>
+                                                <a href="https://www.linkedin.com/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    
+                    <!-- Comments Section -->
+                    <div class="th-comments-wrap" id="comments">
+                        <h2 class="blog-inner-title h4"><i class="far fa-comments"></i> Bình luận (@commentCount)</h2>
+                        @if (approvedComments.Any())
+                        {
+                            <ul class="comment-list">
+                                @foreach (var comment in approvedComments)
+                                {
+                                    var commentDate = comment.CreatedAt?.ToString("dd MMMM, yyyy") ?? DateTime.Now.ToString("dd MMMM, yyyy");
+                                    var commentTime = comment.CreatedAt?.ToString("HH:mm") ?? DateTime.Now.ToString("HH:mm");
+                                    var commenterName = comment.User?.UserName ?? comment.Name ?? "Khách";
+                                    
+                                    <li class="th-comment-item">
+                                        <div class="th-post-comment">
+                                            <div class="comment-avater">
+                                                <img src="~/assets/img/blog/comment-author-1.jpg" alt="Comment Author">
+                                            </div>
+                                            <div class="comment-content">
+                                                <h3 class="name">@commenterName</h3>
+                                                <span class="commented-on">@commentDate<span class="ms-2">@commentTime</span></span>
+                                                <p class="text">@comment.Content</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <p class="text-muted">Chưa có bình luận nào. Hãy là người đầu tiên bình luận!</p>
+                        }
+                    </div>
+                    
+                    <!-- Comment Form -->
+                    <div class="th-comment-form">
+                        <div class="form-title">
+                            <h3 class="blog-inner-title h4 mb-2">Để lại bình luận</h3>
+                            <p class="form-text">Địa chỉ email của bạn sẽ không được công bố. Các trường bắt buộc được đánh dấu *</p>
+                        </div>
+                        <form action="#" method="POST" class="row">
+                            <div class="col-md-6 form-group style-border">
+                                <input type="text" placeholder="Tên của bạn *" class="form-control" required>
+                            </div>
+                            <div class="col-md-6 form-group style-border">
+                                <input type="email" placeholder="Email của bạn *" class="form-control" required>
+                            </div>
+                            <div class="col-12 form-group style-border">
+                                <textarea placeholder="Nội dung bình luận *" class="form-control" rows="5" required></textarea>
+                            </div>
+                            <div class="col-12 form-group mb-0">
+                                <button type="submit" class="th-btn btn-fw">GỬI BÌNH LUẬN</button>
+                            </div>
+                        </form>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-5">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 64px; color: var(--smoke-color); margin-bottom: 20px;"></i>
+                        <p class="text-muted">Không tìm thấy bài viết này.</p>
+                        <a href="@Url.Action("Index", "Blog")" class="th-btn style3 mt-3">Quay lại danh sách</a>
+                    </div>
+                }
+            </div>
+            <div class="col-xxl-4 col-lg-5">
+                <aside class="sidebar-area">
+                    <div class="widget widget_search">
+                        <form class="search-form">
+                            <input type="text" placeholder="Tìm kiếm...">
+                            <button type="submit"><i class="far fa-search"></i></button>
+                        </form>
+                    </div>
+                    
+                    @if (relatedPosts.Any())
+                    {
+                        <div class="widget">
+                            <h3 class="widget_title">Bài viết liên quan</h3>
+                            <div class="recent-post-wrap">
+                                @foreach (var relatedPost in relatedPosts)
+                                {
+                                    var relatedImageUrl = !string.IsNullOrEmpty(relatedPost.ImageUrl)
+                                        ? (relatedPost.ImageUrl.StartsWith("http://") || relatedPost.ImageUrl.StartsWith("https://") || relatedPost.ImageUrl.StartsWith("/")
+                                            ? relatedPost.ImageUrl
+                                            : Url.Content($"~/assets/img/blog/{relatedPost.ImageUrl}"))
+                                        : Url.Content("~/assets/img/blog/recent-post-1-1.jpg");
+                                    var relatedDate = relatedPost.PublishedAt?.ToString("dd MMMM, yyyy") ?? DateTime.Now.ToString("dd MMMM, yyyy");
+                                    
+                                    <div class="recent-post">
+                                        <div class="media-img">
+                                            <a href="@Url.Action("Details", "Blog", new { id = relatedPost.BlogPostId })">
+                                                <img src="@(relatedImageUrl.StartsWith("http://") || relatedImageUrl.StartsWith("https://") ? relatedImageUrl : Url.Content(relatedImageUrl))" alt="@relatedPost.Title">
+                                            </a>
+                                        </div>
+                                        <div class="media-body">
+                                            <div class="recent-post-meta">
+                                                <a href="@Url.Action("Index", "Blog")"><i class="fas fa-calendar-days"></i>@relatedDate</a>
+                                            </div>
+                                            <h4 class="post-title">
+                                                <a class="text-inherit" href="@Url.Action("Details", "Blog", new { id = relatedPost.BlogPostId })">
+                                                    @(relatedPost.Title?.Length > 50 ? relatedPost.Title.Substring(0, 50) + "..." : relatedPost.Title)
+                                                </a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </aside>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .blog-content-text {
+        line-height: 1.8;
+        color: var(--body-color);
+    }
+    .blog-content-text p {
+        margin-bottom: 20px;
+    }
+    .blog-author {
+        color: var(--body-color);
+        font-size: 14px;
+    }
+    .blog-author i {
+        color: var(--theme-color);
+    }
+</style>
+

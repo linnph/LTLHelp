@@ -1,6 +1,7 @@
 @model LTLHelp.Models.Donation
 @{
     ViewData["Title"] = "Thanh Toán Quyên Góp";
+    Layout = "~/Views/Shared/_Layout.cshtml";
     var campaign = ViewBag.Campaign as Campaign;
     var paymentMethods = ViewBag.PaymentMethods as List<PaymentMethod> ?? new List<PaymentMethod>();
 }

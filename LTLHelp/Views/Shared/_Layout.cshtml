@@ -247,7 +247,7 @@
                                 </div>
                                 <div class="box-content">
                                     <p class="box-text">Địa chỉ:</p>
-                                    <h4 class="box-title"><a href="https://www.google.com/maps">Newyork City, USA</a></h4>
+                                    <h4 class="box-title"><a href="https://www.google.com/maps">Đại Học Vinh, Nghệ An</a></h4>
                                 </div>
                             </div>
                             <div class="info-card">
@@ -296,42 +296,49 @@
                             </div>
                         </div>
                         <nav class="main-menu d-none d-lg-block">
-                            <ul>
+                            <ul style="white-space: nowrap; flex-wrap: nowrap;">
                                 <li><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
                                 <li><a href="@Url.Action("About", "Home")">Giới thiệu</a></li>
                                 <li class="menu-item-has-children">
                                     <a href="@Url.Action("Index", "Campaign")">Chiến dịch</a>
                                     <ul class="sub-menu">
-                                        <li><a href="@Url.Action("Index", "Campaign")">Danh sách chiến dịch</a></li>
-                                        <li><a href="@Url.Action("Progress", "Campaign")">Tiến độ chiến dịch</a></li>
+                                        <li><a href="@Url.Action("Index", "Campaign")">Danh sách</a></li>
+                                        <li><a href="@Url.Action("Progress", "Campaign")">Tiến độ</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="@Url.Action("Index", "Donor")">Nhà tài trợ hàng đầu</a></li>
+                                <li><a href="@Url.Action("Index", "Donor")">Tài trợ</a></li>
+                                <li><a href="@Url.Action("Index", "Blog")">Tin tức</a></li>
                                 <li class="menu-item-has-children">
-                                    <a href="@Url.Action("Index", "Blog")">Tin tức</a>
+                                    <a href="@Url.Action("Index", "Volunteer")">Tình nguyện</a>
                                     <ul class="sub-menu">
-                                        <li><a href="@Url.Action("Index", "Blog")">Danh sách tin tức</a></li>
-                                    </ul>
-                                </li>
-                                <li class="menu-item-has-children">
-                                    <a href="@Url.Action("Index", "Volunteer")">Tình nguyện viên</a>
-                                    <ul class="sub-menu">
-                                        <li><a href="@Url.Action("Index", "Volunteer")">Danh sách tình nguyện viên</a></li>
-                                        <li><a href="@Url.Action("Apply", "Volunteer")">Đăng ký tình nguyện viên</a></li>
+                                        <li><a href="@Url.Action("Index", "Volunteer")">Danh sách</a></li>
+                                        <li><a href="@Url.Action("Apply", "Volunteer")">Đăng ký</a></li>
                                     </ul>
                                 </li>
                                 <li><a href="@Url.Action("Index", "Contact")">Liên hệ</a></li>
                             </ul>
                                                     
                         </nav>
+                        <style>
+                            .main-menu ul {
+                                display: flex !important;
+                                flex-wrap: nowrap !important;
+                                white-space: nowrap !important;
+                            }
+                            .main-menu ul li {
+                                white-space: nowrap !important;
+                                flex-shrink: 0 !important;
+                            }
+                            .main-menu ul li a {
+                                white-space: nowrap !important;
+                                padding: 10px 15px !important;
+                                font-size: 14px !important;
+                            }
+                        </style>
                         <p class="header-notice"><img class="me-1" src="~/assets/img/icon/heart-icon.svg" alt="img">Bạn đã sẵn sàng giúp đỡ họ chưa? Hãy trở thành tình nguyện viên...</p>
                     </div>
                     <div class="header-button">
                         <button type="button" class="icon-btn style2 searchBoxToggler d-lg-block d-none"><i class="far fa-search"></i></button>
-                        <button type="button" class="icon-btn sideMenuToggler">
-                            <span class="badge">5</span>
-                            <i class="fa-regular fa-cart-shopping"></i>
-                        </button>
                         <div class="dropdown d-lg-inline-block d-none">
                             <button class="th-btn style2 dropdown-toggle" type="button" id="loginDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-user me-2"></i> Tài khoản

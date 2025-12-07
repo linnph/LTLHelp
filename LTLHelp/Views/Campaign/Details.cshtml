@@ -1,6 +1,7 @@
 @model LTLHelp.Models.Campaign
 @{
     ViewData["Title"] = Model?.Title ?? "Chi Tiết Chiến Dịch";
+    Layout = "~/Views/Shared/_Layout.cshtml";
     var progressPercent = Model?.GoalAmount > 0 
         ? (int)((Model.RaisedAmount ?? 0) / Model.GoalAmount.Value * 100) 
         : 0;

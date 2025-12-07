@@ -1,0 +1,145 @@
+@model LTLHelp.Models.TeamMember
+@{
+    ViewData["Title"] = Model?.FullName ?? "Chi Tiết Tình Nguyện Viên";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!--==============================
+    Breadcumb
+============================== -->
+<div class="breadcumb-wrapper " data-bg-src="/assets/img/bg/cta-bg4-1.jpg" data-overlay="theme">
+    <div class="container">
+        <div class="breadcumb-content">
+            <h1 class="breadcumb-title">Chi Tiết Tình Nguyện Viên</h1>
+            <ul class="breadcumb-menu">
+                <li><a href="@Url.Action("Index", "Home")">Trang Chủ</a></li>
+                <li><a href="@Url.Action("Index", "Volunteer")">Tình Nguyện Viên</a></li>
+                <li>Chi Tiết</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--==============================
+Team Area  
+==============================-->
+<section class="space">
+    <div class="container">
+        @if (Model != null)
+        {
+            var avatarUrl = !string.IsNullOrEmpty(Model.AvatarUrl)
+                ? (Model.AvatarUrl.StartsWith("http://") || Model.AvatarUrl.StartsWith("https://") || Model.AvatarUrl.StartsWith("/")
+                    ? Model.AvatarUrl
+                    : Url.Content($"~/assets/img/team/{Model.AvatarUrl}"))
+                : Url.Content("~/assets/img/team/team_inner_1.png");
+            
+            <div class="team-details-wrap mb-80">
+                <div class="row gx-60 gy-40">
+                    <div class="col-xl-5">
+                        <div class="about-card-img">
+                            <img src="@(avatarUrl.StartsWith("http://") || avatarUrl.StartsWith("https://") ? avatarUrl : Url.Content(avatarUrl))" alt="@Model.FullName">
+                        </div>
+                    </div>
+                    <div class="col-xl-7">
+                        <div class="about-card">
+                            <div class="about-card-title-wrap">
+                                <div class="media-left">
+                                    <h2 class="h3 about-card_title mt-n2">@Model.FullName</h2>
+                                    <p class="about-card_desig">@(Model.Position ?? "Tình Nguyện Viên")</p>
+                                </div>
+                                <div class="th-social style4">
+                                    @if (!string.IsNullOrEmpty(Model.Facebook))
+                                    {
+                                        <a target="_blank" href="@Model.Facebook"><i class="fab fa-facebook-f"></i></a>
+                                    }
+                                    @if (!string.IsNullOrEmpty(Model.Twitter))
+                                    {
+                                        <a target="_blank" href="@Model.Twitter"><i class="fab fa-twitter"></i></a>
+                                    }
+                                    @if (!string.IsNullOrEmpty(Model.Linkedin))
+                                    {
+                                        <a target="_blank" href="@Model.Linkedin"><i class="fab fa-linkedin-in"></i></a>
+                                    }
+                                    @if (string.IsNullOrEmpty(Model.Facebook) && string.IsNullOrEmpty(Model.Twitter) && string.IsNullOrEmpty(Model.Linkedin))
+                                    {
+                                        <a target="_blank" href="https://facebook.com/"><i class="fab fa-facebook-f"></i></a>
+                                        <a target="_blank" href="https://twitter.com/"><i class="fab fa-twitter"></i></a>
+                                        <a target="_blank" href="https://instagram.com/"><i class="fab fa-instagram"></i></a>
+                                    }
+                                </div>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(Model.Bio))
+                            {
+                                <p class="about-card_text">@Model.Bio</p>
+                            }
+                            else
+                            {
+                                <p class="about-card_text">Tình nguyện viên tích cực của chúng tôi, luôn sẵn sàng hỗ trợ và đóng góp cho cộng đồng.</p>
+                            }
+                            
+                            <div class="team-details-about-info">
+                                @if (!string.IsNullOrEmpty(Model.Experience))
+                                {
+                                    <div class="about-contact">
+                                        <div class="icon">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        <div class="media-left">
+                                            <h6 class="about-contact-title">Kinh Nghiệm</h6>
+                                            <p class="about-contact-text">@Model.Experience</p>
+                                        </div>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.Email))
+                                {
+                                    <div class="about-contact">
+                                        <div class="icon">
+                                            <i class="fas fa-envelope"></i>
+                                        </div>
+                                        <div class="media-left">
+                                            <h6 class="about-contact-title">Địa Chỉ Email</h6>
+                                            <a href="mailto:@Model.Email" class="about-contact-text">@Model.Email</a>
+                                        </div>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.Phone))
+                                {
+                                    <div class="about-contact">
+                                        <div class="icon">
+                                            <i class="fas fa-phone"></i>
+                                        </div>
+                                        <div class="media-left">
+                                            <h6 class="about-contact-title">Số Điện Thoại</h6>
+                                            <a href="tel:@Model.Phone" class="about-contact-text">@Model.Phone</a>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <a href="@Url.Action("Index", "Contact")" class="th-btn">Liên Hệ <i class="fas fa-arrow-up-right ms-2"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            @if (!string.IsNullOrEmpty(Model.Bio))
+            {
+                <div class="row gy-40">
+                    <div class="col-xl-12">
+                        <h3 class="title mt-n2 mb-25">Về Tôi</h3>
+                        <p>@Model.Bio</p>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="fas fa-exclamation-triangle" style="font-size: 64px; color: var(--smoke-color); margin-bottom: 20px;"></i>
+                <p class="text-muted">Không tìm thấy thông tin tình nguyện viên này.</p>
+                <a href="@Url.Action("Index", "Volunteer")" class="th-btn style3 mt-3">Quay lại danh sách</a>
+            </div>
+        }
+    </div>
+</section>
+
