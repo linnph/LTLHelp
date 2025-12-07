@@ -1,0 +1,81 @@
+﻿@{
+    ViewData["Title"] = "Đăng ký tài khoản Admin";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Đăng ký tài khoản quản trị</h3>
+                </div>
+
+                <form asp-action="Index" asp-controller="Register" asp-area="Admin" method="post" class="needs-validation" novalidate>
+                    <div class="card-body">
+
+                        <!-- Email -->
+                        <div class="form-group">
+                            <label for="Email">Email (dùng để đăng nhập)</label>
+                            <input type="email" name="Email" class="form-control" placeholder="nhap@email.com" required />
+                            <div class="invalid-feedback">Vui lòng nhập email hợp lệ</div>
+                        </div>
+
+                        <!-- Họ tên -->
+                        <div class="form-group">
+                            <label for="FullName">Họ và tên</label>
+                            <input type="text" name="FullName" class="form-control" placeholder="Nguyễn Văn A" required />
+                            <div class="invalid-feedback">Vui lòng nhập họ tên</div>
+                        </div>
+
+                        <!-- Mật khẩu -->
+                        <div class="form-group">
+                            <label for="Password">Mật khẩu</label>
+                            <input type="password" name="Password" class="form-control" required minlength="6" />
+                            <div class="invalid-feedback">Mật khẩu ít nhất 6 ký tự</div>
+                        </div>
+
+                        <!-- Nhập lại mật khẩu -->
+                        <div class="form-group">
+                            <label for="ConfirmPassword">Nhập lại mật khẩu</label>
+                            <input type="password" name="ConfirmPassword" class="form-control" required />
+                            <div class="invalid-feedback">Vui lòng nhập lại mật khẩu</div>
+                        </div>
+
+                    </div>
+
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-user-plus"></i> Đăng ký ngay
+                        </button>
+                        <a asp-action="Index" asp-controller="Login" asp-area="Admin" class="btn btn-link float-right">
+                            Đã có tài khoản? Đăng nhập
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Bootstrap 4 validation
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                var forms = document.getElementsByClassName('needs-validation');
+                Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+}
