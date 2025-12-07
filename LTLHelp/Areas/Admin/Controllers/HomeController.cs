@@ -20,12 +20,12 @@ namespace LTLHelp.Areas.Admin.Controllers
         {
             var model = new DashboardViewModel();
 
-            model.TotalDonationAmount = await _context.TbDonations.SumAsync(d => d.Amount);
+            model.TotalDonationAmount = await _context.Donations.SumAsync(d => d.Amount);
 
-            model.PendingDonationsCount = (int)await _context.TbDonations
+            model.PendingDonationsCount = (int)await _context.Donations
                 .CountAsync(d => d.PaymentMethod == "Pending"); 
 
-            model.TotalActiveCampaigns = (int)await _context.TbCampaigns
+            model.TotalActiveCampaigns = (int)await _context.Campaigns
                 .CountAsync(c => c.IsActive == true);
 
             model.TotalDonorCount = (int)await _context.TbDonors.CountAsync();

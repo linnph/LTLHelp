@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<LTLHelp.Models.Campaign>
+@{
     ViewData["Title"] = "Home Page";
 }
 <div class="th-hero-wrapper hero-1" id="hero">
@@ -226,159 +227,65 @@ LTLHelpion Area
                 </div>
             </div>
         </div>
-        <div class="slider-area">
-            <div class="swiper th-slider has-shadow" id="ltlhelpionSlider1" data-slider-options='{"breakpoints":{"0":{"slidesPerView":1},"576":{"slidesPerView":"1"},"768":{"slidesPerView":"2"},"992":{"slidesPerView":"2"},"1200":{"slidesPerView":"3"}}, "autoHeight": "true"}'>
+            <div class="slider-area">
+                <div class="swiper th-slider has-shadow" id="ltlhelpionSlider1" data-slider-options='{"breakpoints":{"0":{"slidesPerView":1},"576":{"slidesPerView":"1"},"768":{"slidesPerView":"2"},"992":{"slidesPerView":"2"},"1200":{"slidesPerView":"3"}}, "autoHeight": "true"}'>
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <div class="ltlhelpion-card" data-theme-color="">
-                            <div class="ltlhelpion-card-shape" data-mask-src="~/assets/img/ltlhelpion/ltlhelpion-card-bg-shape1-1.png"></div>
-                            <div class="box-thumb">
-                                <img src="~/assets/img/ltlhelpion/ltlhelpion1-1.png" alt="image">
-                                <div class="ltlhelpion-card-tag">85%</div>
-                            </div>
-                            <div class="box-content">
-                                <h3 class="box-title"><a href="blog-details.html">Big charity: build school for poor children</a></h3>
-                                <div class="ltlhelpion-card_progress-wrap">
-
-                                    <div class="progress">
-                                        <div class="progress-bar" style="width: 85%;">
+                    @{
+                        var themeColors = new[] { "", "var(--theme-color2)", "#FF5528" };
+                        var imageIndexes = new[] { "1", "2", "3" };
+                        int colorIndex = 0;
+                        int imageIndex = 0;
+                    }
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach (var campaign in Model)
+                    {
+                        var progressPercent = campaign.GoalAmount > 0 
+                            ? (int)((campaign.RaisedAmount ?? 0) / campaign.GoalAmount.Value * 100) 
+                            : 0;
+                        var imageUrl = !string.IsNullOrEmpty(campaign.ImageUrl) 
+                            ? campaign.ImageUrl 
+                            : $"~/assets/img/ltlhelpion/ltlhelpion1-{imageIndexes[imageIndex % imageIndexes.Length]}.png";
+                        var themeColor = themeColors[colorIndex % themeColors.Length];
+                        
+                        <div class="swiper-slide">
+                            <div class="ltlhelpion-card" data-theme-color="@themeColor">
+                                <div class="ltlhelpion-card-shape" data-mask-src="~/assets/img/ltlhelpion/ltlhelpion-card-bg-shape1-1.png"></div>
+                                <div class="box-thumb">
+                                    <img src="@imageUrl" alt="@campaign.Title">
+                                    <div class="ltlhelpion-card-tag">@progressPercent%</div>
+                                </div>
+                                <div class="box-content">
+                                    <h3 class="box-title"><a href="@Url.Action("Details", "Campaign", new { id = campaign.CampaignId })">@campaign.Title</a></h3>
+                                    <div class="ltlhelpion-card_progress-wrap">
+                                        <div class="progress">
+                                            <div class="progress-bar" style="width: @progressPercent%;">
+                                            </div>
+                                        </div>
+                                        <div class="ltlhelpion-card_progress-content">
+                                            <span class="ltlhelpion-card_raise">Raised - @((campaign.RaisedAmount ?? 0).ToString("N0"))</span>
+                                            <span class="ltlhelpion-card_goal">Goal - @((campaign.GoalAmount ?? 0).ToString("N0"))</span>
                                         </div>
                                     </div>
-                                    <div class="ltlhelpion-card_progress-content">
-                                        <span class="ltlhelpion-card_raise">Raised - 5M</span>
-                                        <span class="ltlhelpion-card_goal">Goal - $10M</span>
-                                    </div>
+                                    <a href="@Url.Action("Checkout", "Donation", new { campaignId = campaign.CampaignId })" class="th-btn style6">Donate Now <i class="fas fa-arrow-up-right ms-2"></i></a>
                                 </div>
-                                <a href="blog-details.html" class="th-btn style6">LTLHelpe Now <i class="fas fa-arrow-up-right ms-2"></i></a>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="ltlhelpion-card" data-theme-color="var(--theme-color2)">
-                            <div class="ltlhelpion-card-shape" data-mask-src="~/assets/img/ltlhelpion/ltlhelpion-card-bg-shape1-1.png"></div>
-                            <div class="box-thumb">
-                                <img src="~/assets/img/ltlhelpion/ltlhelpion1-2.png" alt="image">
-                                <div class="ltlhelpion-card-tag">85%</div>
-                            </div>
-                            <div class="box-content">
-                                <h3 class="box-title"><a href="blog-details.html">Give health support for every homeless poor children</a></h3>
-                                <div class="ltlhelpion-card_progress-wrap">
-
-                                    <div class="progress">
-                                        <div class="progress-bar" style="width: 85%;">
-                                        </div>
-                                    </div>
-                                    <div class="ltlhelpion-card_progress-content">
-                                        <span class="ltlhelpion-card_raise">Raised - 5M</span>
-                                        <span class="ltlhelpion-card_goal">Goal - $10M</span>
-                                    </div>
+                        
+                        colorIndex++;
+                        imageIndex++;
+                        }
+                    }
+                    else
+                    {
+                        <div class="swiper-slide">
+                            <div class="ltlhelpion-card">
+                                <div class="box-content text-center p-4">
+                                    <p class="text-muted">Hiện tại chưa có chiến dịch nào. Vui lòng quay lại sau!</p>
                                 </div>
-                                <a href="blog-details.html" class="th-btn style6">LTLHelpe Now <i class="fas fa-arrow-up-right ms-2"></i></a>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="ltlhelpion-card" data-theme-color="#FF5528">
-                            <div class="ltlhelpion-card-shape" data-mask-src="~/assets/img/ltlhelpion/ltlhelpion-card-bg-shape1-1.png"></div>
-                            <div class="box-thumb">
-                                <img src="~/assets/img/ltlhelpion/ltlhelpion1-3.png" alt="image">
-                                <div class="ltlhelpion-card-tag">85%</div>
-                            </div>
-                            <div class="box-content">
-                                <h3 class="box-title"><a href="blog-details.html">Construct Dwellings African Impoverished Women</a></h3>
-                                <div class="ltlhelpion-card_progress-wrap">
-
-                                    <div class="progress">
-                                        <div class="progress-bar" style="width: 85%;">
-                                        </div>
-                                    </div>
-                                    <div class="ltlhelpion-card_progress-content">
-                                        <span class="ltlhelpion-card_raise">Raised - 5M</span>
-                                        <span class="ltlhelpion-card_goal">Goal - $10M</span>
-                                    </div>
-                                </div>
-                                <a href="blog-details.html" class="th-btn style6">LTLHelpe Now <i class="fas fa-arrow-up-right ms-2"></i></a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="ltlhelpion-card" data-theme-color="">
-                            <div class="ltlhelpion-card-shape" data-mask-src="~/assets/img/ltlhelpion/ltlhelpion-card-bg-shape1-1.png"></div>
-                            <div class="box-thumb">
-                                <img src="~/assets/img/ltlhelpion/ltlhelpion1-1.png" alt="image">
-                                <div class="ltlhelpion-card-tag">85%</div>
-                            </div>
-                            <div class="box-content">
-                                <h3 class="box-title"><a href="blog-details.html">Big charity: build school for poor children</a></h3>
-                                <div class="ltlhelpion-card_progress-wrap">
-
-                                    <div class="progress">
-                                        <div class="progress-bar" style="width: 80%;">
-                                        </div>
-                                    </div>
-                                    <div class="ltlhelpion-card_progress-content">
-                                        <span class="ltlhelpion-card_raise">Raised - 5M</span>
-                                        <span class="ltlhelpion-card_goal">Goal - $10M</span>
-                                    </div>
-                                </div>
-                                <a href="blog-details.html" class="th-btn style6">LTLHelpe Now <i class="fas fa-arrow-up-right ms-2"></i></a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="ltlhelpion-card" data-theme-color="var(--theme-color2)">
-                            <div class="ltlhelpion-card-shape" data-mask-src="~/assets/img/ltlhelpion/ltlhelpion-card-bg-shape1-1.png"></div>
-                            <div class="box-thumb">
-                                <img src="~/assets/img/ltlhelpion/ltlhelpion1-2.png" alt="image">
-                                <div class="ltlhelpion-card-tag">85%</div>
-                            </div>
-                            <div class="box-content">
-                                <h3 class="box-title"><a href="blog-details.html">Give health support for every homeless poor children</a></h3>
-                                <div class="ltlhelpion-card_progress-wrap">
-
-                                    <div class="progress">
-                                        <div class="progress-bar" style="width: 80%;">
-                                        </div>
-                                    </div>
-                                    <div class="ltlhelpion-card_progress-content">
-                                        <span class="ltlhelpion-card_raise">Raised - 5M</span>
-                                        <span class="ltlhelpion-card_goal">Goal - $10M</span>
-                                    </div>
-                                </div>
-                                <a href="blog-details.html" class="th-btn style6">LTLHelpe Now <i class="fas fa-arrow-up-right ms-2"></i></a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="ltlhelpion-card" data-theme-color="#FF5528">
-                            <div class="ltlhelpion-card-shape" data-mask-src="~/assets/img/ltlhelpion/ltlhelpion-card-bg-shape1-1.png"></div>
-                            <div class="box-thumb">
-                                <img src="~/assets/img/ltlhelpion/ltlhelpion1-3.png" alt="image">
-                                <div class="ltlhelpion-card-tag">85%</div>
-                            </div>
-                            <div class="box-content">
-                                <h3 class="box-title"><a href="blog-details.html">Construct Dwellings African Impoverished Women</a></h3>
-                                <div class="ltlhelpion-card_progress-wrap">
-
-                                    <div class="progress">
-                                        <div class="progress-bar" style="width: 80%;">
-                                        </div>
-                                    </div>
-                                    <div class="ltlhelpion-card_progress-content">
-                                        <span class="ltlhelpion-card_raise">Raised - 5M</span>
-                                        <span class="ltlhelpion-card_goal">Goal - $10M</span>
-                                    </div>
-                                </div>
-                                <a href="blog-details.html" class="th-btn style6">LTLHelpe Now <i class="fas fa-arrow-up-right ms-2"></i></a>
-                            </div>
-                        </div>
-                    </div>
-
+                    }
                 </div>
             </div>
         </div>

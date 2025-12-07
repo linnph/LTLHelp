@@ -82,12 +82,12 @@
         <div class="sidemenu-content">
             <button class="closeButton sideMenuCls"><i class="far fa-times"></i></button>
             <div class="widget woocommerce widget_shopping_cart">
-                <h3 class="widget_title">Shopping cart</h3>
+                <h3 class="widget_title">Giỏ quyên góp</h3>
                 <div class="widget_shopping_cart_content">
                     <ul class="woocommerce-mini-cart cart_list product_list_widget ">
                         <li class="woocommerce-mini-cart-item mini_cart_item">
                             <a href="index.html#" class="remove remove_from_cart_button"><i class="far fa-times"></i></a>
-                            <a href="index.html#"><img src="~/assets/img/product/product_thumb_1_1.png" alt="Cart Image">Books</a>
+                            <a href="index.html#"><img src="~/assets/img/product/product_thumb_1_1.png" alt="Cart Image">Sách</a>
                             <span class="quantity">
                                 1 ×
                                 <span class="woocommerce-Price-amount amount">
@@ -97,7 +97,7 @@
                         </li>
                         <li class="woocommerce-mini-cart-item mini_cart_item">
                             <a href="index.html#" class="remove remove_from_cart_button"><i class="far fa-times"></i></a>
-                            <a href="index.html#"><img src="~/assets/img/product/product_thumb_1_2.png" alt="Cart Image">Medicine</a>
+                            <a href="index.html#"><img src="~/assets/img/product/product_thumb_1_2.png" alt="Cart Image">Thuốc</a>
                             <span class="quantity">
                                 1 ×
                                 <span class="woocommerce-Price-amount amount">
@@ -107,7 +107,7 @@
                         </li>
                         <li class="woocommerce-mini-cart-item mini_cart_item">
                             <a href="index.html#" class="remove remove_from_cart_button"><i class="far fa-times"></i></a>
-                            <a href="index.html#"><img src="~/assets/img/product/product_thumb_1_3.png" alt="Cart Image">Dress</a>
+                            <a href="index.html#"><img src="~/assets/img/product/product_thumb_1_3.png" alt="Cart Image">Quần áo</a>
                             <span class="quantity">
                                 1 ×
                                 <span class="woocommerce-Price-amount amount">
@@ -117,7 +117,7 @@
                         </li>
                         <li class="woocommerce-mini-cart-item mini_cart_item">
                             <a href="index.html#" class="remove remove_from_cart_button"><i class="far fa-times"></i></a>
-                            <a href="index.html#"><img src="~/assets/img/product/product_thumb_1_4.png" alt="Cart Image">Chair</a>
+                            <a href="index.html#"><img src="~/assets/img/product/product_thumb_1_4.png" alt="Cart Image">Ghế</a>
                             <span class="quantity">
                                 1 ×
                                 <span class="woocommerce-Price-amount amount">
@@ -127,7 +127,7 @@
                         </li>
                         <li class="woocommerce-mini-cart-item mini_cart_item">
                             <a href="index.html#" class="remove remove_from_cart_button"><i class="far fa-times"></i></a>
-                            <a href="index.html#"><img src="~/assets/img/product/product_thumb_1_5.png" alt="Cart Image">Cloths</a>
+                            <a href="index.html#"><img src="~/assets/img/product/product_thumb_1_5.png" alt="Cart Image">Vải</a>
                             <span class="quantity">
                                 1 ×
                                 <span class="woocommerce-Price-amount amount">
@@ -137,14 +137,14 @@
                         </li>
                     </ul>
                     <p class="woocommerce-mini-cart__total total">
-                        <strong>Subtotal:</strong>
+                        <strong>Tổng cộng:</strong>
                         <span class="woocommerce-Price-amount amount">
                             <span class="woocommerce-Price-currencySymbol">$</span>4398.00
                         </span>
                     </p>
                     <p class="woocommerce-mini-cart__buttons buttons">
-                        <a href="cart.html" class="th-btn wc-forward">View cart</a>
-                        <a href="checkout.html" class="th-btn checkout wc-forward">Checkout</a>
+                        <a href="@Url.Action("Checkout", "Donation")" class="th-btn wc-forward">Xem giỏ</a>
+                        <a href="@Url.Action("Checkout", "Donation")" class="th-btn checkout wc-forward">Thanh toán</a>
                     </p>
                 </div>
             </div>
@@ -153,7 +153,7 @@
     <div class="popup-search-box d-none d-lg-block">
         <button class="searchClose"><i class="far fa-times"></i></button>
         <form action="index.html#">
-            <input type="text" placeholder="What are you looking for?">
+            <input type="text" placeholder="Bạn đang tìm kiếm gì?">
             <button type="submit"><i class="fal fa-search"></i></button>
         </form>
     </div>
@@ -164,87 +164,44 @@
         <div class="th-menu-area text-center">
             <button class="th-menu-toggle"><i class="fal fa-times"></i></button>
             <div class="mobile-logo">
-                <a href="index.html"><img src="~/assets/img/logo.svg" alt="LTLHelp"></a>
+                <a href="@Url.Action("Index", "Home")"><img src="~/assets/img/logo.svg" alt="LTLHelp"></a>
             </div>
             <div class="th-mobile-menu">
                 <ul>
+                    <li><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                    <li><a href="@Url.Action("About", "Home")">Giới thiệu</a></li>
                     <li class="menu-item-has-children">
-                        <a href="index.html">Home</a>
+                        <a href="@Url.Action("Index", "Campaign")">Chiến dịch</a>
                         <ul class="sub-menu">
-                            <li class="menu-item-has-children">
-                                <a href="index.html#">Multipage</a>
-                                <ul class="sub-menu">
-                                    <li><a href="index.html">Home One</a></li>
-                                    <li><a href="home-2.html">Home Two</a></li>
-                                    <li><a href="home-3.html">Home Three</a></li>
-                                    <li><a href="home-4.html">Home Four</a></li>
-                                    <li><a href="home-5.html">Home Five</a></li>
-                                </ul>
-                            </li>
-                            <li class="menu-item-has-children">
-                                <a href="index.html#">Onepage</a>
-                                <ul class="sub-menu">
-                                    <li><a href="home-1-op.html">Home One</a></li>
-                                    <li><a href="home-2-op.html">Home Two</a></li>
-                                    <li><a href="home-3-op.html">Home Three</a></li>
-                                    <li><a href="home-4-op.html">Home Four</a></li>
-                                    <li><a href="home-5-op.html">Home Five</a></li>
-                                </ul>
-                            </li>
-                            <li class="menu-item-has-children">
-                                <a href="index.html#">RTL</a>
-                                <ul class="sub-menu">
-                                    <li><a href="home-1-rtl.html">Home One</a></li>
-                                    <li><a href="home-2-rtl.html">Home Two</a></li>
-                                    <li><a href="home-3-rtl.html">Home Three</a></li>
-                                    <li><a href="home-4-rtl.html">Home Four</a></li>
-                                    <li><a href="home-5-rtl.html">Home Five</a></li>
-                                </ul>
-                            </li>
+                            <li><a href="@Url.Action("Index", "Campaign")">Danh sách chiến dịch</a></li>
+                            <li><a href="@Url.Action("Progress", "Campaign")">Tiến độ chiến dịch</a></li>
                         </ul>
                     </li>
-                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="@Url.Action("Index", "Donor")">Nhà tài trợ hàng đầu</a></li>
                     <li class="menu-item-has-children">
-                        <a href="index.html#">LTLHelpions</a>
+                        <a href="@Url.Action("Index", "Blog")">Tin tức</a>
                         <ul class="sub-menu">
-                            <li><a href="ltlhelpion.html">LTLHelpions</a></li>
-                            <li><a href="ltlhelpion-details.html">LTLHelpion Details</a></li>
-                            <li><a href="ltlhelpe-now.html">LTLHelpe Now</a></li>
+                            <li><a href="@Url.Action("Index", "Blog")">Danh sách tin tức</a></li>
                         </ul>
                     </li>
                     <li class="menu-item-has-children">
-                        <a href="index.html#">Pages</a>
+                        <a href="@Url.Action("Index", "Volunteer")">Tình nguyện viên</a>
                         <ul class="sub-menu">
-                            <li class="menu-item-has-children">
-                                <a href="index.html#">Shop</a>
-                                <ul class="sub-menu">
-                                    <li><a href="shop.html">Shop</a></li>
-                                    <li><a href="shop-details.html">Shop Details</a></li>
-                                    <li><a href="cart.html">Cart Page</a></li>
-                                    <li><a href="checkout.html">Checkout</a></li>
-                                    <li><a href="wishlist.html">Wishlist</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="team.html">Volunteers</a></li>
-                            <li><a href="team-details.html">Volunteer Details</a></li>
-                            <li><a href="add-team.html">Become A Volunteer</a></li>
-                            <li><a href="gallery.html">Gallery</a></li>
-                            <li><a href="pricing.html">Pricing</a></li>
-                            <li><a href="faq.html">FAQS</a></li>
-                            <li><a href="testimonial.html">Testimonials</a></li>
-                            <li><a href="error.html">Error Page</a></li>
+                            <li><a href="@Url.Action("Index", "Volunteer")">Danh sách tình nguyện viên</a></li>
+                            <li><a href="@Url.Action("Apply", "Volunteer")">Đăng ký tình nguyện viên</a></li>
                         </ul>
                     </li>
+                    <li><a href="@Url.Action("Index", "Contact")">Liên hệ</a></li>
                     <li class="menu-item-has-children">
-                        <a href="index.html#">Blog</a>
+                        <a href="#">Tài khoản</a>
                         <ul class="sub-menu">
-                            <li><a href="blog.html">Blog</a></li>
-                            <li><a href="blog-details.html">Blog Details</a></li>
+                            <li><a href="@Url.Action("Login", "Account")">Đăng nhập</a></li>
+                            <li><a href="@Url.Action("Register", "Account")">Đăng ký</a></li>
+                            <li><a href="@Url.Action("MyAccount", "Account")">Tài khoản của tôi</a></li>
+                            <li><a href="@Url.Action("History", "Donation")">Lịch sử quyên góp</a></li>
                         </ul>
                     </li>
-                    <li>
-                        <a href="contact.html">Contact Us</a>
-                    </li>
+                    <li><a href="@Url.Action("Checkout", "Donation")">Quyên góp ngay</a></li>
                 </ul>
             </div>
         </div>
@@ -278,7 +235,7 @@
                 <div class="row justify-content-center justify-content-lg-between align-items-center gy-2">
                     <div class="col-auto d-none d-lg-block">
                         <div class="header-logo">
-                            <a href="index.html"><img src="~/assets/img/logo.svg" alt="LTLHelp"></a>
+                            <a href="@Url.Action("Index", "Home")"><img src="~/assets/img/logo.svg" alt="LTLHelp"></a>
                         </div>
                     </div>
                     <div class="col-auto d-none d-md-block">
@@ -290,7 +247,7 @@
                                     <div class="bg-shape2" data-mask-src="~/assets/img/shape/info_card_icon_bg_shape_1_1.png"></div>
                                 </div>
                                 <div class="box-content">
-                                    <p class="box-text">Locate Address:</p>
+                                    <p class="box-text">Địa chỉ:</p>
                                     <h4 class="box-title"><a href="https://www.google.com/maps">Newyork City, USA</a></h4>
                                 </div>
                             </div>
@@ -301,7 +258,7 @@
                                     <div class="bg-shape2" data-mask-src="~/assets/img/shape/info_card_icon_bg_shape_1_1.png"></div>
                                 </div>
                                 <div class="box-content">
-                                    <p class="box-text">Call us any time:</p>
+                                    <p class="box-text">Gọi cho chúng tôi bất cứ lúc nào:</p>
                                     <h4 class="box-title"><a href="tel:16336547896">+163-3654-7896</a></h4>
                                 </div>
                             </div>
@@ -312,7 +269,7 @@
                                     <div class="bg-shape2" data-mask-src="~/assets/img/shape/info_card_icon_bg_shape_1_1.png"></div>
                                 </div>
                                 <div class="box-content">
-                                    <p class="box-text">Email us any time:</p>
+                                    <p class="box-text">Gửi email cho chúng tôi bất cứ lúc nào:</p>
                                     <h4 class="box-title"><a href="mailto:info@ltlhelp.com">info@ltlhelp.com</a></h4>
                                 </div>
                             </div>
@@ -336,14 +293,38 @@
                     <div class="menu-area-wrap">
                         <div class="col-auto d-inline-block d-lg-none">
                             <div class="header-logo">
-                                <a href="index.html"><img src="~/assets/img/logo-white.svg" alt="LTLHelp"></a>
+                                <a href="@Url.Action("Index", "Home")"><img src="~/assets/img/logo-white.svg" alt="LTLHelp"></a>
                             </div>
                         </div>
                         <nav class="main-menu d-none d-lg-block">
-                            
-                                @await Component.InvokeAsync("MenuTop")                          
+                            <ul>
+                                <li><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                                <li><a href="@Url.Action("About", "Home")">Giới thiệu</a></li>
+                                <li class="menu-item-has-children">
+                                    <a href="@Url.Action("Index", "Campaign")">Chiến dịch</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="@Url.Action("Index", "Campaign")">Danh sách chiến dịch</a></li>
+                                        <li><a href="@Url.Action("Progress", "Campaign")">Tiến độ chiến dịch</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="@Url.Action("Index", "Donor")">Nhà tài trợ hàng đầu</a></li>
+                                <li class="menu-item-has-children">
+                                    <a href="@Url.Action("Index", "Blog")">Tin tức</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="@Url.Action("Index", "Blog")">Danh sách tin tức</a></li>
+                                    </ul>
+                                </li>
+                                <li class="menu-item-has-children">
+                                    <a href="@Url.Action("Index", "Volunteer")">Tình nguyện viên</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="@Url.Action("Index", "Volunteer")">Danh sách tình nguyện viên</a></li>
+                                        <li><a href="@Url.Action("Apply", "Volunteer")">Đăng ký tình nguyện viên</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="@Url.Action("Index", "Contact")">Liên hệ</a></li>
+                            </ul>
                         </nav>
-                        <p class="header-notice"><img class="me-1" src="~/assets/img/icon/heart-icon.svg" alt="img">Are you ready to help them? Let’s become a volunteers...</p>
+                        <p class="header-notice"><img class="me-1" src="~/assets/img/icon/heart-icon.svg" alt="img">Bạn đã sẵn sàng giúp đỡ họ chưa? Hãy trở thành tình nguyện viên...</p>
                     </div>
                     <div class="header-button">
                         <button type="button" class="icon-btn style2 searchBoxToggler d-lg-block d-none"><i class="far fa-search"></i></button>
@@ -351,7 +332,18 @@
                             <span class="badge">5</span>
                             <i class="fa-regular fa-cart-shopping"></i>
                         </button>
-                        <a href="contact.html" class="th-btn style3 d-lg-block d-none"><i class="fas fa-heart me-2"></i> LTLHelpe Bây Giờ</a>
+                        <div class="dropdown d-lg-inline-block d-none">
+                            <button class="th-btn style2 dropdown-toggle" type="button" id="loginDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user me-2"></i> Tài khoản
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="loginDropdown">
+                                <li><a class="dropdown-item" href="@Url.Action("Login", "Account")"><i class="fas fa-sign-in-alt me-2"></i> Đăng nhập</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Register", "Account")"><i class="fas fa-user-plus me-2"></i> Đăng ký</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("MyAccount", "Account")"><i class="fas fa-user-circle me-2"></i> Tài khoản của tôi</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("History", "Donation")"><i class="fas fa-history me-2"></i> Lịch sử quyên góp</a></li>
+                            </ul>
+                        </div>
+                        <a href="@Url.Action("Checkout", "Donation")" class="th-btn style3 d-lg-block d-none"><i class="fas fa-heart me-2"></i> Quyên góp ngay</a>
                         <button type="button" class="icon-btn th-menu-toggle d-lg-none"><i class="far fa-bars"></i></button>
                     </div>
                 </div>
@@ -380,13 +372,13 @@
                 <div class="subscribe-box">
                     <div class="row gy-40 align-items-center justify-content-center">
                         <div class="col-xl-6">
-                            <h4 class="subscribe-box_title">Subscribe to Our Newsletter</h4>
-                            <p class="subscribe-box_text">Regular inspections and feedback mechanisms</p>
+                            <h4 class="subscribe-box_title">Đăng ký nhận bản tin</h4>
+                            <p class="subscribe-box_text">Kiểm tra định kỳ và cơ chế phản hồi</p>
                         </div>
                         <div class="col-xl-6 col-lg-8">
                             <form class="newsletter-form">
                                 <div class="form-group">
-                                    <input class="form-control" type="email" placeholder="Enter Email Address" required="">
+                                    <input class="form-control" type="email" placeholder="Nhập địa chỉ email" required="">
                                 </div>
                                 <button type="submit" class="th-btn style3"><i class="fas fa-paper-plane"></i></button>
                             </form>
@@ -402,37 +394,37 @@
                         <div class="widget footer-widget">
                             <div class="th-widget-about">
                                 <div class="about-logo">
-                                    <a href="index.html"><img src="~/assets/img/logo-white.svg" alt="LTLHelp"></a>
+                                    <a href="@Url.Action("Index", "Home")"><img src="~/assets/img/logo-white.svg" alt="LTLHelp"></a>
                                 </div>
-                                <p class="about-text"> Our secure online ltlhelpion platform allows you to make contributions quickly and safely. Choose from various.</p>
-                                <a href="contact.html" class="th-btn"><i class="fas fa-heart me-2"></i> LTLHelpe Now</a>
+                                <p class="about-text"> Nền tảng quyên góp trực tuyến an toàn của chúng tôi cho phép bạn đóng góp nhanh chóng và an toàn. Chọn từ nhiều phương thức thanh toán.</p>
+                                <a href="@Url.Action("Checkout", "Donation")" class="th-btn"><i class="fas fa-heart me-2"></i> Quyên góp ngay</a>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-6 col-xl-auto">
                         <div class="widget widget_nav_menu footer-widget">
-                            <h3 class="widget_title">Quick Links</h3>
+                            <h3 class="widget_title">Liên kết nhanh</h3>
                             <div class="menu-all-pages-container">
                                 <ul class="menu">
-                                    <li><a href="about.html">About Us</a></li>
-                                    <li><a href="blog.html">Our News</a></li>
-                                    <li><a href="about.html">Our Campaign</a></li>
-                                    <li><a href="contact.html">Privacy policy</a></li>
-                                    <li><a href="contact.html">Contact Us</a></li>
+                                    <li><a href="@Url.Action("About", "Home")">Về chúng tôi</a></li>
+                                    <li><a href="@Url.Action("Index", "Blog")">Tin tức của chúng tôi</a></li>
+                                    <li><a href="@Url.Action("Index", "Campaign")">Chiến dịch của chúng tôi</a></li>
+                                    <li><a href="@Url.Action("Index", "Contact")">Chính sách bảo mật</a></li>
+                                    <li><a href="@Url.Action("Index", "Contact")">Liên hệ</a></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-6 col-xl-auto">
                         <div class="widget widget_nav_menu footer-widget">
-                            <h3 class="widget_title">Our Service</h3>
+                            <h3 class="widget_title">Dịch vụ của chúng tôi</h3>
                             <div class="menu-all-pages-container">
                                 <ul class="menu">
-                                    <li><a href="ltlhelpe-now.html">Give LTLHelpion</a></li>
-                                    <li><a href="faq.html">Education Support</a></li>
-                                    <li><a href="faq.html">Food Support</a></li>
-                                    <li><a href="faq.html">Health Support</a></li>
-                                    <li><a href="gallery.html">Our Campaign </a></li>
+                                    <li><a href="@Url.Action("Checkout", "Donation")">Quyên góp</a></li>
+                                    <li><a href="@Url.Action("Index", "Campaign")">Hỗ trợ giáo dục</a></li>
+                                    <li><a href="@Url.Action("Index", "Campaign")">Hỗ trợ lương thực</a></li>
+                                    <li><a href="@Url.Action("Index", "Campaign")">Hỗ trợ y tế</a></li>
+                                    <li><a href="@Url.Action("Index", "Campaign")">Chiến dịch của chúng tôi</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -440,7 +432,7 @@
                     <div class="col-md-6 col-xl-auto">
                         <div class="widget footer-widget">
                             <div class="th-widget-contact">
-                                <h3 class="widget_title">Contact Us</h3>
+                                <h3 class="widget_title">Liên hệ chúng tôi</h3>
                                 <div class="info-card">
                                     <div class="box-icon">
                                         <i class="fal fa-phone"></i>
@@ -448,7 +440,7 @@
                                         <div class="bg-shape2" data-mask-src="~/assets/img/shape/info_card_icon_bg_shape_1_1.png"></div>
                                     </div>
                                     <div class="box-content">
-                                        <p class="box-text">Call us any time:</p>
+                                        <p class="box-text">Gọi cho chúng tôi bất cứ lúc nào:</p>
                                         <h4 class="box-title"><a href="tel:16336547896">+163-3654-7896</a></h4>
                                     </div>
                                 </div>
@@ -459,7 +451,7 @@
                                         <div class="bg-shape2" data-mask-src="~/assets/img/shape/info_card_icon_bg_shape_1_1.png"></div>
                                     </div>
                                     <div class="box-content">
-                                        <p class="box-text">Email us any time:</p>
+                                        <p class="box-text">Gửi email cho chúng tôi bất cứ lúc nào:</p>
                                         <h4 class="box-title"><a href="mailto:info@ltlhelp.com">info@ltlhelp.com</a></h4>
                                     </div>
                                 </div>
@@ -480,7 +472,7 @@
                 <div class="row justify-content-center gy-3 align-items-center">
                     <div class="col-lg-12">
                         <p class="copyright-text text-center">
-                            <i class="fal fa-copyright"></i> Copyright 2025 <a href="index.html">LTLHelp</a>. All Rights Reserved.
+                            <i class="fal fa-copyright"></i> Bản quyền 2025 <a href="@Url.Action("Index", "Home")">LTLHelp</a>. Bảo lưu mọi quyền.
                         </p>
                     </div>
                 </div>
