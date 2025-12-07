@@ -1,0 +1,195 @@
+@model LTLHelp.Models.Campaign
+@{
+    ViewData["Title"] = Model?.Title ?? "Chi Tiết Chiến Dịch";
+    var progressPercent = Model?.GoalAmount > 0 
+        ? (int)((Model.RaisedAmount ?? 0) / Model.GoalAmount.Value * 100) 
+        : 0;
+    var imageUrl = !string.IsNullOrEmpty(Model?.ImageUrl) 
+        ? (Model.ImageUrl.StartsWith("http://") || Model.ImageUrl.StartsWith("https://") 
+            ? Model.ImageUrl 
+            : (Model.ImageUrl.StartsWith("~") || Model.ImageUrl.StartsWith("/") 
+                ? Model.ImageUrl 
+                : "~/" + Model.ImageUrl.TrimStart('/')))
+        : "~/assets/img/donation/donation-s-1-1.png";
+    var organizerAvatarUrl = !string.IsNullOrEmpty(Model?.OrganizerAvatar) 
+        ? (Model.OrganizerAvatar.StartsWith("http://") || Model.OrganizerAvatar.StartsWith("https://") 
+            ? Model.OrganizerAvatar 
+            : (Model.OrganizerAvatar.StartsWith("~") || Model.OrganizerAvatar.StartsWith("/") 
+                ? Model.OrganizerAvatar 
+                : "~/" + Model.OrganizerAvatar.TrimStart('/')))
+        : "~/assets/img/blog/blog-author.jpg";
+}
+
+<!--==============================
+    Breadcumb
+============================== -->
+<div class="breadcumb-wrapper " data-bg-src="~/assets/img/bg/breadcumb-bg.jpg" data-overlay="theme">
+    <div class="container">
+        <div class="breadcumb-content">
+            <h1 class="breadcumb-title">Chi Tiết Chiến Dịch</h1>
+            <ul class="breadcumb-menu">
+                <li><a href="@Url.Action("Index", "Home")">Trang Chủ</a></li>
+                <li><a href="@Url.Action("Index", "Campaign")">Chiến Dịch</a></li>
+                <li>Chi Tiết</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--==============================
+    Chi Tiết Chiến Dịch Area
+==============================-->
+<section class="donation-details space-top space-extra2-bottom">
+    <div class="container">
+        <div class="row gx-40">
+            <div class="col-xxl-8 col-lg-7">
+                <div class="page-img">
+                    <img src="@(imageUrl.StartsWith("http://") || imageUrl.StartsWith("https://") ? imageUrl : Url.Content(imageUrl))" alt="@Model?.Title">
+                    @if (Model?.Category != null)
+                    {
+                        <div class="tag">@Model.Category.Name</div>
+                    }
+                </div>
+                <div class="blog-content">
+                    <h2 class="h3 page-title mt-n2">@(Model?.Title ?? "Chiến Dịch")</h2>
+                    <p class="mb-35">@(Model?.Content ?? Model?.Summary ?? "Tham gia các chiến dịch gây quỹ của chúng tôi để nâng cao nhận thức và quyên góp cho các dự án cụ thể. Tham gia các đợt vận động theo mùa, nỗ lực gây quỹ cộng đồng và các lời kêu gọi đặc biệt để giúp chúng tôi đạt được mục tiêu và giải quyết các nhu cầu cấp thiết.")</p>
+                    <div class="donation-progress-wrap mb-55">
+                        <div class="media-left">
+                            <div class="progress">
+                                <div class="progress-bar" style="width: @progressPercent%;">
+                                    <div class="progress-value">@progressPercent%</div>
+                                </div>
+                            </div>
+                            <div class="donation-progress-content">
+                                <span class="donation-card_raise">Đã Quyên Góp <span class="donation-card_raise-number">@((Model?.RaisedAmount ?? 0).ToString("N0")) VNĐ</span></span>
+                                <span class="donation-card_goal">Mục Tiêu <span class="donation-card_goal-number">@((Model?.GoalAmount ?? 0).ToString("N0")) VNĐ</span></span>
+                            </div>
+                        </div>
+                        <div class="btn-wrap">
+                            <a class="th-btn" href="@Url.Action("Checkout", "Donation", new { campaignId = Model?.CampaignId })">Quyên Góp Ngay <i class="fas fa-arrow-up-right ms-2"></i></a>
+                        </div>
+                    </div>
+                    
+                    @if (!string.IsNullOrEmpty(Model?.Content))
+                    {
+                        <h3 class="mb-15">Về Chiến Dịch</h3>
+                        <div class="mb-45">
+                            @Html.Raw(Model.Content)
+                        </div>
+                    }
+                    
+                    @if (!string.IsNullOrEmpty(Model?.Summary))
+                    {
+                        <h3 class="mb-15">Tóm Tắt</h3>
+                        <p class="mb-45">@Model.Summary</p>
+                    }
+                    
+                    @if (Model?.CampaignGalleries != null && Model.CampaignGalleries.Any())
+                    {
+                        <h3 class="mb-15">Hình Ảnh Chiến Dịch</h3>
+                        <div class="row gx-40 gy-30 align-items-center mb-40">
+                            @foreach (var gallery in Model.CampaignGalleries)
+                            {
+                                var galleryImageUrl = !string.IsNullOrEmpty(gallery.ImageUrl) 
+                                    ? (gallery.ImageUrl.StartsWith("http://") || gallery.ImageUrl.StartsWith("https://") 
+                                        ? gallery.ImageUrl 
+                                        : (gallery.ImageUrl.StartsWith("~") || gallery.ImageUrl.StartsWith("/") 
+                                            ? gallery.ImageUrl 
+                                            : "~/" + gallery.ImageUrl.TrimStart('/')))
+                                    : "~/assets/img/donation/donation-s-1-2.png";
+                                
+                                <div class="col-xl-6">
+                                    <div class="page-img mb-0">
+                                        <img src="@(galleryImageUrl.StartsWith("http://") || galleryImageUrl.StartsWith("https://") ? galleryImageUrl : Url.Content(galleryImageUrl))" alt="@gallery.Caption">
+                                        @if (!string.IsNullOrEmpty(gallery.Caption))
+                                        {
+                                            <p class="mt-2 text-center">@gallery.Caption</p>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    
+                    @if (Model?.CampaignUpdates != null && Model.CampaignUpdates.Any())
+                    {
+                        <h3 class="mb-15">Cập Nhật Chiến Dịch</h3>
+                        <div class="mb-40">
+                            @foreach (var update in Model.CampaignUpdates.OrderByDescending(u => u.CreatedAt))
+                            {
+                                <div class="mb-30 p-3 border rounded">
+                                    <h4 class="mb-2">@(update.Title ?? "Cập Nhật")</h4>
+                                    <p class="text-muted small mb-2">
+                                        <i class="fas fa-calendar"></i> @(update.CreatedAt?.ToString("dd/MM/yyyy HH:mm") ?? "")
+                                    </p>
+                                    <p>@(update.Content ?? "")</p>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="col-xxl-4 col-lg-5">
+                <aside class="sidebar-area donation-sidebar">
+                    @if (!string.IsNullOrEmpty(Model?.OrganizerName))
+                    {
+                        <div class="widget" data-bg-src="~/assets/img/bg/gray-bg2.png" data-overlay="gray" data-opacity="5">
+                            <div class="author-widget-wrap">
+                                <div class="author-tag">Người Tổ Chức:</div>
+                                <div class="avater">
+                                    <img src="@(organizerAvatarUrl.StartsWith("http://") || organizerAvatarUrl.StartsWith("https://") ? organizerAvatarUrl : Url.Content(organizerAvatarUrl))" alt="@Model.OrganizerName">
+                                </div>
+                                <div class="author-info">
+                                    <h4 class="name"><a class="text-inherit" href="#">@Model.OrganizerName</a></h4>
+                                    @if (Model.Category != null)
+                                    {
+                                        <span class="meta">
+                                            <a href="#"><i class="fas fa-tags"></i>@Model.Category.Name</a>
+                                        </span>
+                                    }
+                                    @if (Model.StartDate.HasValue)
+                                    {
+                                        <span class="meta">
+                                            <a href="#"><i class="fas fa-calendar"></i>Bắt đầu: @Model.StartDate.Value.ToString("dd/MM/yyyy")</a>
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    
+                    <div class="widget" data-bg-src="~/assets/img/bg/gray-bg2.png" data-overlay="gray" data-opacity="5">
+                        <div class="widget-donation-wrap">
+                            <div class="donate-price">50.000 VNĐ</div>
+                            <h4 class="title">Đóng Góp Của Bạn Tạo Nên Sự Khác Biệt</h4>
+                            <a class="th-btn" href="@Url.Action("Checkout", "Donation", new { campaignId = Model?.CampaignId })">Quyên Góp 50.000 VNĐ</a>
+                        </div>
+                    </div>
+                    
+                    @if (Model?.Donations != null && Model.Donations.Any())
+                    {
+                        <div class="widget" data-bg-src="~/assets/img/bg/gray-bg2.png" data-overlay="gray" data-opacity="5">
+                            <h3 class="widget_title">Nhà Tài Trợ Gần Đây</h3>
+                            <div class="recent-donate-wrap">
+                                @foreach (var donation in Model.Donations.Where(d => !(d.IsAnonymous ?? false)).OrderByDescending(d => d.CreatedAt).Take(5))
+                                {
+                                    <div class="recent-post">
+                                        <div class="media-img">
+                                            <a href="#"><img src="~/assets/img/widget/donor_1_1.jpg" alt="Donor"></a>
+                                        </div>
+                                        <div class="media-body">
+                                            <h4 class="post-title"><a class="text-inherit" href="#">@(donation.DonorName ?? "Người ủng hộ")</a></h4>
+                                            <div class="recent-post-meta">
+                                                <a href="#">@donation.Amount.ToString("N0") VNĐ</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </aside>
+            </div>
+        </div>
+    </div>
+</section>
+

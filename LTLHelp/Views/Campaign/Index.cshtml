@@ -1,0 +1,96 @@
+@model IEnumerable<LTLHelp.Models.Campaign>
+@{
+    ViewData["Title"] = "Danh Sách Chiến Dịch";
+}
+
+<!--==============================
+    Breadcumb
+============================== -->
+<div class="breadcumb-wrapper " data-bg-src="/assets/img/bg/cta-bg4-1.jpg" data-overlay="theme">
+    <div class="container">
+        <div class="breadcumb-content">
+            <h1 class="breadcumb-title">Chiến Dịch</h1>
+            <ul class="breadcumb-menu">
+                <li><a href="@Url.Action("Index", "Home")">Trang Chủ</a></li>
+                <li>Chiến Dịch</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--==============================
+Chiến Dịch Area  
+==============================-->
+<section class="space" id="donation-sec">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="title-area text-center">
+                    <span class="sub-title before-none after-none"><i class="far fa-heart text-theme"></i> Hãy Bắt Đầu Đóng Góp</span>
+                    <h2 class="sec-title">Xem Tác Động Của Bạn: Minh Bạch
+                        Các Chiến Dịch Đóng Góp</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row gy-30">
+            @if (Model != null && Model.Any())
+            {
+                var themeColors = new[] { "", "bg-theme2" };
+                int colorIndex = 0;
+                var imageIndexes = new[] { "1", "2", "3", "4", "5", "6" };
+                int imageIndex = 0;
+
+                @foreach (var campaign in Model)
+                {
+                    var progressPercent = campaign.GoalAmount > 0 
+                        ? (int)((campaign.RaisedAmount ?? 0) / campaign.GoalAmount.Value * 100) 
+                        : 0;
+                    var imageUrl = !string.IsNullOrEmpty(campaign.ImageUrl) 
+                        ? (campaign.ImageUrl.StartsWith("http://") || campaign.ImageUrl.StartsWith("https://") 
+                            ? campaign.ImageUrl 
+                            : (campaign.ImageUrl.StartsWith("~") || campaign.ImageUrl.StartsWith("/") 
+                                ? campaign.ImageUrl 
+                                : "~/" + campaign.ImageUrl.TrimStart('/')))
+                        : $"~/assets/img/donation/donation2-{imageIndexes[imageIndex % imageIndexes.Length]}.png";
+                    var tagClass = themeColors[colorIndex % themeColors.Length];
+                    
+                    <div class="col-xl-6">
+                        <div class="donation-card style3">
+                            <div class="box-thumb">
+                                <img src="@(imageUrl.StartsWith("http://") || imageUrl.StartsWith("https://") ? imageUrl : Url.Content(imageUrl))" alt="@campaign.Title">
+                                <div class="donation-card-tag @tagClass">@progressPercent%</div>
+                                <div class="donation-card-shape" data-mask-src="~/assets/img/donation/donation-card-shape2-1.png"></div>
+                            </div>
+                            <div class="box-content">
+                                <h3 class="box-title"><a href="@Url.Action("Details", "Campaign", new { id = campaign.CampaignId })">@campaign.Title</a></h3>
+                                <p>@(campaign.Summary ?? "Tham gia cộng đồng những người ủng hộ tận tâm bằng cách trở thành thành viên. Tận hưởng những lợi ích độc quyền.")</p>
+                                <div class="donation-card_progress-wrap">
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: @progressPercent%;">
+                                        </div>
+                                    </div>
+                                    <div class="donation-card_progress-content">
+                                        <span class="donation-card_raise">Đã Quyên Góp <span class="donation-card_raise-number">@((campaign.RaisedAmount ?? 0).ToString("N0")) VNĐ</span></span>
+                                        <span class="donation-card_goal">Mục Tiêu <span class="donation-card_goal-number">@((campaign.GoalAmount ?? 0).ToString("N0")) VNĐ</span></span>
+                                    </div>
+                                </div>
+                                <a href="@Url.Action("Details", "Campaign", new { id = campaign.CampaignId })" class="th-btn style6">Quyên Góp Ngay <i class="fas fa-arrow-up-right ms-2"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    colorIndex++;
+                    imageIndex++;
+                }
+            }
+            else
+            {
+                <div class="col-12">
+                    <div class="text-center py-5">
+                        <p class="text-muted">Hiện tại chưa có chiến dịch nào. Vui lòng quay lại sau!</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+

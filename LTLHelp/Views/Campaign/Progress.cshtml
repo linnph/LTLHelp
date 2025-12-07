@@ -1,0 +1,302 @@
+@model IEnumerable<LTLHelp.Models.Campaign>
+@{
+    ViewData["Title"] = "Tiến Độ Chiến Dịch";
+    var totalCampaigns = Model?.Count() ?? 0;
+    var totalRaised = Model?.Sum(c => c.RaisedAmount ?? 0) ?? 0;
+    var totalGoal = Model?.Sum(c => c.GoalAmount ?? 0) ?? 0;
+    var overallProgress = totalGoal > 0 ? (int)(totalRaised / totalGoal * 100) : 0;
+}
+
+<!--==============================
+    Breadcumb
+============================== -->
+<div class="breadcumb-wrapper " data-bg-src="/assets/img/bg/cta-bg4-1.jpg" data-overlay="theme">
+    <div class="container">
+        <div class="breadcumb-content">
+            <h1 class="breadcumb-title">Tiến Độ Chiến Dịch</h1>
+            <ul class="breadcumb-menu">
+                <li><a href="@Url.Action("Index", "Home")">Trang Chủ</a></li>
+                <li><a href="@Url.Action("Index", "Campaign")">Chiến Dịch</a></li>
+                <li>Tiến Độ</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--==============================
+Campaign Progress Area   
+==============================-->
+<div class="space overflow-hidden position-relative z-index-common">
+    <div class="container">
+        <!-- Campaign Summary -->
+        <div class="campaign-summary">
+            <h2 class="text-white mb-4">Thống Kê Tổng Quan Chiến Dịch</h2>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <h3>@totalCampaigns</h3>
+                    <p>Chiến Dịch Đang Hoạt Động</p>
+                </div>
+                <div class="summary-item">
+                    <h3>@totalRaised.ToString("N0") VNĐ</h3>
+                    <p>Tổng Đã Quyên Góp</p>
+                </div>
+                <div class="summary-item">
+                    <h3>@totalGoal.ToString("N0") VNĐ</h3>
+                    <p>Tổng Mục Tiêu</p>
+                </div>
+                <div class="summary-item">
+                    <h3>@overallProgress%</h3>
+                    <p>Tiến Độ Tổng Thể</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Campaign Progress Cards -->
+        <div class="row gy-30">
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var campaign in Model)
+                {
+                    var progressPercent = campaign.GoalAmount > 0 
+                        ? (int)((campaign.RaisedAmount ?? 0) / campaign.GoalAmount.Value * 100) 
+                        : 0;
+                    
+                    <div class="col-lg-6">
+                        <div class="campaign-progress-card">
+                            <h3><a href="@Url.Action("Details", "Campaign", new { id = campaign.CampaignId })" class="text-inherit">@campaign.Title</a></h3>
+                            <div class="campaign-stats">
+                                <div class="stat-item">
+                                    <div class="stat-label">Mục Tiêu</div>
+                                    <div class="stat-value">@((campaign.GoalAmount ?? 0).ToString("N0")) VNĐ</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">Đã Quyên Góp</div>
+                                    <div class="stat-value">@((campaign.RaisedAmount ?? 0).ToString("N0")) VNĐ</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">Tiến Độ</div>
+                                    <div class="stat-percentage">@progressPercent%</div>
+                                </div>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-label">
+                                    <span>Đã Quyên Góp: <strong>@((campaign.RaisedAmount ?? 0).ToString("N0")) VNĐ</strong></span>
+                                    <span>Mục Tiêu: <strong>@((campaign.GoalAmount ?? 0).ToString("N0")) VNĐ</strong></span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: @progressPercent%; background-color: var(--theme-color);" aria-valuenow="@progressPercent" aria-valuemin="0" aria-valuemax="100">
+                                        <span class="progress-value">@progressPercent%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <a href="@Url.Action("Details", "Campaign", new { id = campaign.CampaignId })" class="th-btn">Xem Chi Tiết <i class="fas fa-arrow-up-right ms-2"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12">
+                    <div class="campaign-progress-card text-center">
+                        <p class="text-muted">Hiện tại chưa có chiến dịch nào. Vui lòng quay lại sau!</p>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Chart Section -->
+        @if (Model != null && Model.Any())
+        {
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="campaign-progress-card">
+                        <h3>So Sánh Tiến Độ Chiến Dịch</h3>
+                        <div class="chart-container">
+                            <canvas id="campaignChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .campaign-progress-card {
+        background: var(--white-color);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.08);
+        margin-bottom: 30px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .campaign-progress-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.12);
+    }
+    .campaign-progress-card h3 {
+        color: var(--title-color);
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+    .campaign-stats {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    .stat-item {
+        flex: 1;
+        min-width: 150px;
+    }
+    .stat-label {
+        font-size: 14px;
+        color: var(--body-color);
+        margin-bottom: 5px;
+    }
+    .stat-value {
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--theme-color);
+    }
+    .stat-percentage {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--theme-color2);
+    }
+    .progress-container {
+        margin-top: 25px;
+    }
+    .progress-label {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 14px;
+        color: var(--body-color);
+    }
+    .progress-label strong {
+        color: var(--title-color);
+    }
+    .progress {
+        background: var(--smoke-color2);
+        height: 12px;
+        border-radius: 30px;
+        overflow: visible;
+        position: relative;
+    }
+    .progress .progress-bar {
+        border-radius: 30px;
+        position: relative;
+        overflow: visible;
+    }
+    .progress .progress-value {
+        position: absolute;
+        right: 0;
+        top: -30px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--theme-color);
+        background: var(--white-color);
+        padding: 4px 8px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .chart-container {
+        position: relative;
+        height: 300px;
+        margin-top: 30px;
+    }
+    .campaign-summary {
+        background: linear-gradient(135deg, var(--theme-color) 0%, var(--theme-dark) 100%);
+        border-radius: 20px;
+        padding: 40px;
+        color: var(--white-color);
+        margin-bottom: 40px;
+    }
+    .campaign-summary h2 {
+        color: var(--white-color);
+        margin-bottom: 30px;
+    }
+    .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 30px;
+    }
+    .summary-item {
+        text-align: center;
+    }
+    .summary-item h3 {
+        font-size: 36px;
+        font-weight: 700;
+        color: var(--white-color);
+        margin-bottom: 10px;
+    }
+    .summary-item p {
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0;
+    }
+</style>
+
+@if (Model != null && Model.Any())
+{
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('campaignChart');
+            if (ctx) {
+                const campaigns = @Html.Raw(Json.Serialize(Model.Select(c => new { 
+                    Title = c.Title, 
+                    Raised = c.RaisedAmount ?? 0, 
+                    Goal = c.GoalAmount ?? 0 
+                })));
+                
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: campaigns.map(c => c.Title.length > 20 ? c.Title.substring(0, 20) + '...' : c.Title),
+                        datasets: [{
+                            label: 'Đã Quyên Góp (VNĐ)',
+                            data: campaigns.map(c => c.Raised),
+                            backgroundColor: '#1A685B',
+                            borderColor: '#122F2A',
+                            borderWidth: 2
+                        }, {
+                            label: 'Mục Tiêu (VNĐ)',
+                            data: campaigns.map(c => c.Goal),
+                            backgroundColor: '#FFAC00',
+                            borderColor: '#FFAC00',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: 'So Sánh Tiến Độ Chiến Dịch'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return value.toLocaleString('vi-VN') + ' VNĐ';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+}
+
