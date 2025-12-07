@@ -4,21 +4,28 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>LTLHelp - Admin</title>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 </head>
-<body class="hold-transition  layout-fixed">
-    <div class="wrapper" >
+
+<body class="hold-transition layout-fixed">
+    <div class="wrapper">
+
+        <!-- Navbar -->
         <nav class="main-header navbar navbar-expand navbar-dark navbar-primary">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button">
+                        <i class="fas fa-bars"></i>
+                    </a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="/" class="nav-link">Trang chủ</a>
                 </li>
             </ul>
+
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="/Admin/Account/Logout">
@@ -27,87 +34,101 @@
                 </li>
             </ul>
         </nav>
+        <!-- /.navbar -->
+        <!-- Main Sidebar -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <a href="/Admin/Home/Index" class="brand-link">
+                <img src="~/assets/img/favicons/android-icon-192x192.png"
+                     alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <span class="brand-text font-weight-light">LTLHelp Admin</span>
+            </a>
 
-            <aside class="main-sidebar sidebar-dark-primary elevation-4">
-                <a href="/Admin/Home/Index" class="brand-link">
-                    <img src="~/assets/img/favicons/android-icon-192x192.png" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-                    <span class="brand-text font-weight-light">LTLHelp Admin</span>
-                </a>
-                <div class="sidebar">
-                    <nav class="mt-2">
-                        <ul class="nav nav-pills nav-sidebar flex-column nav-flat nav-compact nav-child-indent"
-                            data-widget="treeview" role="menu" data-accordion="false">
+            <div class="sidebar">
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column nav-flat nav-compact nav-child-indent"
+                        data-widget="treeview" role="menu" data-accordion="false">
 
-                            <li class="nav-item">
-                                <a href="/Admin/Home/Index"
-                                   class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" ? "active" : "")">
-                                    <i class="nav-icon fas fa-tachometer-alt"></i>
-                                    <p>Dashboard Tổng quan</p>
-                                </a>
-                            </li>
+                        <!-- DASHBOARD -->
+                        <li class="nav-item">
+                            <a href="/Admin/Home/Index"
+                               class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" ? "active" : "")">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>Dashboard Tổng quan</p>
+                            </a>
+                        </li>
 
-                            <li class="nav-header">QUẢN LÝ NGHIỆP VỤ</li>
+                        <li class="nav-header">QUẢN LÝ NGHIỆP VỤ</li>
 
-                            <li class="nav-item">
-                                <a href="/Admin/Donor"
-                                   class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Donor" ? "active" : "")">
-                                    <i class="nav-icon fas fa-users"></i> <p>Người dùng (Donor)</p>
-                                </a>
-                            </li>
+                        <!-- DONOR -->
+                        <li class="nav-item">
+                            <a href="/Admin/Donor"
+                               class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Donor" ? "active" : "")">
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>Người dùng (Donor)</p>
+                            </a>
+                        </li>
 
-                            <li class="nav-item">
-                                <a href="/Admin/Campaign"
-                                   class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Campaign" ? "active" : "")">
-                                    <i class="nav-icon fas fa-bullhorn"></i>
-                                    <p>Chiến dịch Quyên góp</p>
-                                </a>
-                            </li>
+                        <!-- CAMPAIGNS (đã sửa đúng route + active) -->
+                        <li class="nav-item">
+                            <a href="/Admin/Campaigns"
+                               class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Campaigns" ? "active" : "")">
+                                <i class="nav-icon fas fa-bullhorn"></i>
+                                <p>Chiến dịch Quyên góp</p>
+                            </a>
+                        </li>
 
-                            <li class="nav-item">
-                                <a href="/Admin/Donation"
-                                   class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Donation" ? "active" : "")">
-                                    <i class="nav-icon fas fa-donate"></i>
-                                    <p>Khoản Quyên góp</p>
-                                </a>
-                            </li>
+                        <!-- DONATION -->
+                        <li class="nav-item">
+                            <a href="/Admin/Donation"
+                               class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Donation" ? "active" : "")">
+                                <i class="nav-icon fas fa-donate"></i>
+                                <p>Khoản Quyên góp</p>
+                            </a>
+                        </li>
 
-                            <li class="nav-item">
-                                <a href="/Admin/Blog"
-                                   class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "active" : "")">
-                                    <i class="nav-icon fas fa-newspaper"></i>
-                                    <p>Tin tức - Bài viết</p>
-                                </a>
-                            </li>
+                        <!-- BLOG -->
+                        <li class="nav-item">
+                            <a href="/Admin/Blog"
+                               class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "active" : "")">
+                                <i class="nav-icon fas fa-newspaper"></i>
+                                <p>Tin tức - Bài viết</p>
+                            </a>
+                        </li>
 
-                            <li class="nav-header">PHÂN TÍCH & BÁO CÁO</li>
+                        <li class="nav-header">PHÂN TÍCH & BÁO CÁO</li>
 
-                            <li class="nav-item">
-                                <a href="/Admin/Report"
-                                   class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Report" ? "active" : "")">
-                                    <i class="nav-icon fas fa-chart-line"></i>
-                                    <p>Thống kê & Báo cáo</p>
-                                </a>
-                            </li>
+                        <!-- REPORT -->
+                        <li class="nav-item">
+                            <a href="/Admin/Report"
+                               class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Report" ? "active" : "")">
+                                <i class="nav-icon fas fa-chart-line"></i>
+                                <p>Thống kê & Báo cáo</p>
+                            </a>
+                        </li>
 
-                            <li class="nav-header">CẤU HÌNH HỆ THỐNG</li>
-                        </ul>
-                    </nav>
-                </div>
-            </aside>
+                        <li class="nav-header">CẤU HÌNH HỆ THỐNG</li>
+
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+        <!-- /.sidebar -->
+        <!-- Content Wrapper -->
         <div class="content-wrapper">
-            <section class="content">
+            <section class="content pt-3">
                 <div class="container-fluid">
                     @RenderBody()
                 </div>
             </section>
         </div>
 
-        <!-- Footer, JS -->
     </div>
 
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+
     @RenderSection("Scripts", required: false)
 </body>
 </html>

@@ -1,0 +1,54 @@
+﻿@model IEnumerable<LTLHelp.Models.Campaign>
+
+@{
+    ViewData["Title"] = "Quản lý chiến dịch";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Quản lý chiến dịch</h2>
+
+
+
+<p>
+    <a asp-action="Create" asp-controller="Campaigns" class="btn btn-primary">+ Thêm chiến dịch</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Tên chiến dịch</th>
+            <th>Mục tiêu</th>
+            <th>Đã quyên góp</th>
+            <th>Bắt đầu</th>
+            <th>Kết thúc</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@item.GoalAmount</td>
+                    <td>@item.RaisedAmount</td>
+                    <td>@item.StartDate?.ToString("dd/MM/yyyy")</td>
+                    <td>@item.EndDate?.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.CampaignId" class="btn btn-warning btn-sm">Sửa</a>
+
+                        <a asp-action="Delete"
+                           asp-route-id="@item.CampaignId"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
+
+                    </td>
+
+
+
+                </tr>
+            }
+        }
+    </tbody>
+</table>
