@@ -337,10 +337,22 @@
                                 <i class="fas fa-user me-2"></i> Tài khoản
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="loginDropdown">
-                                <li><a class="dropdown-item" href="@Url.Action("Login", "Account")"><i class="fas fa-sign-in-alt me-2"></i> Đăng nhập</a></li>
-                                <li><a class="dropdown-item" href="@Url.Action("Register", "Account")"><i class="fas fa-user-plus me-2"></i> Đăng ký</a></li>
-                                <li><a class="dropdown-item" href="@Url.Action("MyAccount", "Account")"><i class="fas fa-user-circle me-2"></i> Tài khoản của tôi</a></li>
-                                <li><a class="dropdown-item" href="@Url.Action("History", "Donation")"><i class="fas fa-history me-2"></i> Lịch sử quyên góp</a></li>
+                                @{
+                                    var userId = Context.Session.GetInt32("UserId");
+                                    var isLoggedIn = userId.HasValue;
+                                }
+                                @if (isLoggedIn)
+                                {
+                                    <li><a class="dropdown-item" href="@Url.Action("MyAccount", "Account")"><i class="fas fa-user-circle me-2"></i> Tài khoản của tôi</a></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("History", "Donation")"><i class="fas fa-history me-2"></i> Lịch sử quyên góp</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("Logout", "Account")"><i class="fas fa-sign-out-alt me-2"></i> Đăng xuất</a></li>
+                                }
+                                else
+                                {
+                                    <li><a class="dropdown-item" href="@Url.Action("Login", "Account")"><i class="fas fa-sign-in-alt me-2"></i> Đăng nhập</a></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("Register", "Account")"><i class="fas fa-user-plus me-2"></i> Đăng ký</a></li>
+                                }
                             </ul>
                         </div>
                         <a href="@Url.Action("Checkout", "Donation")" class="th-btn style3 d-lg-block d-none"><i class="fas fa-heart me-2"></i> Quyên góp ngay</a>
@@ -511,6 +523,8 @@
 
     <!-- Main Js File -->
     <script src="~/assets/js/main.js"></script>
+    
+    @RenderSection("Scripts", required: false)
 </body>
 
 </html>

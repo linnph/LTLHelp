@@ -1,0 +1,76 @@
+@{
+    ViewData["Title"] = "Đăng Ký";
+}
+
+<!--==============================
+    Breadcumb
+============================== -->
+<div class="breadcumb-wrapper " data-bg-src="/assets/img/bg/breadcumb-bg.jpg" data-overlay="theme">
+    <div class="container">
+        <div class="breadcumb-content">
+            <h1 class="breadcumb-title">Đăng Ký</h1>
+            <ul class="breadcumb-menu">
+                <li><a href="@Url.Action("Index", "Home")">Trang Chủ</a></li>
+                <li>Đăng Ký</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--==============================
+Register Area   
+==============================-->
+<div class="space overflow-hidden position-relative z-index-common">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-6 col-lg-8">
+                <div class="contact-form-v1">
+                    <div class="text-center mb-40">
+                        <h2 class="sec-title">Tạo Tài Khoản</h2>
+                        <p class="sec-text">Tham gia cùng chúng tôi ngay hôm nay và tạo sự khác biệt</p>
+                    </div>
+                    
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    
+                    <form asp-action="Register" method="POST" class="contact-form style-border">
+                        <div class="row">
+                            <div class="form-group style-border col-12">
+                                <i class="fal fa-user"></i>
+                                <input type="text" class="form-control" name="name" id="name" placeholder="Họ và Tên" required>
+                            </div>
+                            <div class="form-group style-border col-12">
+                                <i class="fal fa-envelope"></i>
+                                <input type="email" class="form-control" name="email" id="email" placeholder="Email" required>
+                            </div>
+                            <div class="form-group style-border col-12">
+                                <i class="fal fa-phone"></i>
+                                <input type="tel" class="form-control" name="phone" id="phone" placeholder="Số Điện Thoại" required>
+                            </div>
+                            <div class="form-group style-border col-12">
+                                <i class="fal fa-lock"></i>
+                                <input type="password" class="form-control" name="password" id="password" placeholder="Mật khẩu" required>
+                            </div>
+                            <div class="form-group style-border col-12">
+                                <i class="fal fa-lock"></i>
+                                <input type="password" class="form-control" name="confirm_password" id="confirm_password" placeholder="Xác nhận mật khẩu" required>
+                            </div>
+                            <div class="form-group col-12">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="terms" name="terms" required>
+                                    <label class="form-check-label" for="terms">Tôi đồng ý với <a href="@Url.Action("Privacy", "Home")" style="color: var(--theme-color);">Điều Khoản & Điều Kiện</a> và <a href="@Url.Action("Privacy", "Home")" style="color: var(--theme-color);">Chính Sách Bảo Mật</a></label>
+                                </div>
+                            </div>
+                            <div class="form-btn col-12">
+                                <button type="submit" class="th-btn w-100">Đăng Ký</button>
+                            </div>
+                            <div class="col-12 text-center mt-4">
+                                <p class="mb-0">Đã có tài khoản? <a href="@Url.Action("Login", "Account")" class="text-decoration-none" style="color: var(--theme-color); font-weight: 600;">Đăng Nhập Ngay</a></p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

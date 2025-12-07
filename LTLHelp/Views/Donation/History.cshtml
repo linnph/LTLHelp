@@ -1,0 +1,201 @@
+@model IEnumerable<LTLHelp.Models.Donation>
+@{
+    ViewData["Title"] = "Lịch Sử Quyên Góp";
+    var totalDonated = ViewBag.TotalDonated as decimal? ?? 0;
+    var totalDonations = ViewBag.TotalDonations as int? ?? 0;
+    var confirmedAmount = ViewBag.ConfirmedAmount as decimal? ?? 0;
+}
+
+<!--==============================
+    Breadcumb
+============================== -->
+<div class="breadcumb-wrapper " data-bg-src="/assets/img/bg/cta-bg4-1.jpg" data-overlay="theme">
+    <div class="container">
+        <div class="breadcumb-content">
+            <h1 class="breadcumb-title">Lịch Sử Quyên Góp</h1>
+            <ul class="breadcumb-menu">
+                <li><a href="@Url.Action("Index", "Home")">Trang Chủ</a></li>
+                <li>Lịch Sử Quyên Góp</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--==============================
+Donation History Area   
+==============================-->
+<div class="space overflow-hidden position-relative z-index-common">
+    <div class="container">
+        <!-- Donation Summary -->
+        <div class="donation-summary">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="donation-summary-item">
+                        <h3>@totalDonated.ToString("N0") VNĐ</h3>
+                        <p>Tổng Đã Quyên Góp</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="donation-summary-item">
+                        <h3>@totalDonations</h3>
+                        <p>Tổng Số Lần Quyên Góp</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="donation-summary-item">
+                        <h3>@confirmedAmount.ToString("N0") VNĐ</h3>
+                        <p>Số Tiền Đã Xác Nhận</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Donation Table -->
+        <div class="donation-table">
+            <h3 class="mb-4">Lịch Sử Quyên Góp</h3>
+            @if (Model != null && Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Ngày</th>
+                                <th>Chiến Dịch</th>
+                                <th>Số Tiền</th>
+                                <th>Trạng Thái</th>
+                                <th>Hành Động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var donation in Model)
+                            {
+                                var statusClass = (donation.Status == "Thành công" || donation.Status == "Đã thanh toán") 
+                                    ? "status-confirmed" 
+                                    : "status-pending";
+                                
+                                <tr>
+                                    <td>@(donation.CreatedAt?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                                    <td>
+                                        @if (donation.Campaign != null)
+                                        {
+                                            <a href="@Url.Action("Details", "Campaign", new { id = donation.Campaign.CampaignId })" class="text-theme">
+                                                @donation.Campaign.Title
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Chiến dịch không xác định</span>
+                                        }
+                                    </td>
+                                    <td><strong>@donation.Amount.ToString("N0") VNĐ</strong></td>
+                                    <td>
+                                        <span class="status-badge @statusClass">
+                                            @(donation.Status ?? "Chờ xác nhận")
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("Details", "Campaign", new { id = donation.CampaignId })" class="text-theme">
+                                            <i class="fas fa-eye me-1"></i> Xem
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-inbox" style="font-size: 64px; color: var(--smoke-color); margin-bottom: 20px;"></i>
+                    <p class="text-muted">Bạn chưa có lịch sử quyên góp nào. Hãy bắt đầu quyên góp ngay hôm nay!</p>
+                    <a href="@Url.Action("Index", "Campaign")" class="th-btn style3 mt-3">
+                        <i class="fas fa-heart me-2"></i> Xem Chiến Dịch
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .donation-summary {
+        background: var(--smoke-color);
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 40px;
+    }
+    .donation-summary-item {
+        text-align: center;
+    }
+    .donation-summary-item h3 {
+        font-size: 32px;
+        color: var(--theme-color);
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+    .donation-summary-item p {
+        margin: 0;
+        color: var(--body-color);
+        font-weight: 600;
+    }
+    .status-badge {
+        display: inline-block;
+        padding: 6px 16px;
+        border-radius: 50px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+    .status-pending {
+        background: #FFF3CD;
+        color: #856404;
+    }
+    .status-confirmed {
+        background: #D4EDDA;
+        color: #155724;
+    }
+    .donation-table {
+        background: var(--white-color);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.08);
+    }
+    .donation-table h3 {
+        color: var(--title-color);
+        font-weight: 700;
+        margin-bottom: 25px;
+    }
+    .donation-table table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .donation-table thead {
+        background: var(--smoke-color);
+    }
+    .donation-table th {
+        padding: 15px;
+        text-align: left;
+        font-weight: 600;
+        color: var(--title-color);
+        border-bottom: 2px solid var(--th-border-color);
+    }
+    .donation-table td {
+        padding: 15px;
+        border-bottom: 1px solid var(--th-border-color);
+        vertical-align: middle;
+    }
+    .donation-table tbody tr:hover {
+        background: var(--smoke-color);
+    }
+    .donation-table .text-theme {
+        color: var(--theme-color);
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s;
+    }
+    .donation-table .text-theme:hover {
+        color: var(--theme-dark);
+        text-decoration: underline;
+    }
+</style>
+

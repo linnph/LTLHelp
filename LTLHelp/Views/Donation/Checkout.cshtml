@@ -1,0 +1,388 @@
+@model LTLHelp.Models.Donation
+@{
+    ViewData["Title"] = "Thanh Toán Quyên Góp";
+    var campaign = ViewBag.Campaign as Campaign;
+    var paymentMethods = ViewBag.PaymentMethods as List<PaymentMethod> ?? new List<PaymentMethod>();
+}
+
+<!--==============================
+    Breadcumb
+============================== -->
+<div class="breadcumb-wrapper " data-bg-src="/assets/img/bg/cta-bg4-1.jpg" data-overlay="theme">
+    <div class="container">
+        <div class="breadcumb-content">
+            <h1 class="breadcumb-title">Thanh Toán Quyên Góp</h1>
+            <ul class="breadcumb-menu">
+                <li><a href="@Url.Action("Index", "Home")">Trang Chủ</a></li>
+                <li>Thanh Toán Quyên Góp</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--==============================
+Donate Checkout Area   
+==============================-->
+<div class="donate-checkout-wrapper space-top space-extra-bottom">
+    <div class="container">
+        <div class="row gy-4">
+            <!-- Campaign Information (Left Side) -->
+            @if (campaign != null)
+            {
+                <div class="col-lg-5">
+                    <div class="campaign-info-card">
+                        <div class="campaign-image">
+                            @{
+                                var campaignImageUrl = !string.IsNullOrEmpty(campaign.ImageUrl)
+                                    ? (campaign.ImageUrl.StartsWith("http://") || campaign.ImageUrl.StartsWith("https://") || campaign.ImageUrl.StartsWith("/")
+                                        ? campaign.ImageUrl
+                                        : Url.Content($"~/assets/img/donation/{campaign.ImageUrl}"))
+                                    : Url.Content("~/assets/img/donation/donation2-1.png");
+                                var progressPercent = campaign.GoalAmount > 0
+                                    ? (int)((campaign.RaisedAmount ?? 0) / campaign.GoalAmount.Value * 100)
+                                    : 0;
+                            }
+                            <img src="@(campaignImageUrl.StartsWith("http://") || campaignImageUrl.StartsWith("https://") ? campaignImageUrl : Url.Content(campaignImageUrl))" alt="@campaign.Title">
+                            <div class="campaign-badge">@progressPercent%</div>
+                        </div>
+                        <h3 class="campaign-title">@campaign.Title</h3>
+                        <p class="campaign-description">@(campaign.Content ?? campaign.Summary ?? "Tham gia cộng đồng những người ủng hộ tận tâm bằng cách trở thành thành viên. Tận hưởng những lợi ích độc quyền.")</p>
+                        <div class="progress-info">
+                            <div class="progress">
+                                <div class="progress-bar" style="width: @progressPercent%;"></div>
+                            </div>
+                            <div class="progress-stats">
+                                <span class="raised">Đã Quyên Góp: @((campaign.RaisedAmount ?? 0).ToString("N0")) VNĐ</span>
+                                <span class="goal">Mục Tiêu: @((campaign.GoalAmount ?? 0).ToString("N0")) VNĐ</span>
+                            </div>
+                        </div>
+                        <div class="campaign-meta">
+                            @if (campaign.StartDate.HasValue)
+                            {
+                                <p style="color: var(--body-color); margin-bottom: 10px;"><i class="fas fa-calendar-alt me-2" style="color: var(--theme-color);"></i><strong>Ngày Bắt Đầu:</strong> @campaign.StartDate.Value.ToString("dd/MM/yyyy")</p>
+                            }
+                            @if (campaign.EndDate.HasValue)
+                            {
+                                <p style="color: var(--body-color); margin-bottom: 0;"><i class="fas fa-calendar-check me-2" style="color: var(--theme-color);"></i><strong>Ngày Kết Thúc:</strong> @campaign.EndDate.Value.ToString("dd/MM/yyyy")</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Donation Form (Right Side) -->
+            <div class="@(campaign != null ? "col-lg-7" : "col-lg-12")">
+                <div class="donation-form-card">
+                    <h3><i class="fas fa-heart me-2" style="color: var(--theme-color);"></i>Hoàn Tất Quyên Góp Của Bạn</h3>
+                    
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    
+                    <form asp-action="Checkout" method="POST" id="donationForm">
+                        <input type="hidden" asp-for="CampaignId" value="@(campaign?.CampaignId ?? Model?.CampaignId ?? 0)" />
+                        
+                        <!-- Donation Amount -->
+                        <div class="donation-amount-section">
+                            <label>Số Tiền Quyên Góp <span style="color: var(--error-color);">*</span></label>
+                            <div class="donation-amount-options">
+                                <div class="donation-amount-btn" data-amount="50000">50.000 VNĐ</div>
+                                <div class="donation-amount-btn" data-amount="100000">100.000 VNĐ</div>
+                                <div class="donation-amount-btn" data-amount="200000">200.000 VNĐ</div>
+                                <div class="donation-amount-btn" data-amount="500000">500.000 VNĐ</div>
+                                <div class="donation-amount-btn" data-amount="1000000">1.000.000 VNĐ</div>
+                            </div>
+                            <input type="number" class="custom-amount-input" id="customAmount" placeholder="Hoặc nhập số tiền tùy chọn (VNĐ)" asp-for="Amount" required min="10000" step="1000">
+                            <span asp-validation-for="Amount" class="text-danger"></span>
+                        </div>
+
+                        <!-- Personal Information -->
+                        <div class="form-section">
+                            <label>Họ và Tên <span style="color: var(--error-color);">*</span></label>
+                            <input type="text" class="form-control" asp-for="DonorName" required placeholder="Nhập họ và tên của bạn">
+                            <span asp-validation-for="DonorName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-section">
+                            <label>Email <span style="color: var(--error-color);">*</span></label>
+                            <input type="email" class="form-control" asp-for="DonorEmail" required placeholder="your.email@example.com">
+                            <span asp-validation-for="DonorEmail" class="text-danger"></span>
+                        </div>
+
+                        <!-- Message Section -->
+                        <div class="form-section">
+                            <label>Lời Nhắn (Tùy chọn)</label>
+                            <textarea class="form-control" asp-for="DonorMessage" placeholder="Để lại lời nhắn động viên hoặc hỗ trợ cho chiến dịch..."></textarea>
+                            <small style="color: var(--body-color); font-size: 13px;">Lời nhắn của bạn sẽ được chia sẻ với ban tổ chức chiến dịch và có thể được hiển thị công khai.</small>
+                        </div>
+
+                        <!-- Anonymous Donation -->
+                        <div class="anonymous-donation">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="IsAnonymous" value="true" id="anonymousDonation" @(Model != null && Model.IsAnonymous == true ? "checked" : "")>
+                                <label class="form-check-label" for="anonymousDonation">
+                                    Quyên góp ẩn danh
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Payment Method -->
+                        <div class="payment-methods">
+                            <label style="margin-bottom: 15px;">Phương Thức Thanh Toán <span style="color: var(--error-color);">*</span></label>
+                            @if (paymentMethods.Any())
+                            {
+                                @foreach (var method in paymentMethods)
+                                {
+                                    <div class="payment-method-item">
+                                        <input type="radio" id="payment_@method.PaymentMethodId" name="PaymentMethodId" value="@method.PaymentMethodId" required @(method == paymentMethods.First() ? "checked" : "")>
+                                        <label for="payment_@method.PaymentMethodId">
+                                            <i class="fas fa-credit-card me-2"></i> @method.Name
+                                        </label>
+                                        @if (!string.IsNullOrEmpty(method.Description))
+                                        {
+                                            <small style="display: block; margin-left: 30px; color: var(--body-color); font-size: 13px;">@method.Description</small>
+                                        }
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <p class="text-muted">Hiện tại chưa có phương thức thanh toán nào. Vui lòng liên hệ quản trị viên.</p>
+                            }
+                        </div>
+
+                        <!-- Terms Agreement -->
+                        <div class="form-section">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                                <label class="form-check-label" for="agreeTerms">
+                                    Tôi đồng ý với <a href="@Url.Action("Privacy", "Home")" target="_blank" style="color: var(--theme-color);">Điều Khoản & Điều Kiện</a> và <a href="@Url.Action("Privacy", "Home")" target="_blank" style="color: var(--theme-color);">Chính Sách Bảo Mật</a>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="th-btn style3 donate-submit-btn">
+                            <i class="fas fa-heart me-2"></i> Hoàn Tất Quyên Góp
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .donate-checkout-wrapper {
+        padding: 80px 0;
+    }
+    .campaign-info-card {
+        background: var(--white-color);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.08);
+        margin-bottom: 30px;
+    }
+    .campaign-info-card .campaign-image {
+        border-radius: 15px;
+        overflow: hidden;
+        margin-bottom: 25px;
+        position: relative;
+    }
+    .campaign-info-card .campaign-image img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+    .campaign-info-card .campaign-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: var(--theme-color);
+        color: var(--white-color);
+        padding: 8px 18px;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 14px;
+    }
+    .campaign-info-card .campaign-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--title-color);
+        margin-bottom: 15px;
+        line-height: 1.4;
+    }
+    .campaign-info-card .campaign-description {
+        color: var(--body-color);
+        line-height: 1.8;
+        margin-bottom: 25px;
+    }
+    .campaign-info-card .progress-info {
+        margin-bottom: 20px;
+    }
+    .campaign-info-card .progress {
+        height: 8px;
+        background: var(--smoke-color);
+        border-radius: 30px;
+        margin-bottom: 15px;
+    }
+    .campaign-info-card .progress-bar {
+        background: var(--theme-color);
+        border-radius: 30px;
+        height: 100%;
+    }
+    .campaign-info-card .progress-stats {
+        display: flex;
+        justify-content: space-between;
+        font-size: 16px;
+        font-weight: 600;
+    }
+    .campaign-info-card .progress-stats .raised {
+        color: var(--title-color);
+    }
+    .campaign-info-card .progress-stats .goal {
+        color: var(--theme-color);
+    }
+    .donation-form-card {
+        background: var(--white-color);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.08);
+    }
+    .donation-form-card h3 {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--title-color);
+        margin-bottom: 30px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid var(--smoke-color);
+    }
+    .donation-amount-section {
+        margin-bottom: 30px;
+    }
+    .donation-amount-section label {
+        font-weight: 600;
+        color: var(--title-color);
+        margin-bottom: 15px;
+        display: block;
+    }
+    .donation-amount-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    .donation-amount-btn {
+        padding: 12px 20px;
+        border: 2px solid var(--th-border-color);
+        background: var(--white-color);
+        border-radius: 10px;
+        text-align: center;
+        font-weight: 600;
+        color: var(--title-color);
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .donation-amount-btn:hover,
+    .donation-amount-btn.active {
+        border-color: var(--theme-color);
+        background: var(--theme-color);
+        color: var(--white-color);
+    }
+    .custom-amount-input {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid var(--th-border-color);
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+    }
+    .custom-amount-input:focus {
+        outline: none;
+        border-color: var(--theme-color);
+    }
+    .form-section {
+        margin-bottom: 25px;
+    }
+    .form-section label {
+        font-weight: 600;
+        color: var(--title-color);
+        margin-bottom: 8px;
+        display: block;
+    }
+    .form-section .form-control {
+        padding: 12px 15px;
+        border: 2px solid var(--th-border-color);
+        border-radius: 10px;
+    }
+    .form-section .form-control:focus {
+        border-color: var(--theme-color);
+        box-shadow: none;
+    }
+    .form-section textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+    .payment-methods {
+        margin-bottom: 30px;
+    }
+    .payment-method-item {
+        padding: 15px;
+        border: 2px solid var(--th-border-color);
+        border-radius: 10px;
+        margin-bottom: 15px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .payment-method-item:hover {
+        border-color: var(--theme-color);
+    }
+    .payment-method-item input[type="radio"] {
+        margin-right: 10px;
+    }
+    .payment-method-item label {
+        margin: 0;
+        cursor: pointer;
+        font-weight: 600;
+        color: var(--title-color);
+    }
+    .donate-submit-btn {
+        width: 100%;
+        padding: 18px;
+        font-size: 18px;
+        font-weight: 600;
+    }
+    .anonymous-donation {
+        margin-bottom: 25px;
+    }
+    .anonymous-donation .form-check-input {
+        margin-top: 0.3rem;
+    }
+</style>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Donation amount button selection
+        document.addEventListener('DOMContentLoaded', function() {
+            const amountButtons = document.querySelectorAll('.donation-amount-btn');
+            const customAmountInput = document.getElementById('customAmount');
+
+            amountButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    amountButtons.forEach(btn => btn.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    // Set the amount in custom input
+                    const amount = this.getAttribute('data-amount');
+                    customAmountInput.value = amount;
+                });
+            });
+
+            // Clear button selection when typing custom amount
+            customAmountInput.addEventListener('input', function() {
+                amountButtons.forEach(btn => btn.classList.remove('active'));
+            });
+        });
+    </script>
+}
+

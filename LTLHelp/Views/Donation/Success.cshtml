@@ -1,0 +1,180 @@
+@{
+    ViewData["Title"] = "Quyên Góp Thành Công";
+    var donation = ViewBag.Donation as Donation;
+}
+
+<!--==============================
+    Breadcumb
+============================== -->
+<div class="breadcumb-wrapper " data-bg-src="/assets/img/bg/cta-bg4-1.jpg" data-overlay="theme">
+    <div class="container">
+        <div class="breadcumb-content">
+            <h1 class="breadcumb-title">Quyên Góp Thành Công</h1>
+            <ul class="breadcumb-menu">
+                <li><a href="@Url.Action("Index", "Home")">Trang Chủ</a></li>
+                <li>Quyên Góp Thành Công</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--==============================
+Success Area   
+==============================-->
+<section class="space overflow-hidden position-relative z-index-common">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="success-card text-center">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2 class="success-title">Cảm Ơn Bạn Đã Quyên Góp!</h2>
+                    <p class="success-message">
+                        Quyên góp của bạn đã được ghi nhận thành công. Sự đóng góp của bạn sẽ tạo ra sự khác biệt tích cực trong cuộc sống của những người cần giúp đỡ.
+                    </p>
+                    
+                    @if (donation != null)
+                    {
+                        <div class="donation-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Mã Quyên Góp:</span>
+                                <span class="detail-value">#@donation.DonationId</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Số Tiền:</span>
+                                <span class="detail-value">@donation.Amount.ToString("N0") VNĐ</span>
+                            </div>
+                            @if (donation.Campaign != null)
+                            {
+                                <div class="detail-item">
+                                    <span class="detail-label">Chiến Dịch:</span>
+                                    <span class="detail-value">@donation.Campaign.Title</span>
+                                </div>
+                            }
+                            <div class="detail-item">
+                                <span class="detail-label">Trạng Thái:</span>
+                                <span class="detail-value status-badge status-pending">@(donation.Status ?? "Chờ xác nhận")</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Thời Gian:</span>
+                                <span class="detail-value">@(donation.CreatedAt?.ToString("dd/MM/yyyy HH:mm") ?? DateTime.Now.ToString("dd/MM/yyyy HH:mm"))</span>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="success-actions">
+                        <a href="@Url.Action("Index", "Campaign")" class="th-btn style3 me-3">
+                            <i class="fas fa-heart me-2"></i> Xem Thêm Chiến Dịch
+                        </a>
+                        <a href="@Url.Action("History", "Donation")" class="th-btn style2">
+                            <i class="fas fa-history me-2"></i> Lịch Sử Quyên Góp
+                        </a>
+                    </div>
+
+                    <div class="success-note">
+                        <p><i class="fas fa-info-circle me-2"></i>Bạn sẽ nhận được email xác nhận quyên góp trong vài phút tới. Vui lòng kiểm tra hộp thư của bạn.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .success-card {
+        background: var(--white-color);
+        border-radius: 20px;
+        padding: 60px 40px;
+        box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.1);
+        margin: 60px 0;
+    }
+    .success-icon {
+        font-size: 80px;
+        color: #28a745;
+        margin-bottom: 30px;
+        animation: scaleIn 0.5s ease-out;
+    }
+    @@keyframes scaleIn {
+        from {
+            transform: scale(0);
+            opacity: 0;
+        }
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+    .success-title {
+        font-size: 36px;
+        font-weight: 700;
+        color: var(--title-color);
+        margin-bottom: 20px;
+    }
+    .success-message {
+        font-size: 18px;
+        color: var(--body-color);
+        line-height: 1.8;
+        margin-bottom: 40px;
+    }
+    .donation-details {
+        background: var(--smoke-color);
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 40px;
+        text-align: left;
+    }
+    .detail-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid var(--th-border-color);
+    }
+    .detail-item:last-child {
+        border-bottom: none;
+    }
+    .detail-label {
+        font-weight: 600;
+        color: var(--body-color);
+    }
+    .detail-value {
+        font-weight: 700;
+        color: var(--title-color);
+        font-size: 18px;
+    }
+    .status-badge {
+        display: inline-block;
+        padding: 6px 16px;
+        border-radius: 50px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+    .status-pending {
+        background: #FFF3CD;
+        color: #856404;
+    }
+    .status-confirmed {
+        background: #D4EDDA;
+        color: #155724;
+    }
+    .success-actions {
+        margin-bottom: 30px;
+    }
+    .success-note {
+        background: #E7F3FF;
+        border-left: 4px solid var(--theme-color);
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 30px;
+    }
+    .success-note p {
+        margin: 0;
+        color: var(--body-color);
+        font-size: 14px;
+    }
+    .success-note i {
+        color: var(--theme-color);
+    }
+</style>
+
