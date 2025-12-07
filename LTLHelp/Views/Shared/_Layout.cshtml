@@ -1,4 +1,5 @@
-﻿<!doctype html>
+﻿@using Microsoft.AspNetCore.Http
+<!doctype html>
 <html class="no-js" lang="zxx" dir="ltr">
 
 <head>
@@ -188,6 +189,7 @@
                         <ul class="sub-menu">
                             <li><a href="@Url.Action("Index", "Volunteer")">Danh sách tình nguyện viên</a></li>
                             <li><a href="@Url.Action("Apply", "Volunteer")">Đăng ký tình nguyện viên</a></li>
+                            <li><a href="@Url.Action("Index", "Testimonial")">Đánh giá</a></li>
                         </ul>
                     </li>
                     <li><a href="@Url.Action("Index", "Contact")">Liên hệ</a></li>
@@ -313,6 +315,7 @@
                                     <ul class="sub-menu">
                                         <li><a href="@Url.Action("Index", "Volunteer")">Danh sách</a></li>
                                         <li><a href="@Url.Action("Apply", "Volunteer")">Đăng ký</a></li>
+                                        <li><a href="@Url.Action("Index", "Testimonial")">Đánh giá</a></li>
                                     </ul>
                                 </li>
                                 <li><a href="@Url.Action("Index", "Contact")">Liên hệ</a></li>

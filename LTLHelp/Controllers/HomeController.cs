@@ -43,11 +43,30 @@ public class HomeController : Controller
                 .Take(3)
                 .ToListAsync();
 
-            // 4. Lấy 3 lời chứng thực (Testimonials)
-            // Lưu ý: Bảng Testimonials chưa có trong database, 
-            // có thể tạo bảng sau hoặc lấy từ BlogComments/ContactMessages
-            // Tạm thời để danh sách rỗng, có thể thêm sau
-            viewModel.Testimonials = new List<Testimonial>();
+            // 4. Lấy 3 lời chứng thực (Testimonials) từ database
+            var testimonials = await _context.Testimonials
+                .Where(t => t.IsActive == true)
+                .OrderByDescending(t => t.CreatedAt ?? DateTime.MinValue)
+                .ThenByDescending(t => t.TestimonialId)
+                .Take(3)
+                .ToListAsync();
+
+            viewModel.Testimonials = testimonials.Select(t => new TestimonialViewModel
+            {
+                Name = t.FullName ?? "Khách hàng",
+                Position = t.Position ?? "",
+                Content = t.Message ?? "",
+                ImageUrl = !string.IsNullOrEmpty(t.AvatarUrl) 
+                    ? (t.AvatarUrl.StartsWith("http://") || t.AvatarUrl.StartsWith("https://")
+                        ? t.AvatarUrl
+                        : (t.AvatarUrl.StartsWith("~/")
+                            ? t.AvatarUrl
+                            : (t.AvatarUrl.StartsWith("/")
+                                ? $"~{t.AvatarUrl}" // Chuyển /assets/ thành ~/assets/
+                                : $"~/assets/img/testimonial/{t.AvatarUrl.TrimStart('/')}")))
+                    : "~/assets/img/testimonial/testi_1_1.png",
+                Rating = t.Rating
+            }).ToList();
 
             // 5. Lấy 4 câu hỏi FAQ
             // Lưu ý: Bảng FAQ chưa có trong database, có thể tạo bảng sau

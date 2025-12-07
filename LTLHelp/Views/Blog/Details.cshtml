@@ -133,15 +133,39 @@
                             <h3 class="blog-inner-title h4 mb-2">Để lại bình luận</h3>
                             <p class="form-text">Địa chỉ email của bạn sẽ không được công bố. Các trường bắt buộc được đánh dấu *</p>
                         </div>
-                        <form action="#" method="POST" class="row">
+                        
+                        @if (TempData["SuccessMessage"] != null)
+                        {
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+                        
+                        @if (TempData["ErrorMessage"] != null)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+                        
+                        <form action="@Url.Action("AddComment", "Blog")" method="POST" class="row">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="blogPostId" value="@Model.BlogPostId">
+                            
                             <div class="col-md-6 form-group style-border">
-                                <input type="text" placeholder="Tên của bạn *" class="form-control" required>
+                                <input type="text" name="name" id="name" placeholder="Tên của bạn *" class="form-control" 
+                                       value="@(ViewBag.CurrentUserName ?? "")" 
+                                       required>
                             </div>
                             <div class="col-md-6 form-group style-border">
-                                <input type="email" placeholder="Email của bạn *" class="form-control" required>
+                                <input type="email" name="email" id="email" placeholder="Email của bạn *" class="form-control" 
+                                       value="@(ViewBag.CurrentUserEmail ?? "")" 
+                                       required>
                             </div>
                             <div class="col-12 form-group style-border">
-                                <textarea placeholder="Nội dung bình luận *" class="form-control" rows="5" required></textarea>
+                                <textarea name="content" id="content" placeholder="Nội dung bình luận *" class="form-control" rows="5" required></textarea>
                             </div>
                             <div class="col-12 form-group mb-0">
                                 <button type="submit" class="th-btn btn-fw">GỬI BÌNH LUẬN</button>

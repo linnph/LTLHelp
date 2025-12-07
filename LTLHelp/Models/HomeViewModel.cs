@@ -5,12 +5,12 @@ public class HomeViewModel
     public List<Campaign> Campaigns { get; set; } = new List<Campaign>();
     public List<TeamMember> TeamMembers { get; set; } = new List<TeamMember>();
     public List<BlogPost> BlogPosts { get; set; } = new List<BlogPost>();
-    public List<Testimonial> Testimonials { get; set; } = new List<Testimonial>();
+    public List<TestimonialViewModel> Testimonials { get; set; } = new List<TestimonialViewModel>();
     public List<FAQ> FAQs { get; set; } = new List<FAQ>();
     public HomeStatistics Statistics { get; set; } = new HomeStatistics();
 }
 
-public class Testimonial
+public class TestimonialViewModel
 {
     public string Name { get; set; } = string.Empty;
     public string Position { get; set; } = string.Empty;

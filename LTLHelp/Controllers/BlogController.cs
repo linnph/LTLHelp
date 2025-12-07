@@ -77,12 +77,80 @@ public class BlogController : Controller
 
             ViewBag.RelatedPosts = relatedPosts;
 
+            // Lấy thông tin user nếu đã đăng nhập để điền vào form
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId.HasValue)
+            {
+                var user = await _context.Users
+                    .Include(u => u.UserProfile)
+                    .FirstOrDefaultAsync(u => u.UserId == userId.Value);
+                
+                if (user != null)
+                {
+                    ViewBag.CurrentUserName = user.UserProfile != null 
+                        ? $"{user.UserProfile.FirstName} {user.UserProfile.LastName}".Trim()
+                        : user.UserName;
+                    ViewBag.CurrentUserEmail = user.Email;
+                }
+            }
+
             return View(blogPost);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error loading blog post details");
             return NotFound();
+        }
+    }
+
+    // POST: Blog/AddComment
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddComment(int blogPostId, string name, string email, string content)
+    {
+        try
+        {
+            // Kiểm tra validation
+            if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(email) || 
+                string.IsNullOrWhiteSpace(content))
+            {
+                TempData["ErrorMessage"] = "Vui lòng điền đầy đủ thông tin (Tên, Email, Nội dung).";
+                return RedirectToAction("Details", new { id = blogPostId });
+            }
+
+            // Kiểm tra blog post có tồn tại không
+            var blogPost = await _context.BlogPosts.FindAsync(blogPostId);
+            if (blogPost == null)
+            {
+                return NotFound();
+            }
+
+            // Lấy UserId từ session nếu user đã đăng nhập
+            int? userId = HttpContext.Session.GetInt32("UserId");
+
+            // Tạo BlogComment mới
+            var comment = new BlogComment
+            {
+                BlogPostId = blogPostId,
+                UserId = userId,
+                Name = name,
+                Email = email,
+                Content = content,
+                IsApproved = true, // Tự động approve, có thể thay đổi thành false nếu cần admin duyệt
+                CreatedAt = DateTime.Now
+            };
+
+            _context.Add(comment);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Bình luận của bạn đã được gửi thành công!";
+            return RedirectToAction("Details", new { id = blogPostId });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error adding blog comment");
+            TempData["ErrorMessage"] = "Đã xảy ra lỗi khi gửi bình luận. Vui lòng thử lại.";
+            return RedirectToAction("Details", new { id = blogPostId });
         }
     }
 }

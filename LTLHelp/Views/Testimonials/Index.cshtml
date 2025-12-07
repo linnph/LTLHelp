@@ -1,0 +1,94 @@
+@model IEnumerable<LTLHelp.Models.TestimonialViewModel>
+@{
+    ViewData["Title"] = "Đánh Giá";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!--==============================
+    Breadcumb
+============================== -->
+<div class="breadcumb-wrapper " data-bg-src="/assets/img/bg/cta-bg4-1.jpg" data-overlay="theme">
+    <div class="container">
+        <div class="breadcumb-content">
+            <h1 class="breadcumb-title">Đánh Giá</h1>
+            <ul class="breadcumb-menu">
+                <li><a href="@Url.Action("Index", "Home")">Trang Chủ</a></li>
+                <li>Đánh Giá</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--==============================
+Testimonial Area  
+==============================-->
+<section class="overflow-hidden space">
+    <div class="container">
+        <div class="title-area text-center">
+            <span class="sub-title after-none before-none"><i class="far fa-heart text-theme"></i>Đánh Giá</span>
+            <h2 class="sec-title">Những Gì Mọi Người Nói Về Chúng Tôi?</h2>
+        </div>
+        <div class="row gy-30">
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var testimonial in Model)
+                {
+                    var imageUrl = !string.IsNullOrEmpty(testimonial.ImageUrl)
+                        ? testimonial.ImageUrl
+                        : "~/assets/img/testimonial/testi_3_1.png";
+                    
+                    // Chuyển đổi đường dẫn ~/ thành đường dẫn đúng
+                    if (imageUrl.StartsWith("http://") || imageUrl.StartsWith("https://"))
+                    {
+                        // Giữ nguyên URL tuyệt đối
+                    }
+                    else if (imageUrl.StartsWith("/"))
+                    {
+                        // Chuyển /assets/ thành ~/assets/
+                        imageUrl = "~" + imageUrl;
+                        imageUrl = Url.Content(imageUrl);
+                    }
+                    else if (imageUrl.StartsWith("~/"))
+                    {
+                        imageUrl = Url.Content(imageUrl);
+                    }
+                    else
+                    {
+                        imageUrl = Url.Content($"~/assets/img/testimonial/{imageUrl.TrimStart('/')}");
+                    }
+                    
+                    <div class="col-lg-6">
+                        <div class="testi-card3">
+                            <div class="testi-card-shape" data-mask-src="~/assets/img/shape/testi-card-bg-shape3-1.png"></div>
+                            <div class="testi-card_review">
+                                <i class="fas fa-star"></i>
+                                @testimonial.Rating.ToString("F1")
+                            </div>
+                            <div class="testi-card_profile">
+                                <div class="box-thumb">
+                                    <img src="@imageUrl" alt="@testimonial.Name">
+                                    <div class="quote-icon">
+                                        <i class="fal fa-quote-right"></i>
+                                    </div>
+                                </div>
+                                <div class="media-left">
+                                    <h3 class="testi-card_name">@testimonial.Name</h3>
+                                    <span class="testi-card_desig">@testimonial.Position</span>
+                                </div>
+                            </div>
+                            <p class="testi-card_text">"@testimonial.Content"</p>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12 text-center py-5">
+                    <i class="fas fa-comments" style="font-size: 64px; color: var(--smoke-color); margin-bottom: 20px;"></i>
+                    <p class="text-muted">Hiện tại chưa có đánh giá nào. Hãy là người đầu tiên đánh giá!</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
