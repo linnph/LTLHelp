@@ -1,5 +1,5 @@
 ﻿using LTLHelp.Models;
-using Harmic.Utilities;
+using LTLHelp.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LTLHelp.Utilities;
@@ -21,11 +21,11 @@ namespace Harmic.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Index(TbAccount account)
+        public IActionResult Index(User account)
         {
             if (account == null) { return NotFound(); }
 
-            var check = _context.TbAccounts.Where(m => m.Email == account.Email).FirstOrDefault();
+            var check = _context.Users.Where(m => m.Email == account.Email).FirstOrDefault();
             if (check != null)
             {
                 Function._Message = "Trùng tài khoản";

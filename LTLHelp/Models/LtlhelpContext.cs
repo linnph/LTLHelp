@@ -39,8 +39,6 @@ public partial class LtlhelpContext : DbContext
 
     public virtual DbSet<PaymentMethod> PaymentMethods { get; set; }
 
-    public virtual DbSet<TbMenu> TbMenus { get; set; }
-
     public virtual DbSet<Role> Roles { get; set; }
 
     public virtual DbSet<SystemSetting> SystemSettings { get; set; }

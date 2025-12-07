@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace Harmic.Utilities
+namespace LTLHelp.Utilities
 {
     public class HashMD5
     {
