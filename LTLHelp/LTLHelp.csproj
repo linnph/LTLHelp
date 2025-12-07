@@ -7,11 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\assets\.DS_Store" />
-    <None Include="wwwroot\assets\fonts\.DS_Store" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="elFinder.NetCore" Version="1.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="9.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
@@ -22,6 +17,11 @@
     </PackageReference>
     <PackageReference Include="SlugGenerator" Version="2.0.2" />
     <PackageReference Include="X.PagedList.Mvc.Core" Version="10.5.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\assets\.DS_Store" />
+    <None Include="wwwroot\assets\fonts\.DS_Store" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,934 @@
+<!doctype html>
+<html class="no-js" lang="zxx" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>LTLHelp - Charity & Donation HTML Template - Donate Checkout</title>
+    <meta name="author" content="LTLHelp">
+    <meta name="description" content="LTLHelp - Charity & Donation HTML Template">
+    <meta name="keywords" content="LTLHelp - Charity & Donation HTML Template">
+    <meta name="robots" content="INDEX,FOLLOW">
+
+    <!-- Mobile Specific Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Favicons - Place favicon.ico in the root directory -->
+    <link rel="apple-touch-icon" sizes="57x57" href="assets/img/favicons/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="assets/img/favicons/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="assets/img/favicons/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="assets/img/favicons/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="assets/img/favicons/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="assets/img/favicons/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="assets/img/favicons/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="assets/img/favicons/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/favicons/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/img/favicons/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="assets/img/favicons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicons/favicon-16x16.png">
+    <link rel="manifest" href="assets/img/favicons/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="assets/img/favicons/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <!--==============================
+	  Google Fonts
+	============================== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+
+    <!--==============================
+	    All CSS File
+	============================== -->
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <!-- Fontawesome Icon -->
+    <link rel="stylesheet" href="assets/css/fontawesome.min.css">
+    <!-- Magnific Popup -->
+    <link rel="stylesheet" href="assets/css/magnific-popup.min.css">
+    <!-- Swiper Js -->
+    <link rel="stylesheet" href="assets/css/swiper-bundle.min.css">
+    <!-- Theme Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        .donate-checkout-wrapper {
+            padding: 80px 0;
+        }
+        .campaign-info-card {
+            background: var(--white-color);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+        .campaign-info-card .campaign-image {
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        .campaign-info-card .campaign-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .campaign-info-card .campaign-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--theme-color);
+            color: var(--white-color);
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .campaign-info-card .campaign-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--title-color);
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .campaign-info-card .campaign-description {
+            color: var(--body-color);
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+        .campaign-info-card .progress-info {
+            margin-bottom: 20px;
+        }
+        .campaign-info-card .progress {
+            height: 8px;
+            background: var(--smoke-color);
+            border-radius: 30px;
+            margin-bottom: 15px;
+        }
+        .campaign-info-card .progress-bar {
+            background: var(--theme-color);
+            border-radius: 30px;
+            height: 100%;
+        }
+        .campaign-info-card .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .campaign-info-card .progress-stats .raised {
+            color: var(--title-color);
+        }
+        .campaign-info-card .progress-stats .goal {
+            color: var(--theme-color);
+        }
+        .donation-form-card {
+            background: var(--white-color);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.08);
+        }
+        .donation-form-card h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--title-color);
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--smoke-color);
+        }
+        .donation-amount-section {
+            margin-bottom: 30px;
+        }
+        .donation-amount-section label {
+            font-weight: 600;
+            color: var(--title-color);
+            margin-bottom: 15px;
+            display: block;
+        }
+        .donation-amount-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .donation-amount-btn {
+            padding: 12px 20px;
+            border: 2px solid var(--th-border-color);
+            background: var(--white-color);
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--title-color);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .donation-amount-btn:hover,
+        .donation-amount-btn.active {
+            border-color: var(--theme-color);
+            background: var(--theme-color);
+            color: var(--white-color);
+        }
+        .custom-amount-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--th-border-color);
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .custom-amount-input:focus {
+            outline: none;
+            border-color: var(--theme-color);
+        }
+        .form-section {
+            margin-bottom: 25px;
+        }
+        .form-section label {
+            font-weight: 600;
+            color: var(--title-color);
+            margin-bottom: 8px;
+            display: block;
+        }
+        .form-section .form-control {
+            padding: 12px 15px;
+            border: 2px solid var(--th-border-color);
+            border-radius: 10px;
+        }
+        .form-section .form-control:focus {
+            border-color: var(--theme-color);
+            box-shadow: none;
+        }
+        .form-section textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .payment-methods {
+            margin-bottom: 30px;
+        }
+        .payment-method-item {
+            padding: 15px;
+            border: 2px solid var(--th-border-color);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .payment-method-item:hover {
+            border-color: var(--theme-color);
+        }
+        .payment-method-item input[type="radio"] {
+            margin-right: 10px;
+        }
+        .payment-method-item label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--title-color);
+        }
+        .donate-submit-btn {
+            width: 100%;
+            padding: 18px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .anonymous-donation {
+            margin-bottom: 25px;
+        }
+        .anonymous-donation .form-check-input {
+            margin-top: 0.3rem;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!--[if lte IE 9]>
+    	<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  	<![endif]-->
+
+
+    <!--********************************
+   		Code Start From Here 
+	******************************** -->
+
+    <!--==============================
+     Preloader
+  ==============================-->
+    <div class="preloader ">
+        <button class="th-btn style2 preloaderCls">Cancel Preloader </button>
+        <div class="preloader-inner">
+            <span class="loader">
+                LTLHelp
+                <span class="loading-text">LTLHelp</span>
+            </span>
+        </div>
+    </div><!--==============================
+    Sidemenu
+============================== -->
+    <div class="sidemenu-wrapper sidemenu-cart ">
+        <div class="sidemenu-content">
+            <button class="closeButton sideMenuCls"><i class="far fa-times"></i></button>
+            <div class="widget woocommerce widget_shopping_cart">
+                <h3 class="widget_title">Shopping cart</h3>
+                <div class="widget_shopping_cart_content">
+                    <ul class="woocommerce-mini-cart cart_list product_list_widget ">
+                        <li class="woocommerce-mini-cart-item mini_cart_item">
+                            <a href="donate-checkout.html#" class="remove remove_from_cart_button"><i class="far fa-times"></i></a>
+                            <a href="donate-checkout.html#"><img src="assets/img/product/product_thumb_1_1.png" alt="Cart Image">Books</a>
+                            <span class="quantity">1 ×
+                                <span class="woocommerce-Price-amount amount">
+                                    <span class="woocommerce-Price-currencySymbol">$</span>940.00</span>
+                            </span>
+                        </li>
+                        <li class="woocommerce-mini-cart-item mini_cart_item">
+                            <a href="donate-checkout.html#" class="remove remove_from_cart_button"><i class="far fa-times"></i></a>
+                            <a href="donate-checkout.html#"><img src="assets/img/product/product_thumb_1_2.png" alt="Cart Image">Medicine</a>
+                            <span class="quantity">1 ×
+                                <span class="woocommerce-Price-amount amount">
+                                    <span class="woocommerce-Price-currencySymbol">$</span>899.00</span>
+                            </span>
+                        </li>
+                        <li class="woocommerce-mini-cart-item mini_cart_item">
+                            <a href="donate-checkout.html#" class="remove remove_from_cart_button"><i class="far fa-times"></i></a>
+                            <a href="donate-checkout.html#"><img src="assets/img/product/product_thumb_1_3.png" alt="Cart Image">Dress</a>
+                            <span class="quantity">1 ×
+                                <span class="woocommerce-Price-amount amount">
+                                    <span class="woocommerce-Price-currencySymbol">$</span>756.00</span>
+                            </span>
+                        </li>
+                        <li class="woocommerce-mini-cart-item mini_cart_item">
+                            <a href="donate-checkout.html#" class="remove remove_from_cart_button"><i class="far fa-times"></i></a>
+                            <a href="donate-checkout.html#"><img src="assets/img/product/product_thumb_1_4.png" alt="Cart Image">Chair</a>
+                            <span class="quantity">1 ×
+                                <span class="woocommerce-Price-amount amount">
+                                    <span class="woocommerce-Price-currencySymbol">$</span>723.00</span>
+                            </span>
+                        </li>
+                        <li class="woocommerce-mini-cart-item mini_cart_item">
+                            <a href="donate-checkout.html#" class="remove remove_from_cart_button"><i class="far fa-times"></i></a>
+                            <a href="donate-checkout.html#"><img src="assets/img/product/product_thumb_1_5.png" alt="Cart Image">Cloths</a>
+                            <span class="quantity">1 ×
+                                <span class="woocommerce-Price-amount amount">
+                                    <span class="woocommerce-Price-currencySymbol">$</span>1080.00</span>
+                            </span>
+                        </li>
+                    </ul>
+                    <p class="woocommerce-mini-cart__total total">
+                        <strong>Subtotal:</strong>
+                        <span class="woocommerce-Price-amount amount">
+                            <span class="woocommerce-Price-currencySymbol">$</span>4398.00</span>
+                    </p>
+                    <p class="woocommerce-mini-cart__buttons buttons">
+                        <a href="cart.html" class="th-btn wc-forward">View cart</a>
+                        <a href="checkout.html" class="th-btn checkout wc-forward">Checkout</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="popup-search-box d-none d-lg-block">
+        <button class="searchClose"><i class="far fa-times"></i></button>
+        <form action="donate-checkout.html#">
+            <input type="text" placeholder="What are you looking for?">
+            <button type="submit"><i class="fal fa-search"></i></button>
+        </form>
+    </div><!--==============================
+    Mobile Menu
+  ============================== -->
+    <div class="th-menu-wrapper">
+        <div class="th-menu-area text-center">
+            <button class="th-menu-toggle"><i class="fal fa-times"></i></button>
+            <div class="mobile-logo">
+                <a href="index.html"><img src="assets/img/logo.svg" alt="LTLHelp"></a>
+            </div>
+            <div class="th-mobile-menu">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li class="menu-item-has-children">
+                        <a href="donate-checkout.html#">LTLHelpions</a>
+                        <ul class="sub-menu">
+                            <li><a href="ltlhelpion.html">LTLHelpions</a></li>
+                            <li><a href="ltlhelpion-details.html">LTLHelpion Details</a></li>
+                            <li><a href="ltlhelpe-now.html">LTLHelpe Now</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item-has-children">
+                        <a href="donate-checkout.html#">Pages</a>
+                        <ul class="sub-menu">
+                            <li class="menu-item-has-children">
+                                <a href="donate-checkout.html#">Shop</a>
+                                <ul class="sub-menu">
+                                    <li><a href="shop.html">Shop</a></li>
+                                    <li><a href="shop-details.html">Shop Details</a></li>
+                                    <li><a href="cart.html">Cart Page</a></li>
+                                    <li><a href="checkout.html">Checkout</a></li>
+                                    <li><a href="wishlist.html">Wishlist</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="team.html">Volunteers</a></li>
+                            <li><a href="team-details.html">Volunteer Details</a></li>
+                            <li><a href="add-team.html">Become A Volunteer</a></li>
+                            <li><a href="gallery.html">Gallery</a></li>
+                            <li><a href="pricing.html">Pricing</a></li>
+                            <li><a href="faq.html">FAQS</a></li>
+                            <li><a href="testimonial.html">Testimonials</a></li>
+                            <li><a href="error.html">Error Page</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item-has-children">
+                        <a href="donate-checkout.html#">Blog</a>
+                        <ul class="sub-menu">
+                            <li><a href="blog.html">Blog</a></li>
+                            <li><a href="blog-details.html">Blog Details</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="contact.html">Contact Us</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="color-scheme-wrap active">
+        <button class="switchIcon"><i class="fa-solid fa-palette"></i></button>
+        <h3 class="color-scheme-wrap-title text-center">Color Switcher</h3>
+        <h4 class="color-scheme-wrap-subtitle text-center">Theme Color</h4>
+        <div class="color-switch-btns">
+            <button data-color="#1A685B"><i class="fa-solid fa-droplet"></i></button>
+            <button data-color="#f34e3a"><i class="fa-solid fa-droplet"></i></button>
+            <button data-color="#FF4857"><i class="fa-solid fa-droplet"></i></button>
+            <button data-color="#3843C1"><i class="fa-solid fa-droplet"></i></button>
+            <button data-color="#FF7E02"><i class="fa-solid fa-droplet"></i></button>
+        </div>
+        <h4 class="color-scheme-wrap-subtitle mt-20 text-center">Secondary Color</h4>
+        <div class="secondary-color-switch-btns">
+            <button data-secondary-color="#FFAC00"><i class="fa-solid fa-droplet"></i></button>
+            <button data-secondary-color="#F41E1E"><i class="fa-solid fa-droplet"></i></button>
+            <button data-secondary-color="#f34e3a"><i class="fa-solid fa-droplet"></i></button>
+            <button data-secondary-color="#FF4857"><i class="fa-solid fa-droplet"></i></button>
+            <button data-secondary-color="#3843C1"><i class="fa-solid fa-droplet"></i></button>
+        </div>
+    </div><!--==============================
+	Header Area
+==============================-->
+    <header class="th-header header-default">
+        <div class="menu-top">
+            <div class="container">
+                <div class="row justify-content-center justify-content-lg-between align-items-center gy-2">
+                    <div class="col-auto d-none d-lg-block">
+                        <div class="header-logo">
+                            <a href="index.html"><img src="assets/img/logo.svg" alt="LTLHelp"></a>
+                        </div>
+                    </div>
+                    <div class="col-auto d-none d-md-block">
+                        <div class="info-card-wrap">
+                            <div class="info-card">
+                                <div class="box-icon">
+                                    <i class="fal fa-map-marker-alt"></i>
+                                    <div class="bg-shape1" data-mask-src="assets/img/shape/info_card_icon_bg_shape_1_1.png"></div>
+                                    <div class="bg-shape2" data-mask-src="assets/img/shape/info_card_icon_bg_shape_1_1.png"></div>
+                                </div>
+                                <div class="box-content">
+                                    <p class="box-text">Địa chỉ:</p>
+                                    <h4 class="box-title"><a href="https://www.google.com/maps">Newyork City, USA</a></h4>
+                                </div>
+                            </div>
+                            <div class="info-card">
+                                <div class="box-icon">
+                                    <i class="fal fa-phone"></i>
+                                    <div class="bg-shape1" data-mask-src="assets/img/shape/info_card_icon_bg_shape_1_1.png"></div>
+                                    <div class="bg-shape2" data-mask-src="assets/img/shape/info_card_icon_bg_shape_1_1.png"></div>
+                                </div>
+                                <div class="box-content">
+                                    <p class="box-text">Gọi cho chúng tôi bất cứ lúc nào:</p>
+                                    <h4 class="box-title"><a href="tel:16336547896">+163-3654-7896</a></h4>
+                                </div>
+                            </div>
+                            <div class="info-card">
+                                <div class="box-icon">
+                                    <i class="fal fa-envelope-open"></i>
+                                    <div class="bg-shape1" data-mask-src="assets/img/shape/info_card_icon_bg_shape_1_1.png"></div>
+                                    <div class="bg-shape2" data-mask-src="assets/img/shape/info_card_icon_bg_shape_1_1.png"></div>
+                                </div>
+                                <div class="box-content">
+                                    <p class="box-text">Gửi email cho chúng tôi bất cứ lúc nào:</p>
+                                    <h4 class="box-title"><a href="mailto:info@ltlhelp.com">info@ltlhelp.com</a></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-auto header-social-col">
+                        <div class="th-social">
+                            <a href="https://www.facebook.com/"><i class="fab fa-facebook-f"></i></a>
+                            <a href="https://www.twitter.com/"><i class="fab fa-twitter"></i></a>
+                            <a href="https://www.youtube.com/"><i class="fab fa-youtube"></i></a>
+                            <a href="https://www.linkedin.com/"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="sticky-wrapper">
+            <!-- Main Menu Area -->
+            <div class="container">
+                <div class="menu-area">
+                    <div class="menu-area-wrap">
+                        <div class="col-auto d-inline-block d-lg-none">
+                            <div class="header-logo">
+                                <a href="index.html"><img src="assets/img/logo-white.svg" alt="LTLHelp"></a>
+                            </div>
+                        </div>
+                        <nav class="main-menu d-none d-lg-block">
+                            <ul>
+                                <li><a href="index.html">Home</a></li>
+                                <li><a href="about.html">About Us</a></li>
+                                <li class="menu-item-has-children">
+                                    <a href="donate-checkout.html#">LTLHelpions</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="ltlhelpion.html">LTLHelpions</a></li>
+                                        <li><a href="ltlhelpion-details.html">LTLHelpion Details</a></li>
+                                        <li><a href="ltlhelpe-now.html">LTLHelpe Now</a></li>
+                                    </ul>
+                                </li>
+                                <li class="menu-item-has-children">
+                                    <a href="donate-checkout.html#">Pages</a>
+                                    <ul class="sub-menu">
+                                        <li class="menu-item-has-children">
+                                            <a href="donate-checkout.html#">Shop</a>
+                                            <ul class="sub-menu">
+                                                <li><a href="shop.html">Shop</a></li>
+                                                <li><a href="shop-details.html">Shop Details</a></li>
+                                                <li><a href="cart.html">Cart Page</a></li>
+                                                <li><a href="checkout.html">Checkout</a></li>
+                                                <li><a href="wishlist.html">Wishlist</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="team.html">Volunteers</a></li>
+                                        <li><a href="team-details.html">Volunteer Details</a></li>
+                                        <li><a href="add-team.html">Become A Volunteer</a></li>
+                                        <li><a href="gallery.html">Gallery</a></li>
+                                        <li><a href="pricing.html">Pricing</a></li>
+                                        <li><a href="faq.html">FAQS</a></li>
+                                        <li><a href="testimonial.html">Testimonials</a></li>
+                                        <li><a href="error.html">Error Page</a></li>
+                                    </ul>
+                                </li>
+                                <li class="menu-item-has-children">
+                                    <a href="donate-checkout.html#">Blog</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="blog.html">Blog</a></li>
+                                        <li><a href="blog-details.html">Blog Details</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="contact.html">Contact Us</a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <p class="header-notice"><img class="me-1" src="assets/img/icon/heart-icon.svg" alt="img">Are you ready to help them? Let's become a volunteers...</p>
+                    </div>
+                    <div class="header-button">
+                        <button type="button" class="icon-btn style2 searchBoxToggler d-lg-block d-none"><i class="far fa-search"></i></button>
+                        <button type="button" class="icon-btn sideMenuToggler">
+                            <span class="badge">5</span>
+                            <i class="fa-regular fa-cart-shopping"></i>
+                        </button>
+                        <div class="dropdown d-lg-inline-block d-none">
+                            <button class="th-btn style2 dropdown-toggle" type="button" id="loginDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user me-2"></i> Account
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="loginDropdown">
+                                <li><a class="dropdown-item" href="login.html"><i class="fas fa-sign-in-alt me-2"></i> Login</a></li>
+                                <li><a class="dropdown-item" href="register.html"><i class="fas fa-user-plus me-2"></i> Register</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="checkLoginAndRedirect(); return false;"><i class="fas fa-user-circle me-2"></i> My Account</a></li>
+                            </ul>
+                        </div>
+                        <a href="contact.html" class="th-btn style3 d-lg-block d-none"><i class="fas fa-heart me-2"></i> Donate Now</a>
+                        <button type="button" class="icon-btn th-menu-toggle d-lg-none"><i class="far fa-bars"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <!--==============================
+    Breadcumb
+============================== -->
+    <div class="breadcumb-wrapper " data-bg-src="assets/img/bg/breadcumb-bg.jpg" data-overlay="theme">
+        <div class="container">
+            <div class="breadcumb-content">
+                <h1 class="breadcumb-title">Donate Checkout</h1>
+                <ul class="breadcumb-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li>Donate Checkout</li>
+                </ul>
+            </div>
+        </div>
+    </div><!--==============================
+Donate Checkout Area   
+==============================-->
+    <div class="donate-checkout-wrapper space-top space-extra-bottom">
+        <div class="container">
+            <div class="row gy-4">
+                <!-- Campaign Information (Left Side) -->
+                <div class="col-lg-5">
+                    <div class="campaign-info-card">
+                        <div class="campaign-image">
+                            <img src="assets/img/donation/donation2-1.png" alt="Campaign Image">
+                            <div class="campaign-badge">85%</div>
+                        </div>
+                        <h3 class="campaign-title">Your Little Help Can Heal Their Helps</h3>
+                        <p class="campaign-description">Join our community of dedicated supporter by becoming member. Enjoy exclusive benefit. Your contribution makes a real difference in the lives of those in need. Together, we can create positive change and bring hope to communities around the world.</p>
+                        <div class="progress-info">
+                            <div class="progress">
+                                <div class="progress-bar" style="width: 85%;"></div>
+                            </div>
+                            <div class="progress-stats">
+                                <span class="raised">Raised: $45,000.00</span>
+                                <span class="goal">Goal: $60,000.00</span>
+                            </div>
+                        </div>
+                        <div class="campaign-meta">
+                            <p style="color: var(--body-color); margin-bottom: 10px;"><i class="fas fa-calendar-alt me-2" style="color: var(--theme-color);"></i><strong>Start Date:</strong> January 1, 2025</p>
+                            <p style="color: var(--body-color); margin-bottom: 0;"><i class="fas fa-users me-2" style="color: var(--theme-color);"></i><strong>Donors:</strong> 234 people</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Donation Form (Right Side) -->
+                <div class="col-lg-7">
+                    <div class="donation-form-card">
+                        <h3><i class="fas fa-heart me-2" style="color: var(--theme-color);"></i>Complete Your Donation</h3>
+                        <form action="#" method="POST" id="donationForm">
+                            <!-- Donation Amount -->
+                            <div class="donation-amount-section">
+                                <label>Select Donation Amount</label>
+                                <div class="donation-amount-options">
+                                    <div class="donation-amount-btn" data-amount="25">$25</div>
+                                    <div class="donation-amount-btn" data-amount="50">$50</div>
+                                    <div class="donation-amount-btn" data-amount="100">$100</div>
+                                    <div class="donation-amount-btn" data-amount="250">$250</div>
+                                    <div class="donation-amount-btn" data-amount="500">$500</div>
+                                </div>
+                                <input type="text" class="custom-amount-input" id="customAmount" placeholder="Or enter custom amount ($)" name="donation_amount">
+                            </div>
+
+                            <!-- Personal Information -->
+                            <div class="form-section">
+                                <label>Full Name <span style="color: var(--error-color);">*</span></label>
+                                <input type="text" class="form-control" name="full_name" required placeholder="Enter your full name">
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-section">
+                                        <label>Email Address <span style="color: var(--error-color);">*</span></label>
+                                        <input type="email" class="form-control" name="email" required placeholder="your.email@example.com">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-section">
+                                        <label>Phone Number</label>
+                                        <input type="tel" class="form-control" name="phone" placeholder="+1 (555) 123-4567">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <label>Address</label>
+                                <input type="text" class="form-control" name="address" placeholder="Street Address">
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-section">
+                                        <label>City</label>
+                                        <input type="text" class="form-control" name="city" placeholder="City">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-section">
+                                        <label>Country</label>
+                                        <select class="form-control" name="country">
+                                            <option value="">Select Country</option>
+                                            <option value="US">United States</option>
+                                            <option value="UK">United Kingdom</option>
+                                            <option value="CA">Canada</option>
+                                            <option value="AU">Australia</option>
+                                            <option value="DE">Germany</option>
+                                            <option value="FR">France</option>
+                                            <option value="VN">Vietnam</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Message Section -->
+                            <div class="form-section">
+                                <label>Your Message (Optional)</label>
+                                <textarea class="form-control" name="message" placeholder="Leave a message of encouragement or support for the campaign..."></textarea>
+                                <small style="color: var(--body-color); font-size: 13px;">Your message will be shared with the campaign organizers and may be displayed publicly.</small>
+                            </div>
+
+                            <!-- Anonymous Donation -->
+                            <div class="anonymous-donation">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="anonymousDonation" name="anonymous">
+                                    <label class="form-check-label" for="anonymousDonation">
+                                        Make this donation anonymous
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Payment Method -->
+                            <div class="payment-methods">
+                                <label style="margin-bottom: 15px;">Payment Method <span style="color: var(--error-color);">*</span></label>
+                                <div class="payment-method-item">
+                                    <input type="radio" id="payment_credit" name="payment_method" value="credit_card" required checked>
+                                    <label for="payment_credit"><i class="fas fa-credit-card me-2"></i> Credit/Debit Card</label>
+                                </div>
+                                <div class="payment-method-item">
+                                    <input type="radio" id="payment_paypal" name="payment_method" value="paypal" required>
+                                    <label for="payment_paypal"><i class="fab fa-paypal me-2"></i> PayPal</label>
+                                </div>
+                                <div class="payment-method-item">
+                                    <input type="radio" id="payment_bank" name="payment_method" value="bank_transfer" required>
+                                    <label for="payment_bank"><i class="fas fa-university me-2"></i> Bank Transfer</label>
+                                </div>
+                            </div>
+
+                            <!-- Terms Agreement -->
+                            <div class="form-section">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                                    <label class="form-check-label" for="agreeTerms">
+                                        I agree to the <a href="terms-conditions.html" target="_blank" style="color: var(--theme-color);">Terms & Conditions</a> and <a href="privacy-policy.html" target="_blank" style="color: var(--theme-color);">Privacy Policy</a>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="th-btn style3 donate-submit-btn">
+                                <i class="fas fa-heart me-2"></i> Complete Donation
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--==============================
+	Footer Area
+==============================-->
+    <footer class="footer-wrapper footer-default" data-bg-src="assets/img/bg/footer-default-bg-mask.png">
+        <div class="footer-bg-shape2 shape-mockup jump" data-top="20%" data-right="0">
+            <img src="assets/img/shape/footer-bg-shape3.png" alt="img">
+        </div>
+        <div class="footer-bg-shape3 shape-mockup d-none" data-bottom="0" data-right="0">
+            <img src="assets/img/shape/footer-bg-shape2.png" alt="img">
+        </div>
+        <div class="footer-top">
+            <div class="container">
+                <div class="subscribe-box">
+                    <div class="row gy-40 align-items-center justify-content-center">
+                        <div class="col-xl-6">
+                            <h4 class="subscribe-box_title">Subscribe to Our Newsletter</h4>
+                            <p class="subscribe-box_text">Regular inspections and feedback mechanisms</p>
+                        </div>
+                        <div class="col-xl-6 col-lg-8">
+                            <form class="newsletter-form">
+                                <div class="form-group">
+                                    <input class="form-control" type="email" placeholder="Enter Email Address" required="">
+                                </div>
+                                <button type="submit" class="th-btn style3"><i class="fas fa-paper-plane"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="widget-area">
+            <div class="container">
+                <div class="row justify-content-between">
+                    <div class="col-md-6 col-xl-auto">
+                        <div class="widget footer-widget">
+                            <div class="th-widget-about">
+                                <div class="about-logo">
+                                    <a href="index.html"><img src="assets/img/logo-white.svg" alt="LTLHelp"></a>
+                                </div>
+                                <p class="about-text"> Our secure online ltlhelpion platform allows you to make contributions quickly and safely. Choose from various.</p>
+                                <a href="contact.html" class="th-btn"><i class="fas fa-heart me-2"></i> LTLHelpe Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-auto">
+                        <div class="widget widget_nav_menu footer-widget">
+                            <h3 class="widget_title">Quick Links</h3>
+                            <div class="menu-all-pages-container">
+                                <ul class="menu">
+                                    <li><a href="about.html">About Us</a></li>
+                                    <li><a href="blog.html">Our News</a></li>
+                                    <li><a href="about.html">Our Campaign</a></li>
+                                    <li><a href="privacy-policy.html">Privacy policy</a></li>
+                                    <li><a href="terms-conditions.html">Terms & Conditions</a></li>
+                                    <li><a href="contact.html">Contact Us</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-auto">
+                        <div class="widget widget_nav_menu footer-widget">
+                            <h3 class="widget_title">Our Service</h3>
+                            <div class="menu-all-pages-container">
+                                <ul class="menu">
+                                    <li><a href="ltlhelpe-now.html">Give LTLHelpion</a></li>
+                                    <li><a href="faq.html">Education Support</a></li>
+                                    <li><a href="faq.html">Food Support</a></li>
+                                    <li><a href="faq.html">Health Support</a></li>
+                                    <li><a href="gallery.html">Our Campaign </a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl-auto">
+                        <div class="widget footer-widget">
+                            <div class="th-widget-contact">
+                                <h3 class="widget_title">Contact Us</h3>
+                                <div class="info-card">
+                                    <div class="box-icon">
+                                        <i class="fal fa-phone"></i>
+                                        <div class="bg-shape1" data-mask-src="assets/img/shape/info_card_icon_bg_shape_1_1.png"></div>
+                                        <div class="bg-shape2" data-mask-src="assets/img/shape/info_card_icon_bg_shape_1_1.png"></div>
+                                    </div>
+                                    <div class="box-content">
+                                        <p class="box-text">Gọi cho chúng tôi bất cứ lúc nào:</p>
+                                        <h4 class="box-title"><a href="tel:16336547896">+163-3654-7896</a></h4>
+                                    </div>
+                                </div>
+                                <div class="info-card">
+                                    <div class="box-icon">
+                                        <i class="fal fa-envelope-open"></i>
+                                        <div class="bg-shape1" data-mask-src="assets/img/shape/info_card_icon_bg_shape_1_1.png"></div>
+                                        <div class="bg-shape2" data-mask-src="assets/img/shape/info_card_icon_bg_shape_1_1.png"></div>
+                                    </div>
+                                    <div class="box-content">
+                                        <p class="box-text">Gửi email cho chúng tôi bất cứ lúc nào:</p>
+                                        <h4 class="box-title"><a href="mailto:info@ltlhelp.com">info@ltlhelp.com</a></h4>
+                                    </div>
+                                </div>
+                                <div class="th-social style2">
+                                    <a href="https://www.facebook.com/"><i class="fab fa-facebook-f"></i></a>
+                                    <a href="https://www.twitter.com/"><i class="fab fa-twitter"></i></a>
+                                    <a href="https://www.youtube.com/"><i class="fab fa-youtube"></i></a>
+                                    <a href="https://www.linkedin.com/"><i class="fab fa-linkedin-in"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright-wrap">
+            <div class="container">
+                <div class="row justify-content-center gy-3 align-items-center">
+                    <div class="col-lg-12">
+                        <p class="copyright-text text-center">
+                            <i class="fal fa-copyright"></i> Copyright 2025 <a href="index.html">LTLHelp</a>. All Rights Reserved.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!--********************************
+			Code End  Here 
+	******************************** -->
+
+    <!-- Scroll To Top -->
+    <div class="scroll-top">
+        <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+            <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" style="transition: stroke-dashoffset 10ms linear 0s; stroke-dasharray: 307.919, 307.919; stroke-dashoffset: 307.919;"></path>
+        </svg>
+    </div>
+
+    <!--==============================
+    All Js File
+============================== -->
+    <!-- Jquery -->
+    <script src="assets/js/vendor/jquery-3.7.1.min.js"></script>
+    <!-- Swiper Js -->
+    <script src="assets/js/swiper-bundle.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="assets/js/bootstrap.min.js"></script>
+    <!-- Magnific Popup -->
+    <script src="assets/js/jquery.magnific-popup.min.js"></script>
+    <!-- Counter Up -->
+    <script src="assets/js/jquery.counterup.min.js"></script>
+    <!-- Range Slider -->
+    <script src="assets/js/jquery-ui.min.js"></script>
+    <!-- Isotope Filter -->
+    <script src="assets/js/imagesloaded.pkgd.min.js"></script>
+    <script src="assets/js/isotope.pkgd.min.js"></script>
+
+    <!-- Main Js File -->
+    <script src="assets/js/main.js"></script>
+
+    <script>
+        // Donation amount button selection
+        document.addEventListener('DOMContentLoaded', function() {
+            const amountButtons = document.querySelectorAll('.donation-amount-btn');
+            const customAmountInput = document.getElementById('customAmount');
+
+            amountButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    amountButtons.forEach(btn => btn.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    // Set the amount in custom input
+                    const amount = this.getAttribute('data-amount');
+                    customAmountInput.value = '$' + amount;
+                });
+            });
+
+            // Clear button selection when typing custom amount
+            customAmountInput.addEventListener('input', function() {
+                amountButtons.forEach(btn => btn.classList.remove('active'));
+            });
+
+            // Form submission
+            document.getElementById('donationForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                // Here you would normally send the data to your server
+                alert('Thank you for your donation! Your contribution will make a difference.');
+                // In a real application, you would redirect to a payment gateway or process the payment
+            });
+        });
+    </script>
+
+    <script>
+        function checkLoginAndRedirect() {
+            // Kiểm tra trạng thái đăng nhập từ localStorage
+            var isLoggedIn = localStorage.getItem('isLoggedIn');
+            
+            if (isLoggedIn === 'true') {
+                // Đã đăng nhập, cho phép truy cập
+                window.location.href = 'myaccount.html';
+            } else {
+                // Chưa đăng nhập, hiển thị thông báo và redirect đến trang login
+                alert('Bạn cần đăng nhập để truy cập trang này!');
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+
+</body>
+
+</html>
+
