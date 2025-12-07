@@ -1,0 +1,79 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<!-- 4 ô nhỏ màu sắc -->
+<div class="row">
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-info">
+            <div class="inner">
+                <h3>1.700</h3>
+                <p>Tổng tiền quyên góp</p>
+            </div>
+            <div class="icon"><i class="fas fa-donate"></i></div>
+            <a href="#" class="small-box-footer">Xem chi tiết <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-success">
+            <div class="inner">
+                <h3>53<sup style="font-size: 20px">%</sup></h3>
+                <p>Chiến dịch đang hoạt động</p>
+            </div>
+            <div class="icon"><i class="fas fa-check-circle"></i></div>
+            <a href="#" class="small-box-footer">Xem chi tiết <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-warning">
+            <div class="inner">
+                <h3>44</h3>
+                <p>Người dùng mới (Donor)</p>
+            </div>
+            <div class="icon"><i class="fas fa-user-plus"></i></div>
+            <a href="#" class="small-box-footer">Xem chi tiết <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>65</h3>
+                <p>Khoản quyên góp chờ duyệt</p>
+            </div>
+            <div class="icon"><i class="fas fa-clock"></i></div>
+            <a href="#" class="small-box-footer">Xem chi tiết <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+</div>
+
+<!-- Biểu đồ mẫu (tùy chọn) -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Thống kê quyên góp theo tháng</h3>
+            </div>
+            <div class="card-body">
+                <canvas id="myChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6'],
+                datasets: [{
+                    label: 'Quyên góp (triệu VND)',
+                    data: [12, 19, 15, 25, 22, 30],
+                    backgroundColor: 'rgba(0, 123, 255, 0.5)'
+                }]
+            }
+        });
+    </script>
+}
