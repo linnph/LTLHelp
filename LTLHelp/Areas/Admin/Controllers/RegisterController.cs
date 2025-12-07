@@ -33,7 +33,7 @@ namespace Harmic.Areas.Admin.Controllers
             }
             Function._Message = string.Empty;
             account.PasswordHash = HashMD5.GetMD5(account.PasswordHash != null ? account.PasswordHash : "");
-            account.RoleId = 3;
+            account.UserId = 1;
             account.IsActive = true;
 
             _context.Add(account);
