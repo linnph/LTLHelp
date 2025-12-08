@@ -181,8 +181,6 @@ public class AccountController : Controller
 
             var user = await _context.Users
                 .Include(u => u.UserProfile)
-                .Include(u => u.Donations)
-                    .ThenInclude(d => d.Campaign)
                 .FirstOrDefaultAsync(u => u.UserId == userId.Value);
 
             if (user == null)
@@ -191,17 +189,63 @@ public class AccountController : Controller
                 return RedirectToAction(nameof(Login));
             }
 
+            // Lấy donations trực tiếp từ bảng Donations (đồng bộ với DonationController.History)
+            // Lấy donations có UserId khớp HOẶC DonorEmail khớp với email của user
+            string? userEmail = user.Email;
+            
+            // Tự động cập nhật UserId cho các donations cũ có DonorEmail khớp nhưng UserId null
+            if (!string.IsNullOrEmpty(userEmail))
+            {
+                var donationsToUpdate = await _context.Donations
+                    .Where(d => d.UserId == null && d.DonorEmail != null && d.DonorEmail.ToLower() == userEmail.ToLower())
+                    .ToListAsync();
+                
+                foreach (var donation in donationsToUpdate)
+                {
+                    donation.UserId = userId.Value;
+                }
+                
+                if (donationsToUpdate.Any())
+                {
+                    await _context.SaveChangesAsync();
+                }
+            }
+            
+            // Chỉ lấy donations có UserId khớp với user hiện tại (đồng bộ với DonationController.History)
+            var donations = await _context.Donations
+                .Where(d => d.UserId == userId.Value)
+                .OrderByDescending(d => d.CreatedAt)
+                .ToListAsync();
+            
+            // Load Campaign cho các donations có CampaignId > 0
+            var campaignIds = donations.Where(d => d.CampaignId > 0).Select(d => d.CampaignId).Distinct().ToList();
+            if (campaignIds.Any())
+            {
+                var campaigns = await _context.Campaigns
+                    .Where(c => campaignIds.Contains(c.CampaignId))
+                    .ToDictionaryAsync(c => c.CampaignId);
+                
+                foreach (var donation in donations.Where(d => d.CampaignId > 0))
+                {
+                    if (campaigns.TryGetValue(donation.CampaignId, out var campaign))
+                    {
+                        donation.Campaign = campaign;
+                    }
+                }
+            }
+
             // Tính tổng số liệu donation
-            var donations = user.Donations?.ToList() ?? new List<Donation>();
             var totalDonated = donations.Sum(d => d.Amount);
             var totalDonations = donations.Count;
+            // Sửa logic: check status "Xác nhận" (theo dữ liệu thực tế trong database)
             var confirmedAmount = donations
-                .Where(d => d.Status == "Thành công" || d.Status == "Đã thanh toán")
+                .Where(d => d.Status == "Xác nhận" || d.Status == "Thành công" || d.Status == "Đã thanh toán")
                 .Sum(d => d.Amount);
 
             ViewBag.TotalDonated = totalDonated;
             ViewBag.TotalDonations = totalDonations;
             ViewBag.ConfirmedAmount = confirmedAmount;
+            ViewBag.Donations = donations; // Truyền donations qua ViewBag để view sử dụng
 
             return View(user);
         }

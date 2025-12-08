@@ -5,7 +5,7 @@
     var totalDonated = ViewBag.TotalDonated as decimal? ?? 0;
     var totalDonations = ViewBag.TotalDonations as int? ?? 0;
     var confirmedAmount = ViewBag.ConfirmedAmount as decimal? ?? 0;
-    var donations = Model?.Donations?.OrderByDescending(d => d.CreatedAt).ToList() ?? new List<Donation>();
+    var donations = ViewBag.Donations as List<LTLHelp.Models.Donation> ?? new List<LTLHelp.Models.Donation>();
 }
 
 <!--==============================
@@ -87,18 +87,22 @@ My Account Area
                                     <tbody>
                                         @foreach (var donation in donations)
                                         {
-                                            var statusClass = (donation.Status == "Thành công" || donation.Status == "Đã thanh toán") 
+                                            var statusClass = (donation.Status == "Xác nhận" || donation.Status == "Thành công" || donation.Status == "Đã thanh toán") 
                                                 ? "status-confirmed" 
                                                 : "status-pending";
                                             
                                             <tr>
                                                 <td>@(donation.CreatedAt?.ToString("dd/MM/yyyy") ?? "N/A")</td>
                                                 <td>
-                                                    @if (donation.Campaign != null)
+                                                    @if (donation.CampaignId > 0 && donation.Campaign != null)
                                                     {
                                                         <a href="@Url.Action("Details", "Campaign", new { id = donation.Campaign.CampaignId })" class="text-theme">
                                                             @donation.Campaign.Title
                                                         </a>
+                                                    }
+                                                    else if (donation.CampaignId == 0)
+                                                    {
+                                                        <span class="text-muted"><i class="fas fa-heart me-1"></i> Quyên góp lẻ (Không theo chiến dịch)</span>
                                                     }
                                                     else
                                                     {
@@ -112,9 +116,16 @@ My Account Area
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <a href="@Url.Action("Details", "Campaign", new { id = donation.CampaignId })" class="text-theme">
-                                                        <i class="fas fa-eye me-1"></i> Xem
-                                                    </a>
+                                                    @if (donation.CampaignId > 0)
+                                                    {
+                                                        <a href="@Url.Action("Details", "Campaign", new { id = donation.CampaignId })" class="text-theme">
+                                                            <i class="fas fa-eye me-1"></i> Xem
+                                                        </a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-muted">-</span>
+                                                    }
                                                 </td>
                                             </tr>
                                         }

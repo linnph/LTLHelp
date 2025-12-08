@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Đăng ký Admin</title>
+    <title>Đăng nhập Admin</title>
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" />
 </head>
@@ -18,7 +18,7 @@
 
                 <div class="card shadow">
                     <div class="card-body">
-                        <h3 class="text-center mb-4">ADMIN REGISTER</h3>
+                        <h3 class="text-center mb-4">ADMIN LOGIN</h3>
 
                         @if (ViewBag.Error != null)
                         {
@@ -27,13 +27,8 @@
 
                         <form method="post">
                             <div class="form-group">
-                                <label>Tên đăng nhập</label>
-                                <input name="username" class="form-control" required />
-                            </div>
-
-                            <div class="form-group">
                                 <label>Email</label>
-                                <input name="email" type="email" class="form-control" required />
+                                <input name="email" class="form-control" required />
                             </div>
 
                             <div class="form-group">
@@ -41,10 +36,12 @@
                                 <input name="password" type="password" class="form-control" required />
                             </div>
 
-                            <button class="btn btn-success btn-block">Đăng ký</button>
+                            <button class="btn btn-primary btn-block">Đăng nhập</button>
 
                             <div class="text-center mt-3">
-                                <a href="/Admin/Account/Login">Đã có tài khoản? Đăng nhập</a>
+                                <a href="/Admin/Register" class="text-primary">
+                                    Chưa có tài khoản? Đăng ký ngay
+                                </a>
                             </div>
                         </form>
 

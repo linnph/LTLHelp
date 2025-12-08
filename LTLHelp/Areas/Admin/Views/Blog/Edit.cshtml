@@ -1,0 +1,42 @@
+﻿@model LTLHelp.Models.BlogPost
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Sửa bài viết";
+}
+
+<h2 class="mb-3">Sửa bài viết</h2>
+
+<form method="post">
+    <input type="hidden" asp-for="BlogPostId" />
+
+    <div class="form-group">
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Danh mục</label>
+        <select asp-for="BlogCategoryId"
+                class="form-control"
+                asp-items="(SelectList)ViewBag.Categories">
+            <option value="">-- Chọn danh mục --</option>
+        </select>
+        <span asp-validation-for="BlogCategoryId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Content"></label>
+        <textarea asp-for="Content" class="form-control" rows="8"></textarea>
+        <span asp-validation-for="Content" class="text-danger"></span>
+    </div>
+
+    <div class="form-group form-check">
+        <input asp-for="IsPublished" class="form-check-input" />
+        <label asp-for="IsPublished" class="form-check-label"></label>
+    </div>
+
+    <button class="btn btn-primary">Lưu</button>
+    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+</form>

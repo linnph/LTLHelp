@@ -1,0 +1,136 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 class="mb-4 font-weight-bold">📊 Thống kê & Báo cáo hệ thống</h2>
+
+<!-- SUMMARY CARDS -->
+<div class="row">
+
+    <div class="col-md-3 mb-3">
+        <div class="card shadow bg-primary text-white p-3 rounded">
+            <h5>Tổng chiến dịch</h5>
+            <h3>@ViewBag.TotalCampaigns</h3>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card shadow bg-success text-white p-3 rounded">
+            <h5>Tổng người dùng</h5>
+            <h3>@ViewBag.TotalUsers</h3>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card shadow bg-warning p-3 rounded">
+            <h5>Tổng khoản quyên góp</h5>
+            <h3>@ViewBag.TotalDonations</h3>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card shadow bg-danger text-white p-3 rounded">
+            <h5>Tổng tiền quyên góp</h5>
+            <h3>@String.Format("{0:N0}", ViewBag.TotalMoney) VNĐ</h3>
+        </div>
+    </div>
+
+</div>
+
+<!-- CHARTS -->
+<div class="row mt-3">
+
+    <div class="col-md-8">
+        <div class="card shadow p-3">
+            <h5>📈 Quyên góp theo tháng</h5>
+            <canvas id="donationChart" height="120"></canvas>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow p-3">
+            <h5>📌 Tỷ lệ chiến dịch</h5>
+            <canvas id="campaignPie"></canvas>
+        </div>
+    </div>
+
+</div>
+
+<!-- TOP CAMPAIGNS -->
+<div class="card shadow p-3 mt-4">
+    <h4>🔥 Top 5 chiến dịch quyên góp cao nhất</h4>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Tên chiến dịch</th>
+                <th class="text-right">Số tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var c in ViewBag.TopCampaigns)
+            {
+                <tr>
+                    <td>@c.Title</td>
+                    <td class="text-right">@String.Format("{0:N0}", c.RaisedAmount) VNĐ</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- TOP DONORS -->
+<div class="card shadow p-3 mt-4 mb-5">
+    <h4>⭐ Top 5 người dùng quyên góp nhiều nhất</h4>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Người dùng</th>
+                <th class="text-right">Số tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var d in ViewBag.TopDonors)
+            {
+                <tr>
+                    <td>@d.User</td>
+                    <td class="text-right">@String.Format("{0:N0}", d.Total) VNĐ</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    var donationCtx = document.getElementById("donationChart");
+    new Chart(donationCtx, {
+        type: "line",
+        data: {
+            labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(
+                         ((IEnumerable<dynamic>)ViewBag.DonationMonths).Select(x => "Tháng " + x.Month))),
+            datasets: [{
+                label: "Số tiền quyên góp",
+                data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(
+                               ((IEnumerable<dynamic>)ViewBag.DonationMonths).Select(x => x.Total))),
+                borderColor: "#3498db",
+                backgroundColor: "rgba(52,152,219,0.3)",
+                fill: true,
+                tension: 0.4
+            }]
+        }
+    });
+
+    new Chart(document.getElementById("campaignPie"), {
+        type: "doughnut",
+        data: {
+            labels: ["Đang hoạt động", "Đã kết thúc"],
+            datasets: [{
+                data: [@ViewBag.ActiveCampaigns, @ViewBag.EndedCampaigns],
+                backgroundColor: ["#2ecc71", "#e74c3c"]
+            }]
+        }
+    });
+</script>

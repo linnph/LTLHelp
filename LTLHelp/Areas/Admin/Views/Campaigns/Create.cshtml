@@ -1,9 +1,12 @@
 ﻿@model LTLHelp.Models.Campaign
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Thêm chiến dịch";
+}
 
 <h2>Thêm chiến dịch</h2>
 
-<form asp-action="Create" method="post">
-
+<form asp-action="Create" method="post" enctype="multipart/form-data">
     <div class="form-group">
         <label asp-for="Title"></label>
         <input asp-for="Title" class="form-control" />
@@ -26,14 +29,30 @@
 
     <div class="form-group">
         <label>Loại chiến dịch</label>
-        <select asp-for="CategoryId"
-                asp-items="ViewBag.Categories"
-                class="form-control">
+        <select asp-for="CategoryId" class="form-control" asp-items="@(ViewBag.Categories)">
             <option value="">-- Chọn loại chiến dịch --</option>
         </select>
     </div>
 
+    <!-- 🔥 THÊM ẢNH -->
+    <div class="form-group mt-3">
+        <label>Ảnh chiến dịch</label>
+        <input type="file" name="ImageFile" class="form-control" onchange="previewImage(event)" />
+
+        <img id="imgPreview" src="~/assets/img/no-image.png"
+             style="max-width: 220px; margin-top: 10px; border-radius: 10px;" />
+    </div>
+
     <button type="submit" class="btn btn-primary mt-3">Lưu</button>
     <a asp-action="Index" class="btn btn-secondary mt-3">Hủy</a>
-
 </form>
+
+<script>
+    function previewImage(event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            document.getElementById('imgPreview').src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>

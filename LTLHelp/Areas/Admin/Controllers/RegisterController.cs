@@ -1,9 +1,8 @@
 ﻿using LTLHelp.Models;
-using LTLHelp.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Harmic.Areas.Admin.Controllers
+namespace LTLHelp.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class RegisterController : Controller
@@ -14,31 +13,43 @@ namespace Harmic.Areas.Admin.Controllers
         {
             _context = context;
         }
+
         [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
+
         [HttpPost]
-        public IActionResult Index(User account)
+        public async Task<IActionResult> Index(string username, string email, string password)
         {
-            if (account == null) { return NotFound(); }
+            // Kiểm tra tồn tại
+            bool exists = await _context.Users.AnyAsync(u =>
+                u.UserName == username || u.Email == email);
 
-            var check = _context.Users.Where(m => m.Email == account.Email).FirstOrDefault();
-            if (check != null)
+            if (exists)
             {
-                Function._Message = "Trùng tài khoản";
-                return RedirectToAction("Index", "Register");
+                ViewBag.Error = "Tên đăng nhập hoặc Email đã tồn tại!";
+                return View();
             }
-            Function._Message = string.Empty;
-            account.PasswordHash = HashMD5.GetMD5(account.PasswordHash != null ? account.PasswordHash : "");
-            account.UserId = 1;
-            account.IsActive = true;
 
-            _context.Add(account);
-            _context.SaveChanges();
-            return RedirectToAction("Index", "Login");
+            var newUser = new User
+            {
+                UserName = username,
+                Email = email,
+                PasswordHash = password,   // 🔥 đang dùng mật khẩu dạng plain!
+                IsActive = true,
+                CreatedAt = DateTime.Now
+            };
+
+            _context.Users.Add(newUser);
+            await _context.SaveChangesAsync();
+
+            // Tự động login sau khi đăng ký
+            HttpContext.Session.SetInt32("AdminUserId", newUser.UserId);
+            HttpContext.Session.SetString("AdminUserName", newUser.UserName);
+
+            return RedirectToAction("Index", "Home", new { area = "Admin" });
         }
-
     }
 }

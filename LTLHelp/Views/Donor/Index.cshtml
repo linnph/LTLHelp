@@ -1,0 +1,202 @@
+@model IEnumerable<LTLHelp.Models.Transaction>
+@{
+    ViewData["Title"] = "Nhà Tài Trợ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .donor-card {
+        background: var(--white-color);
+        border-radius: 20px;
+        padding: 25px;
+        box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.08);
+        margin-bottom: 20px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    .donor-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.12);
+    }
+    .donor-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        overflow: hidden;
+        flex-shrink: 0;
+        border: 3px solid var(--theme-color);
+    }
+    .donor-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .donor-avatar.anonymous {
+        background: var(--smoke-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-color: var(--body-color);
+    }
+    .donor-avatar.anonymous i {
+        font-size: 32px;
+        color: var(--body-color);
+    }
+    .donor-info {
+        flex: 1;
+    }
+    .donor-name {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--title-color);
+        margin-bottom: 5px;
+    }
+    .donor-name.anonymous {
+        color: var(--body-color);
+    }
+    .donor-amount {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--theme-color);
+        margin: 10px 0;
+    }
+    .donor-message {
+        color: var(--body-color);
+        font-size: 14px;
+        font-style: italic;
+        margin-top: 8px;
+    }
+    .donor-date {
+        font-size: 12px;
+        color: var(--body-color);
+        margin-top: 5px;
+    }
+    .donor-rank {
+        display: inline-block;
+        width: 35px;
+        height: 35px;
+        line-height: 35px;
+        text-align: center;
+        background: var(--theme-color);
+        color: var(--white-color);
+        border-radius: 50%;
+        font-weight: 700;
+        font-size: 16px;
+        flex-shrink: 0;
+    }
+    .donor-rank.top-1 {
+        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    }
+    .donor-rank.top-2 {
+        background: linear-gradient(135deg, #C0C0C0 0%, #808080 100%);
+    }
+    .donor-rank.top-3 {
+        background: linear-gradient(135deg, #CD7F32 0%, #8B4513 100%);
+    }
+    .section-title-custom {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+    .section-title-custom h2 {
+        font-size: 36px;
+        font-weight: 700;
+        color: var(--title-color);
+        margin-bottom: 15px;
+    }
+    .section-title-custom p {
+        color: var(--body-color);
+        font-size: 16px;
+    }
+</style>
+
+<!--==============================
+    Breadcumb
+============================== -->
+<div class="breadcumb-wrapper " data-bg-src="/assets/img/bg/cta-bg4-1.jpg" data-overlay="theme">
+    <div class="container">
+        <div class="breadcumb-content">
+            <h1 class="breadcumb-title">Nhà Tài Trợ Hào Phóng</h1>
+            <ul class="breadcumb-menu">
+                <li><a href="@Url.Action("Index", "Home")">Trang Chủ</a></li>
+                <li>Nhà Tài Trợ</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--==============================
+Donors Area   
+==============================-->
+<div class="space overflow-hidden position-relative z-index-common">
+    <div class="container">
+        <!-- Donors Section -->
+        <div class="section-title-custom">
+            <h2>Danh Sách Nhà Tài Trợ</h2>
+            <p>Cảm ơn những nhà tài trợ đã đóng góp và tạo nên sự khác biệt tích cực</p>
+        </div>
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="row gy-30">
+                @{
+                    int index = 1;
+                }
+                @foreach (var transaction in Model)
+                {
+                    var donation = transaction.Donation;
+                    var isAnonymous = donation?.IsAnonymous ?? false;
+                    var donorName = isAnonymous ? "Ẩn danh" : (donation?.DonorName ?? "Khách hàng");
+                    var donorMessage = donation?.DonorMessage;
+                    var amount = transaction.Amount ?? donation?.Amount ?? 0;
+                    var donationDate = transaction.PaidAt ?? donation?.CreatedAt ?? DateTime.Now;
+                    var rankClass = index <= 3 ? $"top-{index}" : "";
+                    
+                    <div class="col-lg-6">
+                        <div class="donor-card">
+                            <span class="donor-rank @rankClass">@index</span>
+                            @if (isAnonymous)
+                            {
+                                <div class="donor-avatar anonymous">
+                                    <i class="fas fa-user-secret"></i>
+                                </div>
+                            }
+                            else
+                            {
+                                var imageIndex = (index % 10) + 1;
+                                var imagePath = Url.Content($"~/assets/img/team/team_1_{imageIndex}.png");
+                                var fallbackPath = Url.Content("~/assets/img/team/team_1_1.png");
+                                <div class="donor-avatar">
+                                    <img src="@imagePath" alt="@donorName" onerror="this.onerror=null; this.src='@fallbackPath';">
+                                </div>
+                            }
+                            <div class="donor-info">
+                                <h3 class="donor-name @(isAnonymous ? "anonymous" : "")">@donorName</h3>
+                                <div class="donor-amount">@amount.ToString("N0") @(transaction.Currency ?? "VND")</div>
+                                @if (!string.IsNullOrEmpty(donorMessage))
+                                {
+                                    <p class="donor-message">"@donorMessage"</p>
+                                }
+                                <div class="donor-date">
+                                    <i class="far fa-calendar me-1"></i> @donationDate.ToString("dd/MM/yyyy HH:mm")
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    index++;
+                }
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <p class="text-muted">Chưa có nhà tài trợ nào. Hãy là người đầu tiên!</p>
+                <a href="@Url.Action("Checkout", "Donation")" class="th-btn style3 mt-3">
+                    <i class="fas fa-heart me-2"></i> Quyên Góp Ngay
+                </a>
+            </div>
+        }
+    </div>
+</div>
+

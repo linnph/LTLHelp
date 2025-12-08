@@ -1,0 +1,35 @@
+﻿@model LTLHelp.Models.BlogPost
+
+<h2>Thêm bài viết</h2>
+
+<form asp-action="Create" asp-controller="Blog" asp-area="Admin" method="post">
+
+    <div class="form-group">
+        <label>Tiêu đề</label>
+        <input asp-for="Title" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label>Danh mục</label>
+        <select asp-for="BlogCategoryId" class="form-control" asp-items="ViewBag.Categories">
+            <option value="">-- Chọn danh mục --</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Nội dung</label>
+        <textarea asp-for="Content" class="form-control" rows="8"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Trạng thái</label>
+        <select asp-for="IsPublished" class="form-control">
+            <option value="true">Đã xuất bản</option>
+            <option value="false">Nháp</option>
+        </select>
+    </div>
+
+    <button class="btn btn-primary">Lưu</button>
+    <a href="/Admin/Blog" class="btn btn-secondary">Hủy</a>
+
+</form>

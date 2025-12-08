@@ -5,50 +5,123 @@
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Quản lý chiến dịch</h2>
+<style>
+    .campaign-table {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+        overflow: hidden;
+    }
+
+    table thead {
+        background: #f5f7fa;
+        font-weight: 600;
+    }
+
+    table tbody tr:hover {
+        background: #eef5ff !important;
+    }
+
+    .tag-active {
+        padding: 4px 10px;
+        background: #e1ffea;
+        color: #27ae60;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .tag-ended {
+        padding: 4px 10px;
+        background: #ffe1e1;
+        color: #e74c3c;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle"></i>
+        @TempData["Error"]
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle"></i>
+        @TempData["Success"]
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+}
 
 
+<h2 class="mb-4">📋 Quản lý chiến dịch</h2>
 
 <p>
-    <a asp-action="Create" asp-controller="Campaigns" class="btn btn-primary">+ Thêm chiến dịch</a>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="fas fa-plus-circle"></i> Thêm chiến dịch
+    </a>
 </p>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Tên chiến dịch</th>
-            <th>Mục tiêu</th>
-            <th>Đã quyên góp</th>
-            <th>Bắt đầu</th>
-            <th>Kết thúc</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model != null)
-        {
-            foreach (var item in Model)
+<div class="campaign-table">
+    <table class="table table-striped mb-0">
+        <thead>
+            <tr>
+                <th>Tên chiến dịch</th>
+                <th>Mục tiêu</th>
+                <th>Đã quyên góp</th>
+                <th>Trạng thái</th>
+                <th>Bắt đầu</th>
+                <th>Kết thúc</th>
+                <th class="text-right">Hành động</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
             {
+                var today = DateOnly.FromDateTime(DateTime.Now);
+                var isActive = item.EndDate >= today;
+
                 <tr>
                     <td>@item.Title</td>
-                    <td>@item.GoalAmount</td>
-                    <td>@item.RaisedAmount</td>
+                    <td>@item.GoalAmount?.ToString("N0")</td>
+                    <td>@item.RaisedAmount?.ToString("N0")</td>
+
+                    <td>
+                        @if (isActive)
+                        {
+                            <span class="tag-active">Đang hoạt động</span>
+                        }
+                        else
+                        {
+                            <span class="tag-ended">Đã kết thúc</span>
+                        }
+                    </td>
+
                     <td>@item.StartDate?.ToString("dd/MM/yyyy")</td>
                     <td>@item.EndDate?.ToString("dd/MM/yyyy")</td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.CampaignId" class="btn btn-warning btn-sm">Sửa</a>
+
+                    <td class="text-right">
+                        <a asp-action="Edit" asp-route-id="@item.CampaignId" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i> Sửa
+                        </a>
 
                         <a asp-action="Delete"
                            asp-route-id="@item.CampaignId"
                            class="btn btn-danger btn-sm"
-                           onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
+                           onclick="return confirm('Bạn chắc chắn muốn xóa chiến dịch này? Nếu đã có khoản quyên góp thì không thể xóa!');">
+                            <i class="fas fa-trash"></i> Xóa
+                        </a>
 
                     </td>
-
-
-
                 </tr>
             }
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>

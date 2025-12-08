@@ -1,13 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using LTLHelp.Areas.Admin.Models;
-using LTLHelp.Models; 
-using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using LTLHelp.Models;
 
 namespace LTLHelp.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class HomeController : Controller
+    public class HomeController : AdminBaseController
     {
         private readonly LtlhelpContext _context;
 
@@ -18,21 +16,59 @@ namespace LTLHelp.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var model = new DashboardViewModel();
+            // Tổng quan
+            ViewBag.TotalCampaigns = await _context.Campaigns.CountAsync();
+            ViewBag.TotalUsers = await _context.Users.CountAsync();
+            ViewBag.TotalDonations = await _context.Donations.CountAsync();
 
-            model.TotalDonationAmount = await _context.Donations.SumAsync(d => d.Amount);
+            ViewBag.TotalMoney = await _context.Donations
+                .Where(d => d.Status == "Thành công" || d.Status == "Đã thanh toán")
+                .SumAsync(d => (decimal?)d.Amount ?? 0);
 
-            model.PendingDonationsCount = (int)await _context.Donations
-                .CountAsync(d => d.Status == "Pending"); 
+            ViewBag.ActiveCampaigns = await _context.Campaigns
+                .Where(c => c.EndDate >= DateOnly.FromDateTime(DateTime.Now))
+                .CountAsync();
 
-            model.TotalActiveCampaigns = (int)await _context.Donations
-                .CountAsync(c => c.IsAnonymous == true);
+            ViewBag.EndedCampaigns = ViewBag.TotalCampaigns - ViewBag.ActiveCampaigns;
 
-            model.TotalDonorCount = (int)await _context.Donations.CountAsync();
+            // Dữ liệu biểu đồ: Quyên góp theo tháng
+            ViewBag.DonationMonths = await _context.Donations
+                .GroupBy(d => d.CreatedAt.Value.Month)
+                .Select(g => new { Month = g.Key, Total = g.Sum(x => x.Amount) })
+                .OrderBy(x => x.Month)
+                .ToListAsync();
 
-            ViewData["Title"] = "Dashboard Tổng quan";
-            return View(model);
+            // Chiến dịch sắp hết hạn
+            ViewBag.ExpiringCampaigns = await _context.Campaigns
+                .Where(c => c.EndDate < DateOnly.FromDateTime(DateTime.Now.AddDays(7)))
+                .OrderBy(c => c.EndDate)
+                .Take(5)
+                .ToListAsync();
+
+            // Top chiến dịch mạnh nhất
+            ViewBag.TopCampaigns = await _context.Campaigns
+                .OrderByDescending(c => c.RaisedAmount)
+                .Take(5)
+                .ToListAsync();
+
+            // Chiến dịch yếu
+            ViewBag.WeakCampaigns = await _context.Campaigns
+                .OrderBy(c => c.RaisedAmount)
+                .Take(5)
+                .ToListAsync();
+
+            // Top người dùng quyên góp nhiều nhất
+            ViewBag.TopDonors = await _context.Donations
+                .GroupBy(g => g.UserId)
+                .Select(g => new {
+                    User = g.First().User.UserName,
+                    Total = g.Sum(x => x.Amount)
+                })
+                .OrderByDescending(g => g.Total)
+                .Take(5)
+                .ToListAsync();
+
+            return View();
         }
     }
 }
-
