@@ -22,10 +22,12 @@ public class DonorController : Controller
         {
             // Lấy toàn bộ danh sách giao dịch donate từ bảng Transactions
             // Bao gồm thông tin Donation để lấy tên người donate, ẩn danh, lời nhắn
+            // Sắp xếp theo số tiền từ lớn đến nhỏ
             var transactions = await _context.Transactions
                 .Include(t => t.Donation)
                 .Where(t => (t.Status == "Thành công" || t.Status == "Đã thanh toán") && t.Donation != null)
-                .OrderByDescending(t => t.PaidAt.HasValue ? t.PaidAt.Value : (t.Donation != null && t.Donation.CreatedAt.HasValue ? t.Donation.CreatedAt.Value : DateTime.MinValue))
+                .OrderByDescending(t => t.Amount ?? (t.Donation != null ? t.Donation.Amount : 0))
+                .ThenByDescending(t => t.PaidAt.HasValue ? t.PaidAt.Value : (t.Donation != null && t.Donation.CreatedAt.HasValue ? t.Donation.CreatedAt.Value : DateTime.MinValue))
                 .ThenByDescending(t => t.TransactionId)
                 .ToListAsync();
 

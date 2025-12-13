@@ -76,11 +76,32 @@ Donate Checkout Area
                 <div class="donation-form-card">
                     <h3><i class="fas fa-heart me-2" style="color: var(--theme-color);"></i>Hoàn Tất Quyên Góp Của Bạn</h3>
                     
-                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+                    
+                    @if (TempData["PaymentError"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i>@TempData["PaymentError"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger">
+                            <strong>Vui lòng kiểm tra lại thông tin:</strong>
+                            <ul class="mb-0 mt-2">
+                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                {
+                                    <li>@error.ErrorMessage</li>
+                                }
+                            </ul>
+                        </div>
+                    }
                     
                     <form asp-action="Checkout" method="POST" id="donationForm">
-                        <input type="hidden" asp-for="CampaignId" value="@(campaign?.CampaignId ?? Model?.CampaignId ?? 0)" />
-                        
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="CampaignId" value="@(Model?.CampaignId ?? campaign?.CampaignId ?? 0)" />
                         <!-- Donation Amount -->
                         <div class="donation-amount-section">
                             <label>Số Tiền Quyên Góp <span style="color: var(--error-color);">*</span></label>
@@ -382,6 +403,64 @@ Donate Checkout Area
             // Clear button selection when typing custom amount
             customAmountInput.addEventListener('input', function() {
                 amountButtons.forEach(btn => btn.classList.remove('active'));
+            });
+
+            // Form submission handler - Debug và validation
+            document.getElementById('donationForm').addEventListener('submit', function(e) {
+                // Kiểm tra phương thức thanh toán
+                const selectedPaymentMethod = document.querySelector('input[name="PaymentMethodId"]:checked');
+                if (!selectedPaymentMethod) {
+                    e.preventDefault();
+                    alert('Vui lòng chọn phương thức thanh toán!');
+                    return false;
+                }
+                
+                // Kiểm tra số tiền
+                const amountInput = document.getElementById('customAmount');
+                const amount = parseFloat(amountInput.value);
+                if (!amount || amount < 10000) {
+                    e.preventDefault();
+                    alert('Vui lòng nhập số tiền tối thiểu 10.000 VNĐ!');
+                    amountInput.focus();
+                    return false;
+                }
+                
+                // Kiểm tra tên
+                const donorName = document.querySelector('input[name="DonorName"]').value.trim();
+                if (!donorName) {
+                    e.preventDefault();
+                    alert('Vui lòng nhập họ và tên!');
+                    return false;
+                }
+                
+                // Kiểm tra email
+                const donorEmail = document.querySelector('input[name="DonorEmail"]').value.trim();
+                const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+                if (!donorEmail || !emailRegex.test(donorEmail)) {
+                    e.preventDefault();
+                    alert('Vui lòng nhập email hợp lệ!');
+                    return false;
+                }
+                
+                // Kiểm tra điều khoản
+                const agreeTerms = document.getElementById('agreeTerms');
+                if (!agreeTerms.checked) {
+                    e.preventDefault();
+                    alert('Vui lòng đồng ý với Điều Khoản & Điều Kiện!');
+                    return false;
+                }
+                
+                // Log thông tin form để debug
+                console.log('=== FORM SUBMISSION DEBUG ===');
+                console.log('PaymentMethodId:', selectedPaymentMethod.value);
+                console.log('Amount:', amount);
+                console.log('DonorName:', donorName);
+                console.log('DonorEmail:', donorEmail);
+                console.log('CampaignId:', document.getElementById('CampaignId').value);
+                console.log('============================');
+                
+                // Không preventDefault - để form submit bình thường
+                // Form sẽ submit và redirect đến server
             });
         });
     </script>

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using LTLHelp.Models;
+using LTLHelp.Services.Vnpay;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,9 @@ builder.Services.AddDbContext<LtlhelpContext>(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+// Add VnPay Service
+builder.Services.AddScoped<IVnPayService, VnPayService>();
 
 // Add session
 builder.Services.AddDistributedMemoryCache();

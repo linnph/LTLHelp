@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LTLHelp.Models;
+using LTLHelp.Services.Vnpay;
+using LTLHelp.Models.Vnpay;
 
 namespace LTLHelp.Controllers;
 
@@ -9,11 +11,15 @@ public class DonationController : Controller
 {
     private readonly LtlhelpContext _context;
     private readonly ILogger<DonationController> _logger;
+    private readonly IVnPayService _vnPayService;
+    private readonly IConfiguration _configuration;
 
-    public DonationController(LtlhelpContext context, ILogger<DonationController> logger)
+    public DonationController(LtlhelpContext context, ILogger<DonationController> logger, IVnPayService vnPayService, IConfiguration configuration)
     {
         _context = context;
         _logger = logger;
+        _vnPayService = vnPayService;
+        _configuration = configuration;
     }
 
     // GET: Donation/Checkout
@@ -33,6 +39,10 @@ public class DonationController : Controller
             var paymentMethods = await _context.PaymentMethods
                 .Where(p => p.IsActive == true)
                 .ToListAsync();
+
+            // Log để debug
+            _logger.LogInformation("Available PaymentMethods: {Methods}", 
+                string.Join(", ", paymentMethods.Select(p => $"ID={p.PaymentMethodId}, Name={p.Name}, Code={p.Code}")));
 
             // Tạo model mới với giá trị mặc định
             // Cho phép CampaignId = 0 hoặc null (quyên góp lẻ không theo chiến dịch)
@@ -70,6 +80,37 @@ public class DonationController : Controller
     {
         try
         {
+            // Thử lấy PaymentMethodId từ Request.Form nếu parameter không có
+            if (!PaymentMethodId.HasValue)
+            {
+                var paymentMethodIdStr = Request.Form["PaymentMethodId"].FirstOrDefault();
+                if (!string.IsNullOrEmpty(paymentMethodIdStr) && int.TryParse(paymentMethodIdStr, out int parsedId))
+                {
+                    PaymentMethodId = parsedId;
+                    _logger.LogInformation("PaymentMethodId retrieved from Request.Form: {PaymentMethodId}", PaymentMethodId);
+                }
+            }
+            
+            _logger.LogInformation("=== CHECKOUT POST START ===");
+            _logger.LogInformation("Initial - PaymentMethodId: {PaymentMethodId}, Amount: {Amount}, CampaignId: {CampaignId}, DonorName: {DonorName}, DonorEmail: {DonorEmail}", 
+                PaymentMethodId, donation.Amount, donation.CampaignId, donation.DonorName, donation.DonorEmail);
+            
+            // Debug: Log Request.Form CampaignId
+            var formCampaignId = Request.Form["CampaignId"].FirstOrDefault();
+            _logger.LogInformation("Request.Form CampaignId: {FormCampaignId}", formCampaignId);
+            
+            // Lấy CampaignId từ Request.Form nếu donation.CampaignId == 0
+            if (donation.CampaignId == 0 && !string.IsNullOrEmpty(formCampaignId))
+            {
+                if (int.TryParse(formCampaignId, out int parsedCampaignId))
+                {
+                    donation.CampaignId = parsedCampaignId;
+                    _logger.LogInformation("CampaignId retrieved from Request.Form: {CampaignId}", donation.CampaignId);
+                }
+            }
+            
+            _logger.LogInformation("After processing - CampaignId: {CampaignId}", donation.CampaignId);
+            
             // Đảm bảo IsAnonymous có giá trị (không null)
             // Nếu checkbox không được check, IsAnonymous sẽ là null, cần set thành false
             if (!donation.IsAnonymous.HasValue)
@@ -77,13 +118,51 @@ public class DonationController : Controller
                 donation.IsAnonymous = false;
             }
             
-            // Validate CampaignId: nếu có campaignId thì phải tồn tại trong database
+            // ⚠️ QUAN TRỌNG: Loại bỏ validation của navigation property Campaign TRƯỚC khi kiểm tra ModelState
+            ModelState.Remove("Campaign");
+            
+            // Validate CampaignId: cho phép CampaignId = 0 (quyên góp lẻ), nếu > 0 thì phải tồn tại trong database
             if (donation.CampaignId > 0)
             {
                 var campaignExists = await _context.Campaigns.AnyAsync(c => c.CampaignId == donation.CampaignId);
                 if (!campaignExists)
                 {
+                    _logger.LogWarning("Campaign not found: {CampaignId}", donation.CampaignId);
                     ModelState.AddModelError("CampaignId", "Chiến dịch không tồn tại.");
+                }
+            }
+            // Nếu CampaignId = 0, đó là quyên góp lẻ, không cần validate - xóa lỗi nếu có
+            else if (donation.CampaignId == 0)
+            {
+                ModelState.Remove("CampaignId");
+            }
+
+            // Validate PaymentMethodId
+            if (!PaymentMethodId.HasValue)
+            {
+                _logger.LogWarning("PaymentMethodId is missing in form submission. Form data: {FormData}", 
+                    string.Join(", ", Request.Form.Select(kv => $"{kv.Key}={string.Join(",", kv.Value.ToArray())}")));
+                ModelState.AddModelError("", "Vui lòng chọn phương thức thanh toán.");
+            }
+            
+            // Log ModelState errors và trạng thái
+            _logger.LogInformation("ModelState.IsValid: {IsValid}, CampaignId: {CampaignId}, PaymentMethodId: {PaymentMethodId}", 
+                ModelState.IsValid, donation.CampaignId, PaymentMethodId);
+            
+            if (!ModelState.IsValid)
+            {
+                var errors = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
+                _logger.LogWarning("ModelState is invalid. Errors: {Errors}", errors);
+                
+                // Log chi tiết từng field error
+                foreach (var key in ModelState.Keys)
+                {
+                    var state = ModelState[key];
+                    if (state?.Errors != null && state.Errors.Count > 0)
+                    {
+                        _logger.LogWarning("Field '{Key}' has errors: {Errors}", key, 
+                            string.Join(", ", state.Errors.Select(e => e.ErrorMessage)));
+                    }
                 }
             }
 
@@ -91,9 +170,6 @@ public class DonationController : Controller
             {
                 // Gán thời gian tạo
                 donation.CreatedAt = DateTime.Now;
-
-                // Gán trạng thái ban đầu
-                donation.Status = "Chờ xác nhận";
 
                 // Gán UserId từ session nếu user đã đăng nhập
                 donation.UserId = HttpContext.Session.GetInt32("UserId");
@@ -108,50 +184,196 @@ public class DonationController : Controller
                     }
                 }
 
-                // Lưu vào database (bảng Donations)
-                _context.Add(donation);
-                await _context.SaveChangesAsync();
-
-                // Tạo Transaction nếu có PaymentMethodId
+                // Kiểm tra phương thức thanh toán
+                PaymentMethod? paymentMethod = null;
                 if (PaymentMethodId.HasValue)
                 {
-                    var transaction = new Transaction
+                    paymentMethod = await _context.PaymentMethods
+                        .FirstOrDefaultAsync(p => p.PaymentMethodId == PaymentMethodId.Value);
+                    
+                    if (paymentMethod == null)
                     {
-                        DonationId = donation.DonationId,
-                        PaymentMethodId = PaymentMethodId.Value,
-                        Amount = donation.Amount,
-                        Currency = "VND",
-                        Status = "Chờ xác nhận",
-                        TransactionCode = $"TXN{DateTime.Now:yyyyMMddHHmmss}{donation.DonationId}",
-                        PaidAt = DateTime.Now // Gán thời gian thanh toán
-                    };
-                    _context.Add(transaction);
-                    await _context.SaveChangesAsync();
-
-                    // Nếu thanh toán thành công, cập nhật status của donation
-                    // (Có thể mở rộng logic này để check status từ payment gateway)
-                    // Tạm thời: nếu có transaction thì coi như đã thanh toán, cập nhật status
-                    donation.Status = "Xác nhận";
-                    await _context.SaveChangesAsync();
-                }
-
-                // Cập nhật RaisedAmount của Campaign (chỉ khi có CampaignId > 0)
-                if (donation.CampaignId > 0)
-                {
-                    var campaign = await _context.Campaigns.FindAsync(donation.CampaignId);
-                    if (campaign != null)
+                        _logger.LogWarning("PaymentMethod not found: {PaymentMethodId}", PaymentMethodId.Value);
+                        ModelState.AddModelError("", "Phương thức thanh toán không tồn tại.");
+                    }
+                    else
                     {
-                        campaign.RaisedAmount = (campaign.RaisedAmount ?? 0) + donation.Amount;
-                        await _context.SaveChangesAsync();
+                        // Log tất cả payment methods để debug
+                        var allPaymentMethods = await _context.PaymentMethods.ToListAsync();
+                        _logger.LogInformation("All PaymentMethods in DB: {Methods}", 
+                            string.Join(", ", allPaymentMethods.Select(p => $"ID={p.PaymentMethodId}, Name={p.Name}, Code={p.Code}")));
                     }
                 }
 
-                // Chuyển hướng sang trang Success
-                return RedirectToAction(nameof(Success), new { donationId = donation.DonationId });
+                // Kiểm tra lại ModelState sau khi validate PaymentMethod
+                if (!ModelState.IsValid)
+                {
+                    // Load lại dữ liệu cho View
+                    var paymentMethods = await _context.PaymentMethods
+                        .Where(p => p.IsActive == true)
+                        .ToListAsync();
+
+                    if (donation.CampaignId > 0)
+                    {
+                        var campaign = await _context.Campaigns
+                            .Include(c => c.Category)
+                            .FirstOrDefaultAsync(c => c.CampaignId == donation.CampaignId);
+                        ViewBag.Campaign = campaign;
+                    }
+
+                    ViewBag.PaymentMethods = paymentMethods;
+                    ViewBag.PaymentMethodSelectList = new SelectList(paymentMethods, "PaymentMethodId", "Name");
+                    return View(donation);
+                }
+
+                // Log thông tin payment method để debug
+                _logger.LogInformation("PaymentMethod found: {PaymentMethodName}, Code: {Code}, PaymentMethodId: {PaymentMethodId}", 
+                    paymentMethod?.Name ?? "NULL", paymentMethod?.Code ?? "NULL", PaymentMethodId);
+                
+                // Nếu là VNPay, tạo donation với status "Chờ thanh toán" và redirect sang VNPay
+                bool isVnPay = paymentMethod != null && 
+                              paymentMethod.Code != null && 
+                              paymentMethod.Code.Trim().ToUpper() == "VNPAY";
+                
+                _logger.LogInformation("Is VNPay check: {IsVnPay}, PaymentMethod: {PaymentMethod}, Code: {Code}", 
+                    isVnPay, paymentMethod?.Name, paymentMethod?.Code);
+                
+                if (isVnPay)
+                {
+                    _logger.LogInformation("=== STARTING VNPAY PAYMENT PROCESS ===");
+                    _logger.LogInformation("Donation Amount: {Amount}, PaymentMethodId: {PaymentMethodId}, Code: {Code}", 
+                        donation.Amount, PaymentMethodId.Value, paymentMethod.Code);
+                    
+                    // Gán trạng thái ban đầu cho VNPay
+                    donation.Status = "Chờ thanh toán";
+
+                    // Lưu vào database (bảng Donations)
+                    _context.Add(donation);
+                    await _context.SaveChangesAsync();
+                    
+                    _logger.LogInformation("Donation saved with ID: {DonationId}", donation.DonationId);
+
+                    try
+                    {
+                        // Tạo PaymentInformationModel cho VNPay
+                        var paymentInfo = new PaymentInformationModel
+                        {
+                            Name = donation.DonorName ?? "Người quyên góp",
+                            OrderDescription = donation.CampaignId > 0 
+                                ? $"Quyen gop chien dich {donation.CampaignId}" 
+                                : "Quyen gop tu thien",
+                            Amount = donation.Amount,
+                            OrderType = "other"
+                        };
+
+                        // Tạo orderId (vnp_TxnRef) với format: DonationId_yyyyMMddHHmmss
+                        var timeZoneById = TimeZoneInfo.FindSystemTimeZoneById(_configuration["TimeZoneId"] ?? "SE Asia Standard Time");
+                        var timeNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZoneById);
+                        string orderId = $"{donation.DonationId}_{timeNow:yyyyMMddHHmmss}";
+                        
+                        _logger.LogInformation("Creating VNPay URL with OrderId: {OrderId}, Amount: {Amount}", orderId, paymentInfo.Amount);
+
+                        // Tạo URL thanh toán VNPay
+                        var paymentUrl = _vnPayService.CreatePaymentUrl(paymentInfo, HttpContext, orderId);
+                        
+                        _logger.LogInformation("=== VNPAY URL CREATED SUCCESSFULLY ===");
+                        _logger.LogInformation("Payment URL: {PaymentUrl}", paymentUrl);
+                        _logger.LogInformation("Redirecting to VNPay...");
+
+                        // Redirect sang cổng VNPay
+                        return Redirect(paymentUrl);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "=== ERROR CREATING VNPAY URL ===");
+                        _logger.LogError(ex, "Exception details: {Exception}", ex.ToString());
+                        
+                        // Xóa donation đã tạo nếu có lỗi
+                        try
+                        {
+                            _context.Remove(donation);
+                            await _context.SaveChangesAsync();
+                        }
+                        catch (Exception deleteEx)
+                        {
+                            _logger.LogError(deleteEx, "Error deleting donation after VNPay URL creation failure");
+                        }
+                        
+                        TempData["PaymentError"] = $"Đã xảy ra lỗi khi tạo liên kết thanh toán VNPay: {ex.Message}. Vui lòng thử lại hoặc liên hệ hỗ trợ.";
+                        
+                        // Load lại dữ liệu cho View
+                        var paymentMethods = await _context.PaymentMethods
+                            .Where(p => p.IsActive == true)
+                            .ToListAsync();
+
+                        if (donation.CampaignId > 0)
+                        {
+                            var campaign = await _context.Campaigns
+                                .Include(c => c.Category)
+                                .FirstOrDefaultAsync(c => c.CampaignId == donation.CampaignId);
+                            ViewBag.Campaign = campaign;
+                        }
+
+                        ViewBag.PaymentMethods = paymentMethods;
+                        ViewBag.PaymentMethodSelectList = new SelectList(paymentMethods, "PaymentMethodId", "Name");
+                        return View(donation);
+                    }
+                }
+                else
+                {
+                    // Các phương thức thanh toán khác (MoMo, Bank...) hoặc không phải VNPay
+                    _logger.LogInformation("Processing non-VNPay payment. PaymentMethod: {PaymentMethodName}, Code: {Code}", 
+                        paymentMethod?.Name ?? "Unknown", paymentMethod?.Code ?? "Unknown");
+                    
+                    // Các phương thức thanh toán khác (MoMo, Bank...)
+                    // Gán trạng thái ban đầu
+                    donation.Status = "Chờ xác nhận";
+
+                    // Lưu vào database (bảng Donations)
+                    _context.Add(donation);
+                    await _context.SaveChangesAsync();
+
+                    // Tạo Transaction nếu có PaymentMethodId
+                    if (PaymentMethodId.HasValue)
+                    {
+                        var transaction = new Transaction
+                        {
+                            DonationId = donation.DonationId,
+                            PaymentMethodId = PaymentMethodId.Value,
+                            Amount = donation.Amount,
+                            Currency = "VND",
+                            Status = "Chờ xác nhận",
+                            TransactionCode = $"TXN{DateTime.Now:yyyyMMddHHmmss}{donation.DonationId}",
+                            PaidAt = DateTime.Now // Gán thời gian thanh toán
+                        };
+                        _context.Add(transaction);
+                        await _context.SaveChangesAsync();
+
+                        // Nếu thanh toán thành công, cập nhật status của donation
+                        // (Có thể mở rộng logic này để check status từ payment gateway)
+                        // Tạm thời: nếu có transaction thì coi như đã thanh toán, cập nhật status
+                        donation.Status = "Xác nhận";
+                        await _context.SaveChangesAsync();
+                    }
+
+                    // Cập nhật RaisedAmount của Campaign (chỉ khi có CampaignId > 0)
+                    if (donation.CampaignId > 0)
+                    {
+                        var campaign = await _context.Campaigns.FindAsync(donation.CampaignId);
+                        if (campaign != null)
+                        {
+                            campaign.RaisedAmount = (campaign.RaisedAmount ?? 0) + donation.Amount;
+                            await _context.SaveChangesAsync();
+                        }
+                    }
+
+                    // Chuyển hướng sang trang Success
+                    return RedirectToAction(nameof(Success), new { donationId = donation.DonationId });
+                }
             }
 
             // Nếu ModelState không hợp lệ, load lại dữ liệu cho View
-            var paymentMethods = await _context.PaymentMethods
+            var paymentMethodsForView = await _context.PaymentMethods
                 .Where(p => p.IsActive == true)
                 .ToListAsync();
 
@@ -163,8 +385,8 @@ public class DonationController : Controller
                 ViewBag.Campaign = campaign;
             }
 
-            ViewBag.PaymentMethods = paymentMethods;
-            ViewBag.PaymentMethodSelectList = new SelectList(paymentMethods, "PaymentMethodId", "Name");
+            ViewBag.PaymentMethods = paymentMethodsForView;
+            ViewBag.PaymentMethodSelectList = new SelectList(paymentMethodsForView, "PaymentMethodId", "Name");
 
             return View(donation);
         }
@@ -190,11 +412,21 @@ public class DonationController : Controller
         {
             var donation = await _context.Donations
                 .Include(d => d.Campaign)
+                .Include(d => d.Transactions)
+                    .ThenInclude(t => t.PaymentMethod)
                 .FirstOrDefaultAsync(d => d.DonationId == donationId.Value);
 
             if (donation != null)
             {
                 ViewBag.Donation = donation;
+                
+                // Lấy transaction thành công gần nhất
+                var successfulTransaction = donation.Transactions
+                    .Where(t => t.Status == "Thành công")
+                    .OrderByDescending(t => t.PaidAt)
+                    .FirstOrDefault();
+                
+                ViewBag.Transaction = successfulTransaction;
             }
         }
 
@@ -297,4 +529,3 @@ public class DonationController : Controller
         }
     }
 }
-

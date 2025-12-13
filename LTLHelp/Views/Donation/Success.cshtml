@@ -2,6 +2,7 @@
     ViewData["Title"] = "Quyên Góp Thành Công";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var donation = ViewBag.Donation as Donation;
+    var transaction = ViewBag.Transaction as Transaction;
 }
 
 <!--==============================
@@ -53,14 +54,35 @@ Success Area
                                     <span class="detail-value">@donation.Campaign.Title</span>
                                 </div>
                             }
+                            @if (transaction != null && transaction.PaymentMethod != null)
+                            {
+                                <div class="detail-item">
+                                    <span class="detail-label">Phương Thức Thanh Toán:</span>
+                                    <span class="detail-value">@transaction.PaymentMethod.Name</span>
+                                </div>
+                                @if (!string.IsNullOrEmpty(transaction.TransactionCode))
+                                {
+                                    <div class="detail-item">
+                                        <span class="detail-label">Mã Giao Dịch:</span>
+                                        <span class="detail-value">@transaction.TransactionCode</span>
+                                    </div>
+                                }
+                            }
                             <div class="detail-item">
                                 <span class="detail-label">Trạng Thái:</span>
-                                <span class="detail-value status-badge status-pending">@(donation.Status ?? "Chờ xác nhận")</span>
+                                <span class="detail-value status-badge @(donation.Status == "Xác nhận" || donation.Status == "Thành công" ? "status-confirmed" : "status-pending")">@(donation.Status ?? "Chờ xác nhận")</span>
                             </div>
                             <div class="detail-item">
                                 <span class="detail-label">Thời Gian:</span>
                                 <span class="detail-value">@(donation.CreatedAt?.ToString("dd/MM/yyyy HH:mm") ?? DateTime.Now.ToString("dd/MM/yyyy HH:mm"))</span>
                             </div>
+                            @if (transaction != null && transaction.PaidAt.HasValue)
+                            {
+                                <div class="detail-item">
+                                    <span class="detail-label">Thời Gian Thanh Toán:</span>
+                                    <span class="detail-value">@transaction.PaidAt.Value.ToString("dd/MM/yyyy HH:mm")</span>
+                                </div>
+                            }
                         </div>
                     }
 
