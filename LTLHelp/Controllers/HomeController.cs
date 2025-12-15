@@ -98,9 +98,66 @@ public class HomeController : Controller
         }
     }
 
-    public IActionResult About()
+    public async Task<IActionResult> About()
     {
-        return View();
+        try
+        {
+            var viewModel = new AboutViewModel();
+
+            // 1. Lấy danh sách tình nguyện viên từ bảng TeamMembers
+            viewModel.TeamMembers = await _context.TeamMembers
+                .Where(t => t.IsActive == true)
+                .OrderByDescending(t => t.CreatedAt)
+                .Take(8)
+                .ToListAsync();
+
+            // 2. Lấy lời chứng thực (Testimonials) từ database
+            var testimonials = await _context.Testimonials
+                .Where(t => t.IsActive == true)
+                .OrderByDescending(t => t.CreatedAt ?? DateTime.MinValue)
+                .ThenByDescending(t => t.TestimonialId)
+                .Take(4)
+                .ToListAsync();
+
+            viewModel.Testimonials = testimonials.Select(t => new TestimonialViewModel
+            {
+                Name = t.FullName ?? "Khách hàng",
+                Position = t.Position ?? "",
+                Content = t.Message ?? "",
+                ImageUrl = !string.IsNullOrEmpty(t.AvatarUrl) 
+                    ? (t.AvatarUrl.StartsWith("http://") || t.AvatarUrl.StartsWith("https://")
+                        ? t.AvatarUrl
+                        : (t.AvatarUrl.StartsWith("~/")
+                            ? t.AvatarUrl
+                            : (t.AvatarUrl.StartsWith("/")
+                                ? $"~{t.AvatarUrl}"
+                                : $"~/assets/img/testimonial/{t.AvatarUrl.TrimStart('/')}")))
+                    : "~/assets/img/testimonial/testi_1_1.png",
+                Rating = t.Rating
+            }).ToList();
+
+            // 3. Lấy số liệu thống kê
+            viewModel.Statistics = new HomeStatistics
+            {
+                TotalCampaigns = await _context.Campaigns.CountAsync(),
+                TotalDonations = await _context.Donations
+                    .Where(d => d.Status == "Thành công" || d.Status == "Đã thanh toán")
+                    .SumAsync(d => (decimal?)d.Amount) ?? 0,
+                TotalVolunteers = await _context.Volunteers
+                    .Where(v => v.Status == "Hoạt động")
+                    .CountAsync(),
+                TotalDonationCount = await _context.Donations
+                    .Where(d => d.Status == "Thành công" || d.Status == "Đã thanh toán")
+                    .CountAsync()
+            };
+
+            return View(viewModel);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error loading about page data");
+            return View(new AboutViewModel());
+        }
     }
 
     public IActionResult Privacy()

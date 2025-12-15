@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace LTLHelp.Models;
 
 public class HomeViewModel
@@ -33,3 +35,9 @@ public class HomeStatistics
     public int TotalDonationCount { get; set; }
 }
 
+public class AboutViewModel
+{
+    public List<TeamMember> TeamMembers { get; set; } = new List<TeamMember>();
+    public List<TestimonialViewModel> Testimonials { get; set; } = new List<TestimonialViewModel>();
+    public HomeStatistics Statistics { get; set; } = new HomeStatistics();
+}
