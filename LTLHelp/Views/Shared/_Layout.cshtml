@@ -53,6 +53,7 @@
     <!-- Theme Custom CSS -->
     <link rel="stylesheet" href="~/assets/css/style.css">
 
+
 </head>
 
 <body>
@@ -501,6 +502,36 @@
             </div>
         </div>
     </footer>
+    <!-- Chat Widget -->
+    <div id="chat-widget">
+        <button id="chat-toggle" aria-label="Mở chat">
+            <span class="dot"></span>
+            <span class="icon">💬</span>
+        </button>
+
+        <div id="chat-box" class="hidden">
+            <div class="chat-header">
+                <div class="left">
+                    <div class="avatar">🤖</div>
+                    <div class="title">
+                        <div class="name">Trợ lý LTLHelp</div>
+                        <div class="status">Đang hoạt động</div>
+                    </div>
+                </div>
+                <button id="chat-close" class="chat-close" aria-label="Đóng">✕</button>
+            </div>
+
+            <div id="chat-messages" class="chat-messages"></div>
+
+            <div class="chat-input">
+                <input id="userMessage" type="text" placeholder="Nhập câu hỏi..." autocomplete="off" />
+                <button id="btnSend" type="button">Gửi</button>
+            </div>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="~/css/chatbot.css" />
+    <script src="~/js/chatbot.js"></script>
 
     <!--********************************
             Code End  Here
@@ -511,9 +542,12 @@
             <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" style="transition: stroke-dashoffset 10ms linear 0s; stroke-dasharray: 307.919, 307.919; stroke-dashoffset: 307.919;"></path>
         </svg>
     </div>
-
+    <link rel="stylesheet" href="~/css/chatbot.css" />
+    <script src="~/js/chatbot.js"></script>
     <!--==============================
         All Js File
+           
+
     ============================== -->
     <!-- Jquery -->
     <script src="~/assets/js/vendor/jquery-3.7.1.min.js"></script>

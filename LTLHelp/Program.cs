@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using LTLHelp.Models;
+﻿using LTLHelp.Models;
+using LTLHelp.Services;
 using LTLHelp.Services.Vnpay;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,9 @@ builder.Services.AddSession(options =>
 });
 
 builder.Services.AddSession();   // ✔ thêm ở đây
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<ChatService>();
+builder.Services.AddScoped<GeminiService>();
 
 
 var app = builder.Build();

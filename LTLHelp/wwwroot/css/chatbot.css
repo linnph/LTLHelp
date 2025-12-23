@@ -1,0 +1,213 @@
+﻿/* Container */
+#chat-widget {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 9999;
+    font-family: system-ui, Arial;
+}
+
+/* Floating button */
+#chat-toggle {
+    width: 54px;
+    height: 54px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    background: #4f46e5;
+    color: #fff;
+    box-shadow: 0 12px 30px rgba(0,0,0,.22);
+    display: grid;
+    place-items: center;
+    position: relative;
+}
+
+    #chat-toggle .dot {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #22c55e;
+        border: 2px solid #4f46e5;
+    }
+
+    #chat-toggle .icon {
+        font-size: 20px;
+    }
+
+/* Chat box */
+#chat-box {
+    width: 360px;
+    height: 520px;
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 18px 60px rgba(0,0,0,.25);
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+}
+
+    #chat-box.hidden {
+        display: none;
+    }
+
+/* Header */
+.chat-header {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: #fff;
+    padding: 12px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+    .chat-header .left {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .chat-header .avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: rgba(255,255,255,.18);
+        display: grid;
+        place-items: center;
+        font-size: 18px;
+    }
+
+    .chat-header .name {
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 1.1;
+    }
+
+    .chat-header .status {
+        font-size: 12px;
+        opacity: .9;
+    }
+
+.chat-close {
+    background: rgba(255,255,255,.18);
+    border: none;
+    color: #fff;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* Messages */
+.chat-messages {
+    flex: 1;
+    padding: 14px;
+    overflow-y: auto;
+    background: #f7f7fb;
+}
+
+/* Bubble */
+.msg {
+    display: flex;
+    margin: 10px 0;
+    gap: 8px;
+    align-items: flex-end;
+}
+
+    .msg .bubble {
+        max-width: 78%;
+        padding: 10px 12px;
+        border-radius: 14px;
+        font-size: 14px;
+        line-height: 1.35;
+        box-shadow: 0 6px 18px rgba(0,0,0,.08);
+        white-space: pre-wrap;
+    }
+
+    .msg.user {
+        justify-content: flex-end;
+    }
+
+        .msg.user .bubble {
+            background: #4f46e5;
+            color: #fff;
+            border-bottom-right-radius: 6px;
+        }
+
+    .msg.bot {
+        justify-content: flex-start;
+    }
+
+        .msg.bot .bubble {
+            background: #fff;
+            color: #111827;
+            border-bottom-left-radius: 6px;
+            border: 1px solid #eef0ff;
+        }
+
+/* Typing */
+.typing {
+    display: inline-flex;
+    gap: 4px;
+}
+
+    .typing span {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #9ca3af;
+        display: inline-block;
+        animation: bounce 1s infinite;
+    }
+
+        .typing span:nth-child(2) {
+            animation-delay: .15s;
+        }
+
+        .typing span:nth-child(3) {
+            animation-delay: .3s;
+        }
+
+@keyframes bounce {
+    0%, 60%, 100% {
+        transform: translateY(0);
+    }
+
+    30% {
+        transform: translateY(-4px);
+    }
+}
+
+/* Input */
+.chat-input {
+    padding: 10px;
+    background: #fff;
+    border-top: 1px solid #eef0ff;
+    display: flex;
+    gap: 8px;
+}
+
+    .chat-input input {
+        flex: 1;
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        outline: none;
+    }
+
+        .chat-input input:focus {
+            border-color: #a5b4fc;
+            box-shadow: 0 0 0 3px rgba(79,70,229,.15);
+        }
+
+    .chat-input button {
+        padding: 10px 14px;
+        border-radius: 12px;
+        border: none;
+        background: #111827;
+        color: #fff;
+        cursor: pointer;
+    }

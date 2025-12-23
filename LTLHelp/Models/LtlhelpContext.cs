@@ -63,12 +63,15 @@ public partial class LtlhelpContext : DbContext
 
     public virtual DbSet<VolunteerAssignment> VolunteerAssignments { get; set; }
 
-   
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("data source= ADMIN-PC\\SQLEXPRESS; initial catalog=LTLHelp; integrated security=True; TrustServerCertificate=True;");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<BlogCategory>(entity =>
         {
-            entity.HasKey(e => e.BlogCategoryId).HasName("PK__BlogCate__6BD2DA016FD41885");
+            entity.HasKey(e => e.BlogCategoryId).HasName("PK__BlogCate__6BD2DA01A7C83C85");
 
             entity.Property(e => e.Description).HasMaxLength(500);
             entity.Property(e => e.IsActive).HasDefaultValue(true);
@@ -78,7 +81,7 @@ public partial class LtlhelpContext : DbContext
 
         modelBuilder.Entity<BlogComment>(entity =>
         {
-            entity.HasKey(e => e.CommentId).HasName("PK__BlogComm__C3B4DFCA692858B4");
+            entity.HasKey(e => e.CommentId).HasName("PK__BlogComm__C3B4DFCA056FCBC5");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(sysdatetime())");
             entity.Property(e => e.Email).HasMaxLength(200);
@@ -88,16 +91,16 @@ public partial class LtlhelpContext : DbContext
             entity.HasOne(d => d.BlogPost).WithMany(p => p.BlogComments)
                 .HasForeignKey(d => d.BlogPostId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BlogComme__BlogP__14270015");
+                .HasConstraintName("FK__BlogComme__BlogP__114A936A");
 
             entity.HasOne(d => d.User).WithMany(p => p.BlogComments)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__BlogComme__UserI__151B244E");
+                .HasConstraintName("FK__BlogComme__UserI__123EB7A3");
         });
 
         modelBuilder.Entity<BlogPost>(entity =>
         {
-            entity.HasKey(e => e.BlogPostId).HasName("PK__BlogPost__321741692A7D1A9D");
+            entity.HasKey(e => e.BlogPostId).HasName("PK__BlogPost__32174169C11D0B9E");
 
             entity.Property(e => e.ImageUrl).HasMaxLength(300);
             entity.Property(e => e.IsPublished).HasDefaultValue(true);
@@ -108,12 +111,12 @@ public partial class LtlhelpContext : DbContext
 
             entity.HasOne(d => d.Author).WithMany(p => p.BlogPosts)
                 .HasForeignKey(d => d.AuthorId)
-                .HasConstraintName("FK__BlogPosts__Autho__09A971A2");
+                .HasConstraintName("FK__BlogPosts__Autho__1332DBDC");
 
             entity.HasOne(d => d.BlogCategory).WithMany(p => p.BlogPosts)
                 .HasForeignKey(d => d.BlogCategoryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BlogPosts__BlogC__08B54D69");
+                .HasConstraintName("FK__BlogPosts__BlogC__14270015");
 
             entity.HasMany(d => d.Tags).WithMany(p => p.BlogPosts)
                 .UsingEntity<Dictionary<string, object>>(
@@ -121,21 +124,21 @@ public partial class LtlhelpContext : DbContext
                     r => r.HasOne<BlogTag>().WithMany()
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__BlogPostT__TagId__0F624AF8"),
+                        .HasConstraintName("FK__BlogPostT__TagId__160F4887"),
                     l => l.HasOne<BlogPost>().WithMany()
                         .HasForeignKey("BlogPostId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__BlogPostT__BlogP__0E6E26BF"),
+                        .HasConstraintName("FK__BlogPostT__BlogP__151B244E"),
                     j =>
                     {
-                        j.HasKey("BlogPostId", "TagId").HasName("PK__BlogPost__E4408EF3E435FE31");
+                        j.HasKey("BlogPostId", "TagId").HasName("PK__BlogPost__E4408EF33F2DB840");
                         j.ToTable("BlogPostTags");
                     });
         });
 
         modelBuilder.Entity<BlogTag>(entity =>
         {
-            entity.HasKey(e => e.TagId).HasName("PK__BlogTags__657CF9AC41385479");
+            entity.HasKey(e => e.TagId).HasName("PK__BlogTags__657CF9AC8105380A");
 
             entity.Property(e => e.Name).HasMaxLength(100);
             entity.Property(e => e.Slug).HasMaxLength(120);
@@ -143,7 +146,7 @@ public partial class LtlhelpContext : DbContext
 
         modelBuilder.Entity<Campaign>(entity =>
         {
-            entity.HasKey(e => e.CampaignId).HasName("PK__Campaign__3F5E8A99E41B3163");
+            entity.HasKey(e => e.CampaignId).HasName("PK__Campaign__3F5E8A99D0D4327F");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(sysdatetime())");
             entity.Property(e => e.GoalAmount)
@@ -164,12 +167,12 @@ public partial class LtlhelpContext : DbContext
 
             entity.HasOne(d => d.Category).WithMany(p => p.Campaigns)
                 .HasForeignKey(d => d.CategoryId)
-                .HasConstraintName("FK__Campaigns__Categ__5441852A");
+                .HasConstraintName("FK__Campaigns__Categ__17F790F9");
         });
 
         modelBuilder.Entity<CampaignCategory>(entity =>
         {
-            entity.HasKey(e => e.CategoryId).HasName("PK__Campaign__19093A0BE2721E87");
+            entity.HasKey(e => e.CategoryId).HasName("PK__Campaign__19093A0BC7E65858");
 
             entity.Property(e => e.Description).HasMaxLength(500);
             entity.Property(e => e.DisplayOrder).HasDefaultValue(0);
@@ -180,7 +183,7 @@ public partial class LtlhelpContext : DbContext
 
         modelBuilder.Entity<CampaignGallery>(entity =>
         {
-            entity.HasKey(e => e.GalleryId).HasName("PK__Campaign__CF4F7BB5C1F92B09");
+            entity.HasKey(e => e.GalleryId).HasName("PK__Campaign__CF4F7BB520C32728");
 
             entity.ToTable("CampaignGallery");
 
@@ -191,12 +194,12 @@ public partial class LtlhelpContext : DbContext
             entity.HasOne(d => d.Campaign).WithMany(p => p.CampaignGalleries)
                 .HasForeignKey(d => d.CampaignId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__CampaignG__Campa__5BE2A6F2");
+                .HasConstraintName("FK__CampaignG__Campa__17036CC0");
         });
 
         modelBuilder.Entity<CampaignUpdate>(entity =>
         {
-            entity.HasKey(e => e.UpdateId).HasName("PK__Campaign__7A0CF3C5841DBC41");
+            entity.HasKey(e => e.UpdateId).HasName("PK__Campaign__7A0CF3C5C7DF8D67");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(sysdatetime())");
             entity.Property(e => e.Title).HasMaxLength(200);
@@ -204,12 +207,12 @@ public partial class LtlhelpContext : DbContext
             entity.HasOne(d => d.Campaign).WithMany(p => p.CampaignUpdates)
                 .HasForeignKey(d => d.CampaignId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__CampaignU__Campa__5812160E");
+                .HasConstraintName("FK__CampaignU__Campa__18EBB532");
         });
 
         modelBuilder.Entity<ContactMessage>(entity =>
         {
-            entity.HasKey(e => e.ContactId).HasName("PK__ContactM__5C66259B596B859B");
+            entity.HasKey(e => e.ContactId).HasName("PK__ContactM__5C66259B80C58F9B");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(sysdatetime())");
             entity.Property(e => e.Email).HasMaxLength(200);
@@ -221,7 +224,7 @@ public partial class LtlhelpContext : DbContext
 
         modelBuilder.Entity<Donation>(entity =>
         {
-            entity.HasKey(e => e.DonationId).HasName("PK__Donation__C5082EFB702ACA3A");
+            entity.HasKey(e => e.DonationId).HasName("PK__Donation__C5082EFB2EB30682");
 
             entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(sysdatetime())");
@@ -236,16 +239,16 @@ public partial class LtlhelpContext : DbContext
             entity.HasOne(d => d.Campaign).WithMany(p => p.Donations)
                 .HasForeignKey(d => d.CampaignId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Donations__Campa__6477ECF3");
+                .HasConstraintName("FK__Donations__Campa__19DFD96B");
 
             entity.HasOne(d => d.User).WithMany(p => p.Donations)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Donations__UserI__656C112C");
+                .HasConstraintName("FK__Donations__UserI__1AD3FDA4");
         });
 
         modelBuilder.Entity<NewsletterSubscriber>(entity =>
         {
-            entity.HasKey(e => e.SubscriberId).HasName("PK__Newslett__7DFEB6D40ED03FED");
+            entity.HasKey(e => e.SubscriberId).HasName("PK__Newslett__7DFEB6D42CBD9AB8");
 
             entity.Property(e => e.Email).HasMaxLength(200);
             entity.Property(e => e.IsActive).HasDefaultValue(true);
@@ -254,7 +257,7 @@ public partial class LtlhelpContext : DbContext
 
         modelBuilder.Entity<PaymentMethod>(entity =>
         {
-            entity.HasKey(e => e.PaymentMethodId).HasName("PK__PaymentM__DC31C1D3C5446509");
+            entity.HasKey(e => e.PaymentMethodId).HasName("PK__PaymentM__DC31C1D357293009");
 
             entity.Property(e => e.Code).HasMaxLength(50);
             entity.Property(e => e.Description).HasMaxLength(300);
@@ -264,7 +267,7 @@ public partial class LtlhelpContext : DbContext
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.RoleId).HasName("PK__Roles__8AFACE1A40FD6357");
+            entity.HasKey(e => e.RoleId).HasName("PK__Roles__8AFACE1A7BF8DFBB");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(sysdatetime())");
             entity.Property(e => e.Description).HasMaxLength(250);
@@ -274,7 +277,7 @@ public partial class LtlhelpContext : DbContext
 
         modelBuilder.Entity<SystemSetting>(entity =>
         {
-            entity.HasKey(e => e.SettingKey).HasName("PK__SystemSe__01E719ACD585F1EC");
+            entity.HasKey(e => e.SettingKey).HasName("PK__SystemSe__01E719AC27002A01");
 
             entity.Property(e => e.SettingKey).HasMaxLength(100);
             entity.Property(e => e.Description).HasMaxLength(300);
@@ -282,7 +285,7 @@ public partial class LtlhelpContext : DbContext
 
         modelBuilder.Entity<TeamMember>(entity =>
         {
-            entity.HasKey(e => e.TeamMemberId).HasName("PK__TeamMemb__C7C092E5673C5BEE");
+            entity.HasKey(e => e.TeamMemberId).HasName("PK__TeamMemb__C7C092E531B0CBF3");
 
             entity.Property(e => e.AvatarUrl).HasMaxLength(300);
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(sysdatetime())");
@@ -299,7 +302,7 @@ public partial class LtlhelpContext : DbContext
 
         modelBuilder.Entity<Testimonial>(entity =>
         {
-            entity.HasKey(e => e.TestimonialId).HasName("PK__Testimon__91A23E73CD5F5D7A");
+            entity.HasKey(e => e.TestimonialId).HasName("PK__Testimon__91A23E739FFE51F7");
 
             entity.Property(e => e.AvatarUrl).HasMaxLength(300);
             entity.Property(e => e.CreatedAt)
@@ -314,7 +317,7 @@ public partial class LtlhelpContext : DbContext
 
         modelBuilder.Entity<Transaction>(entity =>
         {
-            entity.HasKey(e => e.TransactionId).HasName("PK__Transact__55433A6B1A196610");
+            entity.HasKey(e => e.TransactionId).HasName("PK__Transact__55433A6BED201557");
 
             entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.Currency)
@@ -329,21 +332,21 @@ public partial class LtlhelpContext : DbContext
             entity.HasOne(d => d.Donation).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.DonationId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Transacti__Donat__6B24EA82");
+                .HasConstraintName("FK__Transacti__Donat__1BC821DD");
 
             entity.HasOne(d => d.PaymentMethod).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.PaymentMethodId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Transacti__Payme__6C190EBB");
+                .HasConstraintName("FK__Transacti__Payme__1CBC4616");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CC4CF3969705");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CC4CA7D252F2");
 
-            entity.HasIndex(e => e.Email, "UQ__Users__A9D105348EF07CA9").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__Users__A9D105347A9158A7").IsUnique();
 
-            entity.HasIndex(e => e.UserName, "UQ__Users__C9F284567AEE27B0").IsUnique();
+            entity.HasIndex(e => e.UserName, "UQ__Users__C9F2845600C0F3BA").IsUnique();
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(sysdatetime())");
             entity.Property(e => e.Email).HasMaxLength(200);
@@ -357,21 +360,21 @@ public partial class LtlhelpContext : DbContext
                     r => r.HasOne<Role>().WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__UserRoles__RoleI__4222D4EF"),
+                        .HasConstraintName("FK__UserRoles__RoleI__1F98B2C1"),
                     l => l.HasOne<User>().WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__UserRoles__UserI__412EB0B6"),
+                        .HasConstraintName("FK__UserRoles__UserI__208CD6FA"),
                     j =>
                     {
-                        j.HasKey("UserId", "RoleId").HasName("PK__UserRole__AF2760AD8FD892DD");
+                        j.HasKey("UserId", "RoleId").HasName("PK__UserRole__AF2760AD4157CA37");
                         j.ToTable("UserRoles");
                     });
         });
 
         modelBuilder.Entity<UserAddress>(entity =>
         {
-            entity.HasKey(e => e.AddressId).HasName("PK__UserAddr__091C2AFB7F2EA227");
+            entity.HasKey(e => e.AddressId).HasName("PK__UserAddr__091C2AFB441ADC58");
 
             entity.Property(e => e.AddressLine).HasMaxLength(250);
             entity.Property(e => e.City).HasMaxLength(100);
@@ -383,12 +386,12 @@ public partial class LtlhelpContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.UserAddresses)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__UserAddre__UserI__49C3F6B7");
+                .HasConstraintName("FK__UserAddre__UserI__1DB06A4F");
         });
 
         modelBuilder.Entity<UserProfile>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__UserProf__1788CC4CDB50F445");
+            entity.HasKey(e => e.UserId).HasName("PK__UserProf__1788CC4C85EDEBC5");
 
             entity.Property(e => e.UserId).ValueGeneratedNever();
             entity.Property(e => e.AddressLine).HasMaxLength(250);
@@ -402,12 +405,12 @@ public partial class LtlhelpContext : DbContext
             entity.HasOne(d => d.User).WithOne(p => p.UserProfile)
                 .HasForeignKey<UserProfile>(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__UserProfi__UserI__44FF419A");
+                .HasConstraintName("FK__UserProfi__UserI__1EA48E88");
         });
 
         modelBuilder.Entity<Volunteer>(entity =>
         {
-            entity.HasKey(e => e.VolunteerId).HasName("PK__Voluntee__716F6F2C07298EA0");
+            entity.HasKey(e => e.VolunteerId).HasName("PK__Voluntee__716F6F2CB8F29B4F");
 
             entity.Property(e => e.Email).HasMaxLength(200);
             entity.Property(e => e.FullName).HasMaxLength(200);
@@ -419,12 +422,12 @@ public partial class LtlhelpContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.Volunteers)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Volunteer__UserI__70DDC3D8");
+                .HasConstraintName("FK__Volunteer__UserI__236943A5");
         });
 
         modelBuilder.Entity<VolunteerActivity>(entity =>
         {
-            entity.HasKey(e => e.ActivityId).HasName("PK__Voluntee__45F4A7911D03C792");
+            entity.HasKey(e => e.ActivityId).HasName("PK__Voluntee__45F4A7910542F3CA");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(sysdatetime())");
             entity.Property(e => e.Location).HasMaxLength(200);
@@ -433,7 +436,7 @@ public partial class LtlhelpContext : DbContext
 
         modelBuilder.Entity<VolunteerApplication>(entity =>
         {
-            entity.HasKey(e => e.ApplicationId).HasName("PK__Voluntee__C93A4C99D201C782");
+            entity.HasKey(e => e.ApplicationId).HasName("PK__Voluntee__C93A4C99404C4CC1");
 
             entity.Property(e => e.Address).HasMaxLength(250);
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(sysdatetime())");
@@ -448,7 +451,7 @@ public partial class LtlhelpContext : DbContext
 
         modelBuilder.Entity<VolunteerAssignment>(entity =>
         {
-            entity.HasKey(e => e.AssignmentId).HasName("PK__Voluntee__32499E7718B92A2C");
+            entity.HasKey(e => e.AssignmentId).HasName("PK__Voluntee__32499E7739D20FC1");
 
             entity.Property(e => e.AssignedAt).HasDefaultValueSql("(sysdatetime())");
             entity.Property(e => e.Status)
@@ -458,12 +461,12 @@ public partial class LtlhelpContext : DbContext
             entity.HasOne(d => d.Activity).WithMany(p => p.VolunteerAssignments)
                 .HasForeignKey(d => d.ActivityId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Volunteer__Activ__7D439ABD");
+                .HasConstraintName("FK__Volunteer__Activ__2180FB33");
 
             entity.HasOne(d => d.Volunteer).WithMany(p => p.VolunteerAssignments)
                 .HasForeignKey(d => d.VolunteerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Volunteer__Volun__7C4F7684");
+                .HasConstraintName("FK__Volunteer__Volun__22751F6C");
         });
 
         OnModelCreatingPartial(modelBuilder);
