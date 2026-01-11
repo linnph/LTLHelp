@@ -100,7 +100,7 @@ namespace LTLHelp.Services
                     - Thời gian hiện tại: {now:HH:mm}
                     - Ngày hiện tại: {now:dd/MM/yyyy}
                     - Múi giờ: Việt Nam (GMT+7)
-- Thời tiết hiện tại : {weatherDescription}
+                    - Thời tiết hiện tại : {weatherDescription}
                     Quy tắc:
                     - Trả lời tự nhiên như chat thông thường
                     - Nếu người dùng hỏi ngày, giờ thì trả lời dựa vào thời gian hệ thống

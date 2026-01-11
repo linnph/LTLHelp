@@ -22,20 +22,20 @@ public class HomeController : Controller
         {
             var viewModel = new HomeViewModel();
 
-            // 1. Lấy 6 chiến dịch mới nhất từ bảng Campaigns
+          
             viewModel.Campaigns = await _context.Campaigns
                 .OrderByDescending(c => c.CreatedAt)
                 .Take(6)
                 .ToListAsync();
 
-            // 2. Lấy 4 tình nguyện viên từ bảng TeamMembers (hoặc Volunteers nếu cần)
+           
             viewModel.TeamMembers = await _context.TeamMembers
                 .Where(t => t.IsActive == true)
                 .OrderByDescending(t => t.CreatedAt)
                 .Take(4)
                 .ToListAsync();
 
-            // 3. Lấy 3 bài blog mới nhất từ bảng BlogPosts
+            
             viewModel.BlogPosts = await _context.BlogPosts
                 .Include(b => b.BlogCategory)
                 .Where(b => b.IsPublished == true)
@@ -43,7 +43,7 @@ public class HomeController : Controller
                 .Take(3)
                 .ToListAsync();
 
-            // 4. Lấy 3 lời chứng thực (Testimonials) từ database
+           
             var testimonials = await _context.Testimonials
                 .Where(t => t.IsActive == true)
                 .OrderByDescending(t => t.CreatedAt ?? DateTime.MinValue)
@@ -62,18 +62,16 @@ public class HomeController : Controller
                         : (t.AvatarUrl.StartsWith("~/")
                             ? t.AvatarUrl
                             : (t.AvatarUrl.StartsWith("/")
-                                ? $"~{t.AvatarUrl}" // Chuyển /assets/ thành ~/assets/
+                                ? $"~{t.AvatarUrl}" 
                                 : $"~/assets/img/testimonial/{t.AvatarUrl.TrimStart('/')}")))
                     : "~/assets/img/testimonial/testi_1_1.png",
                 Rating = t.Rating
             }).ToList();
 
-            // 5. Lấy 4 câu hỏi FAQ
-            // Lưu ý: Bảng FAQ chưa có trong database, có thể tạo bảng sau
-            // Tạm thời để danh sách rỗng, có thể thêm sau
+           
             viewModel.FAQs = new List<FAQ>();
 
-            // 6. Lấy số liệu thống kê
+           
             viewModel.Statistics = new HomeStatistics
             {
                 TotalCampaigns = await _context.Campaigns.CountAsync(),
