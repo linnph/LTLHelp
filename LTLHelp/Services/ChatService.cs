@@ -33,7 +33,7 @@ namespace LTLHelp.Services
                 }
 
 
-                // ===== TỔNG TIỀN ỦNG HỘ =====
+               
                 if (message.Contains("tổng tiền")
                     || message.Contains("tổng số tiền")
                     || message.Contains("đã gây quỹ")
@@ -63,7 +63,7 @@ namespace LTLHelp.Services
 
                     return "Bài viết mới:\n- " + string.Join("\n- ", posts);
                 }
-                // ===== DANH SÁCH NGƯỜI ĐÃ ỦNG HỘ =====
+            
                 if (message.Contains("người đã ủng hộ")
                     || message.Contains("danh sách ủng hộ")
                     || message.Contains("nhà tài trợ"))
@@ -92,7 +92,7 @@ namespace LTLHelp.Services
                 }
 
                 var now = DateTime.Now;
-
+                var weatherDescription = "Hôm nay thời tiết tại Nghệ An là 23 độ";
                 return await _gemini.AskGemini($@"
                     Bạn là chatbot của website gây quỹ từ thiện LTLHelp.
 
@@ -100,13 +100,17 @@ namespace LTLHelp.Services
                     - Thời gian hiện tại: {now:HH:mm}
                     - Ngày hiện tại: {now:dd/MM/yyyy}
                     - Múi giờ: Việt Nam (GMT+7)
-
+- Thời tiết hiện tại : {weatherDescription}
                     Quy tắc:
                     - Trả lời tự nhiên như chat thông thường
                     - Nếu người dùng hỏi ngày, giờ thì trả lời dựa vào thời gian hệ thống
                     - Nếu hỏi linh tinh thì trả lời như chatbot bình thường
                     - Nếu hỏi về gây quỹ thì trả lời đúng ngữ cảnh website
                     - Không nói lan man, không giải thích kỹ thuật
+                    - Nếu người dùng muốn quyên góp số tiền nào đó thì hãy hướng dẫn họ cách để quyên góp
+                    -Bạn vẫn có thể trả lời bình thường như các chat AI khác 
+                    -Lời văn trả lời thân thiện.
+                    - Nếu người dùng hỏi về thời tiết thế nào hãy trả lời dựa theo thời tiết của hệ thống
 
                     Người dùng hỏi:
                     {message}
