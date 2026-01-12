@@ -92,7 +92,7 @@ namespace LTLHelp.Services
                 }
 
                 var now = DateTime.Now;
-                var weatherDescription = "Hôm nay thời tiết tại Nghệ An là 23 độ";
+                
                 return await _gemini.AskGemini($@"
                     Bạn là chatbot của website gây quỹ từ thiện LTLHelp.
 
@@ -100,7 +100,7 @@ namespace LTLHelp.Services
                     - Thời gian hiện tại: {now:HH:mm}
                     - Ngày hiện tại: {now:dd/MM/yyyy}
                     - Múi giờ: Việt Nam (GMT+7)
-                    - Thời tiết hiện tại : {weatherDescription}
+                 
                     Quy tắc:
                     - Trả lời tự nhiên như chat thông thường
                     - Nếu người dùng hỏi ngày, giờ thì trả lời dựa vào thời gian hệ thống
@@ -119,7 +119,7 @@ namespace LTLHelp.Services
             }
             catch (Exception ex)
             {
-                return $"❌ Lỗi hệ thống: {ex.Message}";
+                return $"Lỗi hệ thống: {ex.Message}";
             }
 
         }

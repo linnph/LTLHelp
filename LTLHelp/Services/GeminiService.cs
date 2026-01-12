@@ -15,7 +15,7 @@ namespace LTLHelp.Services
 
         public async Task<string> AskGemini(string prompt)
         {
-            var model = "gemini-2.5-flash"; // ✅ thử cái này trước
+            var model = "gemini-3-flash-preview"; 
             var url = $"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={_apiKey}";
 
             var body = new
@@ -36,12 +36,9 @@ namespace LTLHelp.Services
 
             if (!response.IsSuccessStatusCode)
             {
-                if ((int)response.StatusCode == 429)
-                {
-                    return "Hiện hệ thống đang quá tải. Bạn vui lòng thử lại sau ít phút nhé.";
-                }
-
-                return "Hệ thống AI đang tạm thời không phản hồi. Vui lòng thử lại sau.";
+               
+                var errorBody = await response.Content.ReadAsStringAsync();
+                return $"Lỗi kết nối AI ({response.StatusCode}): {errorBody}";
             }
 
 
