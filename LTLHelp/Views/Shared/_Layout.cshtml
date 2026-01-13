@@ -502,30 +502,36 @@
             </div>
         </div>
     </footer>
-    <!-- Chat Widget -->
+    <!-- Giao diện chat -->
     <div id="chat-widget">
         <button id="chat-toggle" aria-label="Mở chat">
-            <span class="dot"></span>
+            <div class="dot"></div>
             <span class="icon">💬</span>
         </button>
 
         <div id="chat-box" class="hidden">
             <div class="chat-header">
-                <div class="left">
+                <div class="header-info">
                     <div class="avatar">🤖</div>
-                    <div class="title">
-                        <div class="name">Trợ lý LTLHelp</div>
-                        <div class="status">Đang hoạt động</div>
+                    <div class="text-info">
+                        <span class="name">Trợ lý LTLHelp</span>
+                        <span class="status">Đang hoạt động</span>
                     </div>
                 </div>
-                <button id="chat-close" class="chat-close" aria-label="Đóng">✕</button>
+                <div class="header-actions">
+                    <button id="clear-chat" title="Xóa lịch sử">🗑️</button>
+                    <button id="chat-close">✕</button>
+                </div>
             </div>
 
-            <div id="chat-messages" class="chat-messages"></div>
+            <div id="chat-messages" class="chat-messages">
+            </div>
 
-            <div class="chat-input">
-                <input id="userMessage" type="text" placeholder="Nhập câu hỏi..." autocomplete="off" />
-                <button id="btnSend" type="button">Gửi</button>
+            <div class="chat-input-area">
+                <input id="userMessage" type="text" placeholder="Hỏi tôi về các chiến dịch..." autocomplete="off" />
+                <button id="btnSend">
+                    <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
+                </button>
             </div>
         </div>
     </div>

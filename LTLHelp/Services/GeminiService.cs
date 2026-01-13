@@ -15,7 +15,7 @@ namespace LTLHelp.Services
 
         public async Task<string> AskGemini(string prompt)
         {
-            var model = "gemini-3-flash-preview"; 
+            var model = "gemini-2.5-flash"; 
             var url = $"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={_apiKey}";
 
             var body = new

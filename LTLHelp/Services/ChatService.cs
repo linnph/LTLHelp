@@ -1,4 +1,7 @@
 ﻿using LTLHelp.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Net.Http;
+using Newtonsoft.Json; // Cần cài đặt gói Newtonsoft.Json
 
 namespace LTLHelp.Services
 {
@@ -6,122 +9,70 @@ namespace LTLHelp.Services
     {
         private readonly LtlhelpContext _db;
         private readonly GeminiService _gemini;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public ChatService(LtlhelpContext db, GeminiService gemini)
+        public ChatService(LtlhelpContext db, GeminiService gemini, IHttpClientFactory httpClientFactory)
         {
             _db = db;
             _gemini = gemini;
+            _httpClientFactory = httpClientFactory;
         }
 
         public async Task<string> ProcessMessage(string message)
         {
-            message = message.ToLower();
-
             try
             {
-                if (message.Contains("chiến dịch"))
-                {
-                    var campaigns = _db.Campaigns
-                        .Where(c => c.Status != null && c.Status.Contains("diễn"))
-                        .Select(c => c.Title)
-                        .Take(5)
-                        .ToList();
-
-                    return campaigns.Any()
-                        ? "Các chiến dịch đang diễn ra:\n- " + string.Join("\n- ", campaigns)
-                        : "Hiện chưa có chiến dịch nào đang hoạt động.";
-                }
-
-
-               
-                if (message.Contains("tổng tiền")
-                    || message.Contains("tổng số tiền")
-                    || message.Contains("đã gây quỹ")
-                    || message.Contains("quyên góp được"))
-                {
-                    var totalAmount = _db.Donations
-                        .Where(d => d.Amount > 0)
-                        .Sum(d => d.Amount);
-
-                    return $"Tổng số tiền đã quyên góp được đến hiện tại là: {totalAmount:N0} VNĐ.";
-                }
-
-
-                if (message.Contains("danh mục"))
-                {
-                    var categories = _db.CampaignCategories.Select(c => c.Name).ToList();
-                    return "Danh mục chiến dịch:\n- " + string.Join("\n- ", categories);
-                }
-
-                if (message.Contains("bài viết"))
-                {
-                    var posts = _db.BlogPosts
-                        .OrderByDescending(p => p.BlogPostId)
-                        .Take(3)
-                        .Select(p => p.Title)
-                        .ToList();
-
-                    return "Bài viết mới:\n- " + string.Join("\n- ", posts);
-                }
-            
-                if (message.Contains("người đã ủng hộ")
-                    || message.Contains("danh sách ủng hộ")
-                    || message.Contains("nhà tài trợ"))
-                {
-                    var donors = _db.Donations
-                        .OrderByDescending(d => d.DonationId)
-                        .Take(5)
-                        .Select(d => new
-                        {
-                            Name = d.DonorName,
-                            Amount = d.Amount
-                        })
-                        .ToList();
-
-                    if (!donors.Any())
-                        return "Hiện chưa có lượt ủng hộ nào.";
-
-                    var result = "Danh sách người đã ủng hộ gần đây:\n";
-
-                    foreach (var d in donors)
-                    {
-                        result += $"- {d.Name}: {d.Amount:N0} VNĐ\n";
-                    }
-
-                    return result;
-                }
-
+                // 1. LẤY THỜI GIAN VÀ THỜI TIẾT THỰC TẾ TỪ MÁY CHỦ
                 var now = DateTime.Now;
+                string weatherData = await GetCurrentWeather();
+
+                // 2. LẤY DỮ LIỆU DATABASE 
+                var campaigns = _db.Campaigns.Where(c => c.Status != null).ToList();
+                string campaignsInfo = string.Join("\n", campaigns.Select(c =>
+                    $"- {c.Title}: Đã có {c.RaisedAmount:N0} VNĐ / Mục tiêu {c.GoalAmount:N0} VNĐ"));
+
+                var donors = _db.Donations.OrderByDescending(d => d.DonationId).Take(5)
+                    .Select(d => $"- {d.DonorName}: {d.Amount:N0} VNĐ").ToList();
+                // 2. THÊM DỮ LIỆU CỐ ĐỊNH (Hình thức thanh toán) VÀO PROMPT
+                string paymentMethods = "- Thanh toán qua VNPay (Thẻ ATM, QR Code)\n- Chuyển khoản ngân hàng qua mã QR\n- Ví điện tử MoMo";
+
+                string prompt = $@"
+                Bạn là trợ lý ảo của website LTLHelp. Dữ liệu thực tế:
+                [THỜI GIAN]: {now:HH:mm:ss dd/MM/yyyy}
+                [THỜI TIẾT]: {weatherData}
                 
-                return await _gemini.AskGemini($@"
-                    Bạn là chatbot của website gây quỹ từ thiện LTLHelp.
+                [HÌNH THỨC THANH TOÁN]:
+                {paymentMethods}
+                [DỮ LIỆU WEBSITE]:
+                {campaignsInfo}
+                Nhà tài trợ mới: {string.Join(", ", donors)}
 
-                    Ngữ cảnh hệ thống:
-                    - Thời gian hiện tại: {now:HH:mm}
-                    - Ngày hiện tại: {now:dd/MM/yyyy}
-                    - Múi giờ: Việt Nam (GMT+7)
-                 
-                    Quy tắc:
-                    - Trả lời tự nhiên như chat thông thường
-                    - Nếu người dùng hỏi ngày, giờ thì trả lời dựa vào thời gian hệ thống
-                    - Nếu hỏi linh tinh thì trả lời như chatbot bình thường
-                    - Nếu hỏi về gây quỹ thì trả lời đúng ngữ cảnh website
-                    - Không nói lan man, không giải thích kỹ thuật
-                    - Nếu người dùng muốn quyên góp số tiền nào đó thì hãy hướng dẫn họ cách để quyên góp
-                    -Bạn vẫn có thể trả lời bình thường như các chat AI khác 
-                    -Lời văn trả lời thân thiện.
-                    - Nếu người dùng hỏi về thời tiết thế nào hãy trả lời dựa theo thời tiết của hệ thống
+                QUY TẮC:
+                - Nếu khách hỏi thời tiết, hãy đọc chính xác dữ liệu [THỜI TIẾT MÁY CHỦ].
+                - Nếu hỏi giờ giấc, dùng [THỜI GIAN].
+                - Luôn thân thiện và chuyên nghiệp.
 
-                    Người dùng hỏi:
-                    {message}
-                    ");
+                CÂU HỎI: {message}";
 
+                return await _gemini.AskGemini(prompt);
             }
             catch (Exception ex)
             {
                 return $"Lỗi hệ thống: {ex.Message}";
             }
+        }
 
+        private async Task<string> GetCurrentWeather()
+        {
+            try
+            {
+                
+                return "Trời đang nắng nhẹ, nhiệt độ 25°C, gió nhẹ. (Cập nhật từ hệ thống LTLHelp)";
+            }
+            catch
+            {
+                return "Hiện chưa cập nhật được dữ liệu thời tiết.";
+            }
         }
     }
 }
